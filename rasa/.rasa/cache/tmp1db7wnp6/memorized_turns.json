@@ -1,0 +1,19 @@
+{
+  "lookup": {
+    "eJyLrq6NBQAEOAGx": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohvSg1taS2NhYA6dwbhQ==": "utter_greet",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohvSg1taSWgBmlJSWpRfEQpbhMiAUAQvc0lw==": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohvSg1taSWgBmlJSWpRfEQpeSZQMAVSfn52fGJBQX5QIFcoEhtbSwAJ8FTDQ==": "booking_form",
+    "eJydjkEOhDAIRa/SA3iCXmViSGeCptFCg+im8e6ideXCJrPj/zwefMreuZIFNwg/jUzelToAhYTe3WGOiyIZuy4oxkSyqN6Ngqh7w7GqokBF/zM0vvgyTxByZiuSNZfu3NkQZuZsaPWcYKQRBpZkzMvFB9k82B9Fqn49": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohv7QkPj8tvjg5vyC1tjYWALYRHnM=": "utter_out_of_scope",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohv7QkPj8tvjg5vyC1loBRpSUlqUXxKDoImBcLAA5UPWE=": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohPT8/JakytbY2FgAh+hxX": "utter_goodbye",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohPT8/JakytZaAKaUlJalF8TDFuE2JBQCMqTcN": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3BChdnB1fUJSZnFpcWxsLAHj3HZI=": "utter_services_available",
+    "eJyFjLENgDAMBFfJAEzAKghZJnJhEUJkO2mi7I4R1ND96e9/6WMKvQg1wGh85jn0J0DGg+bwQmI1yu5WJXGHs6N5rTsU4Ug6fo6qGQn4ut02YENOuCX6/lwvgn49/g==": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohKT8/Oz6xoCAfKJALFKmtjQUAMxggJw==": "booking_form",
+    "eJyFjUEOgCAQA7/CA3wBXzFmg2Y1RNglgFwIf3cJnjzorW2m7VzbpGqIWMBs2TJpVYcAMh61eoyzKSMJeyWMwlgSm7VamU8wIbAEXpLW53qnIDjmIOjY6aClA3aOXpiPxxf5e7jc2CJLVw==": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3BChdnB0PFCnLTE4trq2NBQC1dh5w": "utter_services_available",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3BChdnB0PFCnLTE4triVgVGlJSWoRXHV8YlliZk5iUk4qIVNjAYb3P7o=": "action_listen"
+  }
+}

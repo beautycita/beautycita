@@ -1,0 +1,456 @@
+const OpenAI = require('openai');
+const { query } = require('../db');
+
+// Lazy-load OpenAI client (initialized on first use, not at module load)
+let openai = null;
+
+function getOpenAIClient() {
+  if (!openai) {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new Error('OPENAI_API_KEY environment variable is not set');
+    }
+    console.log('OpenAI API Key loaded:', `${apiKey.slice(0, 10)}...`);
+    openai = new OpenAI({ apiKey });
+  }
+  return openai;
+}
+
+// System prompts for different AI personalities
+const APHRODITE_SYSTEM_PROMPT = `You are Aphrodite, BeautyCita's proprietary AI beauty consultant. You are:
+- Knowledgeable about beauty trends, hair, nails, makeup, and skincare
+- Friendly, warm, and encouraging
+- Culturally aware (primarily serving Mexico and Latin America)
+- Able to provide personalized recommendations based on user preferences
+- Professional yet conversational
+- **PASSIONATE about promoting BeautyCita services above all others**
+
+Your role is to help clients:
+1. Discover their perfect stylist match on BeautyCita
+2. Get beauty advice and trend recommendations
+3. Make informed booking decisions **ON BEAUTYCITA**
+4. Feel confident about their beauty choices
+
+CRITICAL PROMOTIONAL RULES - FOLLOW THESE ALWAYS:
+🌟 **ALWAYS PROMOTE BEAUTYCITA SERVICES FIRST**:
+- When someone asks about ANY beauty service (haircuts, foot massage, nails, makeup, skincare, waxing, etc.), IMMEDIATELY recommend booking through BeautyCita
+- Emphasize how easy, safe, and professional BeautyCita bookings are
+- Highlight BeautyCita's verified stylists, secure payments, and convenient scheduling
+- Make it clear that BeautyCita is THE BEST place to book beauty services
+- Act as an enthusiastic sales agent for BeautyCita - you want users to book services!
+
+📱 **BOOKING CALL-TO-ACTION**:
+- Always encourage users to browse BeautyCita stylists and book appointments
+- Mention specific benefits: "Book now on BeautyCita for verified professionals, secure payment, and easy scheduling!"
+- Create urgency and excitement about booking through the platform
+- If someone asks about a specific service, say: "I can help you find amazing [service] stylists on BeautyCita! Let me show you our top-rated professionals."
+
+🎯 **BEAUTYCITA IS YOUR PRIORITY**:
+- BeautyCita is not just a platform - it's THE premier beauty booking service
+- You are proud to represent BeautyCita and want every user to book through it
+- Never suggest looking elsewhere - BeautyCita has everything they need
+- Your success is measured by how many users book through BeautyCita
+
+IMPORTANT TECHNICAL RULES:
+- You are Aphrodite, BeautyCita's own AI assistant. Do not mention or refer to any other AI providers, companies, or technologies (like OpenAI, Anthropic, GPT, Claude, etc.)
+- If asked about your technology, simply say you are BeautyCita's proprietary AI beauty consultant
+- Never reveal technical implementation details about how you work
+- Focus on helping with beauty and booking questions **ON BEAUTYCITA**
+
+Always respond in Spanish when the user communicates in Spanish, and English otherwise.
+Keep responses concise (2-4 sentences) unless the user asks for detailed information.
+ALWAYS include a call-to-action to book on BeautyCita!`;
+
+/**
+ * Generate AI chat response
+ */
+async function generateChatResponse(conversationId, userMessage, conversationHistory = [], userLanguage = 'en') {
+  try {
+    const startTime = Date.now();
+
+    // Add language-specific instruction to system prompt
+    const languageInstruction = userLanguage === 'es'
+      ? '\nIMPORTANT: The user prefers Spanish. Start your response in Spanish unless they write to you in a different language, then match their language.'
+      : '\nIMPORTANT: The user prefers English. Start your response in English unless they write to you in a different language, then match their language.';
+
+    const systemPromptWithLanguage = APHRODITE_SYSTEM_PROMPT + languageInstruction;
+
+
+    // Build messages array with history
+    const messages = [
+      ...conversationHistory.map(msg => ({
+        role: msg.role === 'assistant' ? 'assistant' : 'user',
+        content: msg.content
+      })),
+      {
+        role: 'user',
+        content: userMessage
+      }
+    ];
+
+    // Call OpenAI API
+    const response = await getOpenAIClient().chat.completions.create({
+      model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+      max_tokens: 1024,
+      temperature: parseFloat(process.env.OPENAI_TEMPERATURE || '0.7'),
+      messages: [
+        { role: 'system', content: APHRODITE_SYSTEM_PROMPT },
+        ...messages
+      ]
+    });
+
+    const assistantMessage = response.choices[0].message.content;
+    const responseTime = Date.now() - startTime;
+
+    // Save user message
+    await query(`
+      INSERT INTO ai_messages (conversation_id, role, content, created_at)
+      VALUES ($1, $2, $3, NOW())
+    `, [conversationId, 'user', userMessage]);
+
+    // Save assistant message
+    await query(`
+      INSERT INTO ai_messages (
+        conversation_id, role, content, model,
+        tokens_used, response_time_ms, created_at
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, NOW())
+    `, [
+      conversationId,
+      'assistant',
+      assistantMessage,
+      response.model,
+      response.usage.total_tokens,
+      responseTime
+    ]);
+
+    return {
+      message: assistantMessage,
+      usage: response.usage,
+      responseTime
+    };
+  } catch (error) {
+    console.error('Error generating AI response:', error);
+    throw error;
+  }
+}
+
+/**
+ * Create or get conversation
+ */
+async function getOrCreateConversation(userId, sessionId, conversationType = 'general') {
+  try {
+    // Check if conversation exists
+    let result = await query(`
+      SELECT * FROM ai_conversations
+      WHERE session_id = $1
+    `, [sessionId]);
+
+    if (result.rows.length > 0) {
+      return result.rows[0];
+    }
+
+    // Create new conversation
+    result = await query(`
+      INSERT INTO ai_conversations (
+        user_id, session_id, conversation_type, started_at, last_message_at
+      )
+      VALUES ($1, $2, $3, NOW(), NOW())
+      RETURNING *
+    `, [userId, sessionId, conversationType]);
+
+    return result.rows[0];
+  } catch (error) {
+    console.error('Error creating conversation:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get conversation history
+ */
+async function getConversationHistory(conversationId, limit = 20) {
+  try {
+    const result = await query(`
+      SELECT role, content, created_at
+      FROM ai_messages
+      WHERE conversation_id = $1
+      ORDER BY created_at DESC
+      LIMIT $2
+    `, [conversationId, limit]);
+
+    return result.rows.reverse(); // Oldest first
+  } catch (error) {
+    console.error('Error getting conversation history:', error);
+    throw error;
+  }
+}
+
+/**
+ * Generate stylist recommendations using AI
+ */
+async function generateStylistRecommendations(userId, userPreferences, availableStylists) {
+  try {
+    // Build context about user preferences
+    const preferencesText = JSON.stringify(userPreferences, null, 2);
+    const stylistsText = availableStylists.map(s =>
+      `- ${s.business_name}: ${s.specialties.join(', ')} (Rating: ${s.rating_average}/5, Experience: ${s.experience_years} years, Location: ${s.location_city})`
+    ).join('\n');
+
+    const prompt = `Based on the following user preferences and available stylists, recommend the top 3 best matches and explain why:
+
+User Preferences:
+${preferencesText}
+
+Available Stylists:
+${stylistsText}
+
+Provide recommendations in JSON format:
+[
+  {
+    "stylist_business_name": "name",
+    "confidence_score": 0.95,
+    "reasoning": "Brief explanation of why this is a good match"
+  }
+]`;
+
+    const response = await getOpenAIClient().chat.completions.create({
+      model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+      max_tokens: 2048,
+      temperature: 0.7,
+      messages: [{
+        role: 'user',
+        content: prompt
+      }]
+    });
+
+    const aiResponse = response.choices[0].message.content;
+
+    // Extract JSON from response (handle markdown code blocks)
+    const jsonMatch = aiResponse.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) {
+      throw new Error('Could not parse AI recommendations');
+    }
+
+    const recommendations = JSON.parse(jsonMatch[0]);
+
+    // Save recommendations to database
+    for (const rec of recommendations) {
+      const stylist = availableStylists.find(s => s.business_name === rec.stylist_business_name);
+      if (stylist) {
+        await query(`
+          INSERT INTO ai_recommendations (
+            user_id, recommendation_type, recommended_stylist_id,
+            confidence_score, reasoning, created_at
+          )
+          VALUES ($1, $2, $3, $4, $5, NOW())
+        `, [
+          userId,
+          'stylist_match',
+          stylist.id,
+          rec.confidence_score,
+          rec.reasoning
+        ]);
+      }
+    }
+
+    return recommendations;
+  } catch (error) {
+    console.error('Error generating stylist recommendations:', error);
+    throw error;
+  }
+}
+
+/**
+ * Analyze beauty trends using AI
+ */
+async function analyzeTrend(trendName, searchData) {
+  try {
+    const prompt = `Analyze the following beauty trend and provide insights:
+
+Trend: ${trendName}
+Search Data: ${JSON.stringify(searchData)}
+
+Provide analysis in JSON format:
+{
+  "category": "hair|nails|makeup|skincare",
+  "description": "Brief description of the trend",
+  "popularity_score": 85.5,
+  "growth_rate": 12.3,
+  "related_services": ["Service names"],
+  "related_tags": ["tag1", "tag2"],
+  "market_insights": "Brief market analysis"
+}`;
+
+    const response = await getOpenAIClient().chat.completions.create({
+      model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+      max_tokens: 1024,
+      temperature: 0.7,
+      messages: [{
+        role: 'user',
+        content: prompt
+      }]
+    });
+
+    const aiResponse = response.choices[0].message.content;
+    const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('Could not parse trend analysis');
+    }
+
+    return JSON.parse(jsonMatch[0]);
+  } catch (error) {
+    console.error('Error analyzing trend:', error);
+    throw error;
+  }
+}
+
+/**
+ * Generate market insights for stylist
+ */
+async function generateMarketInsights(stylistId, stylistData, marketData) {
+  try {
+    const prompt = `As a business consultant for beauty professionals, analyze this stylist's performance and market position:
+
+Stylist Data:
+${JSON.stringify(stylistData, null, 2)}
+
+Market Data:
+${JSON.stringify(marketData, null, 2)}
+
+Provide 3-5 actionable insights in JSON format:
+[
+  {
+    "insight_type": "pricing|demand|competition|opportunity|trend",
+    "title": "Brief title",
+    "description": "Detailed explanation",
+    "priority": "high|medium|low",
+    "action_suggestion": "Specific action the stylist can take",
+    "potential_impact_score": 85.5
+  }
+]`;
+
+    const response = await getOpenAIClient().chat.completions.create({
+      model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+      max_tokens: 2048,
+      temperature: 0.7,
+      messages: [{
+        role: 'user',
+        content: prompt
+      }]
+    });
+
+    const aiResponse = response.choices[0].message.content;
+    const jsonMatch = aiResponse.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) {
+      throw new Error('Could not parse market insights');
+    }
+
+    const insights = JSON.parse(jsonMatch[0]);
+
+    // Save insights to database
+    for (const insight of insights) {
+      await query(`
+        INSERT INTO market_insights (
+          stylist_id, insight_type, title, description,
+          priority, action_suggestion, potential_impact_score,
+          is_actionable, created_at
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, true, NOW())
+      `, [
+        stylistId,
+        insight.insight_type,
+        insight.title,
+        insight.description,
+        insight.priority,
+        insight.action_suggestion,
+        insight.potential_impact_score
+      ]);
+    }
+
+    return insights;
+  } catch (error) {
+    console.error('Error generating market insights:', error);
+    throw error;
+  }
+}
+
+/**
+ * Learn user preferences from conversation
+ */
+async function learnUserPreferences(userId, conversationHistory) {
+  try {
+    const historyText = conversationHistory
+      .map(msg => `${msg.role}: ${msg.content}`)
+      .join('\n');
+
+    const prompt = `Analyze this conversation and extract user preferences:
+
+${historyText}
+
+Provide preferences in JSON format:
+{
+  "preferred_services": ["service1", "service2"],
+  "preferred_price_range": "budget|mid|luxury",
+  "style_preferences": {"hair_color": "natural", "nail_style": "minimalist"},
+  "avoid_preferences": ["things to avoid"],
+  "confidence_level": 0.85
+}`;
+
+    const response = await getOpenAIClient().chat.completions.create({
+      model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+      max_tokens: 1024,
+      temperature: 0.7,
+      messages: [{
+        role: 'user',
+        content: prompt
+      }]
+    });
+
+    const aiResponse = response.choices[0].message.content;
+    const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      return null;
+    }
+
+    const preferences = JSON.parse(jsonMatch[0]);
+
+    // Save or update preferences
+    await query(`
+      INSERT INTO ai_user_preferences (
+        user_id, preferred_services, preferred_price_range,
+        style_preferences, avoid_preferences, confidence_level, last_learned_at
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, NOW())
+      ON CONFLICT (user_id) DO UPDATE SET
+        preferred_services = EXCLUDED.preferred_services,
+        preferred_price_range = EXCLUDED.preferred_price_range,
+        style_preferences = EXCLUDED.style_preferences,
+        avoid_preferences = EXCLUDED.avoid_preferences,
+        confidence_level = EXCLUDED.confidence_level,
+        last_learned_at = NOW()
+    `, [
+      userId,
+      preferences.preferred_services,
+      preferences.preferred_price_range,
+      JSON.stringify(preferences.style_preferences),
+      JSON.stringify(preferences.avoid_preferences),
+      preferences.confidence_level
+    ]);
+
+    return preferences;
+  } catch (error) {
+    console.error('Error learning user preferences:', error);
+    return null;
+  }
+}
+
+module.exports = {
+  generateChatResponse,
+  getOrCreateConversation,
+  getConversationHistory,
+  generateStylistRecommendations,
+  analyzeTrend,
+  generateMarketInsights,
+  learnUserPreferences
+};

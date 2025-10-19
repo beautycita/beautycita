@@ -1,0 +1,457 @@
+/**
+ * BeautyCita Custom Theme for BTCPay Server
+ * Matches the beautiful pink/purple/blue gradient design
+ * Version: 1.0
+ * Date: 2025-10-11
+ */
+
+/* ==================== ROOT VARIABLES ==================== */
+:root {
+  /* BeautyCita Brand Colors */
+  --beautycita-pink: #ff0080;
+  --beautycita-purple: #8000ff;
+  --beautycita-blue: #00f5ff;
+  --beautycita-light-pink: #ffb3ba;
+  --beautycita-light-purple: #e6b3ff;
+  --beautycita-light-blue: #bae1ff;
+
+  /* Gradients */
+  --beautycita-gradient-primary: linear-gradient(135deg, #ff0080 0%, #8000ff 50%, #00f5ff 100%);
+  --beautycita-gradient-secondary: linear-gradient(135deg, #ffb3ba 0%, #bae1ff 50%, #e6b3ff 100%);
+  --beautycita-gradient-card: linear-gradient(135deg, rgba(255, 0, 128, 0.05) 0%, rgba(128, 0, 255, 0.05) 100%);
+
+  /* Text Colors */
+  --beautycita-text-primary: #1a1a1a;
+  --beautycita-text-secondary: #666666;
+  --beautycita-text-light: #999999;
+
+  /* Shadows */
+  --beautycita-shadow-sm: 0 4px 12px rgba(255, 0, 128, 0.1);
+  --beautycita-shadow-md: 0 10px 30px rgba(255, 0, 128, 0.15);
+  --beautycita-shadow-lg: 0 20px 60px rgba(255, 0, 128, 0.3);
+  --beautycita-shadow-glow: 0 0 40px rgba(255, 0, 128, 0.3);
+}
+
+/* ==================== GLOBAL STYLES ==================== */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  background: linear-gradient(135deg, #ffb3ba 0%, #bae1ff 50%, #e6b3ff 100%) !important;
+  background-attachment: fixed !important;
+  color: var(--beautycita-text-primary) !important;
+}
+
+/* Main Container */
+.container, .container-fluid {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-radius: 24px !important;
+  box-shadow: var(--beautycita-shadow-lg) !important;
+  padding: 2rem !important;
+  margin: 2rem auto !important;
+}
+
+/* ==================== HEADER & NAVIGATION ==================== */
+.navbar, .top-header {
+  background: var(--beautycita-gradient-primary) !important;
+  border: none !important;
+  box-shadow: var(--beautycita-shadow-md) !important;
+  border-radius: 0 0 20px 20px !important;
+}
+
+.navbar-brand, .navbar-brand:hover {
+  color: white !important;
+  font-weight: 700 !important;
+  font-size: 1.5rem !important;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.5) !important;
+}
+
+.nav-link, .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+}
+
+.nav-link:hover, .navbar-nav .nav-link:hover {
+  color: white !important;
+  transform: translateY(-2px) !important;
+}
+
+/* ==================== BUTTONS ==================== */
+.btn-primary, button[type="submit"], .btn-success {
+  background: var(--beautycita-gradient-primary) !important;
+  border: none !important;
+  color: white !important;
+  padding: 12px 32px !important;
+  border-radius: 50px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 10px 30px rgba(255, 0, 128, 0.4), 0 0 40px rgba(255, 0, 128, 0.3) !important;
+  transition: all 0.3s ease !important;
+  letter-spacing: 0.5px !important;
+}
+
+.btn-primary:hover, button[type="submit"]:hover, .btn-success:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 15px 40px rgba(255, 0, 128, 0.5), 0 0 50px rgba(255, 0, 128, 0.4) !important;
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #666 0%, #999 100%) !important;
+  border: none !important;
+  color: white !important;
+  padding: 12px 32px !important;
+  border-radius: 50px !important;
+  font-weight: 600 !important;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #ff4444 0%, #ff0000 100%) !important;
+  border: none !important;
+  border-radius: 50px !important;
+}
+
+/* ==================== CARDS & PANELS ==================== */
+.card, .panel, .tile {
+  background: white !important;
+  border: 2px solid transparent !important;
+  background-image: linear-gradient(white, white), var(--beautycita-gradient-primary) !important;
+  background-origin: border-box !important;
+  background-clip: padding-box, border-box !important;
+  border-radius: 20px !important;
+  box-shadow: var(--beautycita-shadow-sm) !important;
+  transition: all 0.3s ease !important;
+  overflow: hidden !important;
+}
+
+.card:hover, .panel:hover, .tile:hover {
+  transform: translateY(-4px) scale(1.01) !important;
+  box-shadow: var(--beautycita-shadow-md) !important;
+}
+
+.card-header, .panel-heading {
+  background: var(--beautycita-gradient-card) !important;
+  border-bottom: 1px solid rgba(255, 0, 128, 0.2) !important;
+  color: var(--beautycita-pink) !important;
+  font-weight: 700 !important;
+  font-size: 1.2rem !important;
+  padding: 1.5rem !important;
+}
+
+.card-body, .panel-body {
+  padding: 1.5rem !important;
+}
+
+/* ==================== FORMS & INPUTS ==================== */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea,
+select,
+.form-control {
+  border: 2px solid rgba(255, 0, 128, 0.2) !important;
+  border-radius: 12px !important;
+  padding: 12px 20px !important;
+  transition: all 0.3s ease !important;
+  background: white !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+.form-control:focus {
+  border-color: var(--beautycita-pink) !important;
+  box-shadow: 0 0 20px rgba(255, 0, 128, 0.2) !important;
+  outline: none !important;
+}
+
+.form-group label {
+  color: var(--beautycita-text-primary) !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+/* ==================== TABLES ==================== */
+table, .table {
+  background: white !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  box-shadow: var(--beautycita-shadow-sm) !important;
+}
+
+thead, .table thead {
+  background: var(--beautycita-gradient-card) !important;
+}
+
+thead th, .table thead th {
+  color: var(--beautycita-pink) !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  font-size: 0.85rem !important;
+  letter-spacing: 0.5px !important;
+  padding: 1rem !important;
+  border: none !important;
+}
+
+tbody tr, .table tbody tr {
+  transition: all 0.2s ease !important;
+}
+
+tbody tr:hover, .table tbody tr:hover {
+  background: var(--beautycita-gradient-card) !important;
+}
+
+/* ==================== BADGES & LABELS ==================== */
+.badge, .label {
+  border-radius: 50px !important;
+  padding: 6px 16px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+}
+
+.badge-success, .label-success {
+  background: linear-gradient(135deg, #06ffa5 0%, #00c9ff 100%) !important;
+  color: white !important;
+}
+
+.badge-warning, .label-warning {
+  background: linear-gradient(135deg, #ffbe0b 0%, #ff006e 100%) !important;
+  color: white !important;
+}
+
+.badge-danger, .label-danger {
+  background: linear-gradient(135deg, #ff4444 0%, #ff0000 100%) !important;
+  color: white !important;
+}
+
+.badge-primary, .label-primary {
+  background: var(--beautycita-gradient-primary) !important;
+  color: white !important;
+}
+
+/* ==================== INVOICES ==================== */
+.invoice-box, .payment-box {
+  background: white !important;
+  border: 3px dashed var(--beautycita-pink) !important;
+  border-radius: 20px !important;
+  padding: 2rem !important;
+  box-shadow: var(--beautycita-shadow-md) !important;
+}
+
+.invoice-amount, .payment-amount {
+  background: var(--beautycita-gradient-card) !important;
+  padding: 2rem !important;
+  border-radius: 16px !important;
+  font-size: 2.5rem !important;
+  font-weight: 700 !important;
+  color: var(--beautycita-pink) !important;
+  text-align: center !important;
+  margin: 1.5rem 0 !important;
+  letter-spacing: 2px !important;
+}
+
+.qr-code-container {
+  background: white !important;
+  padding: 2rem !important;
+  border-radius: 16px !important;
+  box-shadow: var(--beautycita-shadow-sm) !important;
+  margin: 1.5rem auto !important;
+  max-width: 350px !important;
+}
+
+/* ==================== ALERTS & NOTIFICATIONS ==================== */
+.alert {
+  border: none !important;
+  border-radius: 16px !important;
+  padding: 1.5rem !important;
+  box-shadow: var(--beautycita-shadow-sm) !important;
+  border-left: 4px solid !important;
+}
+
+.alert-success {
+  background: linear-gradient(135deg, rgba(6, 255, 165, 0.1) 0%, rgba(0, 201, 255, 0.1) 100%) !important;
+  border-left-color: #06ffa5 !important;
+  color: #055f4e !important;
+}
+
+.alert-warning {
+  background: linear-gradient(135deg, rgba(255, 190, 11, 0.1) 0%, rgba(255, 0, 110, 0.1) 100%) !important;
+  border-left-color: #ffbe0b !important;
+  color: #664800 !important;
+}
+
+.alert-danger {
+  background: linear-gradient(135deg, rgba(255, 68, 68, 0.1) 0%, rgba(255, 0, 0, 0.1) 100%) !important;
+  border-left-color: #ff4444 !important;
+  color: #660000 !important;
+}
+
+.alert-info {
+  background: var(--beautycita-gradient-card) !important;
+  border-left-color: var(--beautycita-pink) !important;
+  color: var(--beautycita-text-primary) !important;
+}
+
+/* ==================== STATS & METRICS ==================== */
+.stat-box, .metric-box {
+  background: white !important;
+  border-radius: 16px !important;
+  padding: 1.5rem !important;
+  box-shadow: var(--beautycita-shadow-sm) !important;
+  transition: all 0.3s ease !important;
+  border-left: 4px solid var(--beautycita-pink) !important;
+}
+
+.stat-box:hover, .metric-box:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--beautycita-shadow-md) !important;
+}
+
+.stat-value, .metric-value {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  background: var(--beautycita-gradient-primary) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* ==================== MODALS & DIALOGS ==================== */
+.modal-content, .dialog-content {
+  border: none !important;
+  border-radius: 24px !important;
+  box-shadow: var(--beautycita-shadow-lg) !important;
+  overflow: hidden !important;
+}
+
+.modal-header, .dialog-header {
+  background: var(--beautycita-gradient-primary) !important;
+  color: white !important;
+  border: none !important;
+  padding: 2rem !important;
+}
+
+.modal-title, .dialog-title {
+  font-weight: 700 !important;
+  font-size: 1.5rem !important;
+}
+
+.modal-body, .dialog-body {
+  padding: 2rem !important;
+}
+
+/* ==================== SIDEBAR ==================== */
+.sidebar, .nav-pills {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-radius: 20px !important;
+  padding: 1.5rem !important;
+  box-shadow: var(--beautycita-shadow-md) !important;
+}
+
+.sidebar .nav-link, .nav-pills .nav-link {
+  border-radius: 12px !important;
+  padding: 12px 20px !important;
+  margin: 4px 0 !important;
+  transition: all 0.3s ease !important;
+  color: var(--beautycita-text-primary) !important;
+}
+
+.sidebar .nav-link:hover, .nav-pills .nav-link:hover {
+  background: var(--beautycita-gradient-card) !important;
+  color: var(--beautycita-pink) !important;
+  transform: translateX(4px) !important;
+}
+
+.sidebar .nav-link.active, .nav-pills .nav-link.active {
+  background: var(--beautycita-gradient-primary) !important;
+  color: white !important;
+  box-shadow: var(--beautycita-shadow-glow) !important;
+}
+
+/* ==================== LOADING & SPINNERS ==================== */
+.spinner, .loading {
+  border-color: var(--beautycita-light-pink) !important;
+  border-top-color: var(--beautycita-pink) !important;
+}
+
+/* ==================== FOOTER ==================== */
+footer, .footer {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+  border-top: 1px solid rgba(255, 0, 128, 0.1) !important;
+  padding: 2rem !important;
+  margin-top: 3rem !important;
+  border-radius: 20px 20px 0 0 !important;
+  text-align: center !important;
+}
+
+/* ==================== LOGO CUSTOMIZATION ==================== */
+.btcpay-logo::before {
+  content: "💖 BeautyCita Bitcoin Payments 💅" !important;
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  color: white !important;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .container, .container-fluid {
+    margin: 1rem !important;
+    padding: 1rem !important;
+    border-radius: 16px !important;
+  }
+
+  .btn-primary, button[type="submit"], .btn-success {
+    padding: 10px 24px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .invoice-amount, .payment-amount {
+    font-size: 1.8rem !important;
+    padding: 1.5rem !important;
+  }
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes beautycita-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 0, 128, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 0, 128, 0.6);
+  }
+}
+
+.btn-primary:not(:disabled):not(.disabled):active,
+button[type="submit"]:not(:disabled):not(.disabled):active {
+  animation: beautycita-pulse 0.5s ease !important;
+}
+
+/* ==================== SCROLLBAR ==================== */
+::-webkit-scrollbar {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 182, 193, 0.2) !important;
+  border-radius: 10px !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--beautycita-gradient-primary) !important;
+  border-radius: 10px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #ff006e 0%, #7000e0 100%) !important;
+}
+
+/* ==================== PRINT STYLES ==================== */
+@media print {
+  body {
+    background: white !important;
+  }
+
+  .container, .container-fluid {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+}

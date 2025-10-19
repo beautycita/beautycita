@@ -1,0 +1,321 @@
+/* BeautyCita Custom Calendar Styles - Pink/Purple/Blue Gradient Theme */
+
+.booking-calendar {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Calendar Container */
+.rbc-calendar {
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+/* Toolbar */
+.rbc-toolbar {
+  padding: 16px;
+  background: linear-gradient(to right, #ec4899, #9333ea, #3b82f6);
+  border-radius: 16px;
+  margin-bottom: 16px;
+}
+
+.rbc-toolbar button {
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.rbc-toolbar button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.rbc-toolbar button.rbc-active,
+.rbc-toolbar button:active {
+  background: white;
+  color: #9333ea;
+  border-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.rbc-toolbar-label {
+  color: white;
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+/* Header */
+.rbc-header {
+  padding: 12px;
+  background: #f9fafb;
+  border-bottom: 2px solid #e5e7eb;
+  font-weight: 600;
+  color: #374151;
+}
+
+.rbc-header + .rbc-header {
+  border-left: 1px solid #e5e7eb;
+}
+
+/* Today */
+.rbc-today {
+  background-color: #fdf4ff !important;
+}
+
+.rbc-header.rbc-today {
+  background: linear-gradient(to bottom, #ec4899, #9333ea);
+  color: white;
+  border-radius: 8px 8px 0 0;
+}
+
+/* Time Slots */
+.rbc-time-slot {
+  border-top: 1px solid #f3f4f6;
+  min-height: 40px;
+}
+
+.rbc-time-gutter {
+  background: #fafafa;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.rbc-current-time-indicator {
+  background-color: #ec4899;
+  height: 2px;
+}
+
+/* Day Grid */
+.rbc-day-bg {
+  background: white;
+  border-left: 1px solid #f3f4f6;
+}
+
+.rbc-day-bg:hover {
+  background: #fafafa;
+}
+
+.rbc-off-range-bg {
+  background: #f9fafb;
+}
+
+/* Month View */
+.rbc-month-view {
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.rbc-month-row {
+  border-top: 1px solid #e5e7eb;
+}
+
+.rbc-date-cell {
+  padding: 8px;
+  text-align: right;
+}
+
+.rbc-date-cell.rbc-now {
+  background: linear-gradient(135deg, #ec4899, #9333ea);
+  color: white;
+  font-weight: 700;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+}
+
+/* Events */
+.rbc-event {
+  padding: 4px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rbc-event:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.rbc-event.rbc-selected {
+  box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.3);
+}
+
+.rbc-event-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.rbc-event-content {
+  font-size: 0.875rem;
+}
+
+/* Week View */
+.rbc-time-view {
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.rbc-time-header {
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.rbc-time-header-content {
+  border-left: 1px solid #e5e7eb;
+}
+
+.rbc-time-content {
+  border-top: 2px solid #e5e7eb;
+}
+
+/* Agenda View */
+.rbc-agenda-view {
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.rbc-agenda-table {
+  border-radius: 16px;
+}
+
+.rbc-agenda-date-cell,
+.rbc-agenda-time-cell {
+  padding: 12px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.rbc-agenda-event-cell {
+  padding: 12px;
+}
+
+/* Slot Selection */
+.rbc-slot-selection {
+  background-color: rgba(147, 51, 234, 0.1);
+  border: 2px dashed #9333ea;
+  border-radius: 8px;
+}
+
+/* Show More Link */
+.rbc-show-more {
+  background: linear-gradient(to right, #ec4899, #9333ea);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rbc-show-more:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(147, 51, 234, 0.3);
+}
+
+/* Overlay */
+.rbc-overlay {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+}
+
+.rbc-overlay-header {
+  border-bottom: 2px solid #e5e7eb;
+  padding: 8px 12px;
+  font-weight: 600;
+  color: #374151;
+  background: linear-gradient(to right, #ec4899, #9333ea);
+  color: white;
+  border-radius: 12px 12px 0 0;
+  margin: -8px -8px 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .rbc-toolbar {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .rbc-toolbar-label {
+    order: -1;
+    margin-bottom: 8px;
+  }
+
+  .rbc-event {
+    font-size: 0.75rem;
+    padding: 2px 4px;
+  }
+
+  .rbc-header {
+    padding: 8px 4px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .booking-calendar {
+    background: #1f2937;
+    color: #f3f4f6;
+  }
+
+  .rbc-calendar {
+    background: #1f2937;
+    color: #f3f4f6;
+  }
+
+  .rbc-header {
+    background: #374151;
+    color: #f3f4f6;
+    border-color: #4b5563;
+  }
+
+  .rbc-time-gutter {
+    background: #374151;
+    color: #d1d5db;
+  }
+
+  .rbc-day-bg {
+    background: #1f2937;
+    border-color: #374151;
+  }
+
+  .rbc-day-bg:hover {
+    background: #374151;
+  }
+
+  .rbc-off-range-bg {
+    background: #111827;
+  }
+
+  .rbc-today {
+    background-color: #1e293b !important;
+  }
+
+  .rbc-time-view,
+  .rbc-month-view,
+  .rbc-agenda-view {
+    border-color: #4b5563;
+  }
+
+  .rbc-overlay {
+    background: #374151;
+    border-color: #4b5563;
+  }
+}

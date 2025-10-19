@@ -1,0 +1,908 @@
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import {
+  UserCircleIcon,
+  EnvelopeIcon,
+  PhoneIcon,
+  CameraIcon,
+  PencilIcon,
+  CheckIcon,
+  XMarkIcon,
+  GlobeAltIcon,
+  BellIcon,
+  MoonIcon,
+  SunIcon,
+  KeyIcon,
+  ShieldCheckIcon
+} from '@heroicons/react/24/outline'
+import { useAuthStore } from '../store/authStore'
+import toast from 'react-hot-toast'
+import axios from 'axios'
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+
+export default function ProfilePage() {
+  const { user, updateUser, token } = useAuthStore()
+  const { t, i18n } = useTranslation()
+  const navigate = useNavigate()
+
+  const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem('darkMode') === 'true')
+  const [currentLanguage, setCurrentLanguage] = useState(i18n.language || 'en-US')
+
+  // Profile state
+  const [isEditing, setIsEditing] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+  const [profilePicPreview, setProfilePicPreview] = useState<string | null>(null)
+  const [profilePicFile, setProfilePicFile] = useState<File | null>(null)
+
+  const [formData, setFormData] = useState({
+    username: user?.username || user?.email?.split('@')[0] || '',
+    firstName: '',
+    lastName: '',
+    email: user?.email || '',
+    phone: user?.phone || ''
+  })
+
+  // Security state
+  const [passkeys, setPasskeys] = useState<any[]>([])
+  const [loginHistory, setLoginHistory] = useState<any[]>([])
+  const [loginHistoryTotal, setLoginHistoryTotal] = useState(0)
+  const [loginHistoryPage, setLoginHistoryPage] = useState(0)
+  const [loadingPasskeys, setLoadingPasskeys] = useState(true)
+  const [loadingHistory, setLoadingHistory] = useState(true)
+  const [isAddingPasskey, setIsAddingPasskey] = useState(false)
+  const [newDeviceName, setNewDeviceName] = useState('')
+
+  useEffect(() => {
+    const darkMode = localStorage.getItem('darkMode') === 'true'
+    setIsDarkMode(darkMode)
+    setCurrentLanguage(i18n.language || 'en-US')
+  }, [i18n.language])
+
+  // Fetch passkeys on mount
+  useEffect(() => {
+    fetchPasskeys()
+  }, [])
+
+  // Fetch login history on mount and when page changes
+  useEffect(() => {
+    fetchLoginHistory()
+  }, [loginHistoryPage])
+
+  const fetchPasskeys = async () => {
+    try {
+      setLoadingPasskeys(true)
+      const response = await axios.get(`${API_URL}/api/user/passkeys`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      if (response.data.success) {
+        setPasskeys(response.data.passkeys || [])
+      }
+    } catch (error) {
+      console.error('Failed to fetch passkeys:', error)
+    } finally {
+      setLoadingPasskeys(false)
+    }
+  }
+
+  const fetchLoginHistory = async () => {
+    try {
+      setLoadingHistory(true)
+      const limit = 10
+      const offset = loginHistoryPage * limit
+      const response = await axios.get(`${API_URL}/api/user/login-history?limit=${limit}&offset=${offset}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      if (response.data.success) {
+        setLoginHistory(response.data.history || [])
+        setLoginHistoryTotal(response.data.total || 0)
+      }
+    } catch (error) {
+      console.error('Failed to fetch login history:', error)
+    } finally {
+      setLoadingHistory(false)
+    }
+  }
+
+  const handleDeletePasskey = async (credentialId: string, deviceName: string) => {
+    if (!confirm(t('profile.passkeys.removeConfirm', { deviceName: deviceName || 'this passkey' }))) return
+
+    try {
+      const response = await axios.delete(`${API_URL}/api/user/passkeys/${credentialId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      if (response.data.success) {
+        toast.success(t('profile.passkeys.messages.removedSuccess'))
+        fetchPasskeys()
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to remove passkey')
+    }
+  }
+
+  const handleAddPasskey = async () => {
+    if (!newDeviceName.trim()) {
+      toast.error(t('profile.passkeys.messages.enterDeviceName'))
+      return
+    }
+
+    try {
+      setIsAddingPasskey(true)
+
+      // Check if WebAuthn is supported
+      if (!window.PublicKeyCredential) {
+        toast.error(t('profile.passkeys.messages.notSupported'))
+        return
+      }
+
+      // Get registration options from server
+      const optionsResponse = await axios.post(
+        `${API_URL}/api/webauthn/add-passkey/options`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      )
+
+      if (!optionsResponse.data.success) {
+        throw new Error(optionsResponse.data.message || 'Failed to get registration options')
+      }
+
+      const options = optionsResponse.data.options
+
+      // Convert challenge and user.id from base64url to Uint8Array
+      const challengeBuffer = Uint8Array.from(atob(options.challenge.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0))
+      const userIdBuffer = Uint8Array.from(atob(options.user.id.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0))
+
+      // Convert excludeCredentials
+      const excludeCredentials = options.excludeCredentials?.map((cred: any) => ({
+        ...cred,
+        id: Uint8Array.from(atob(cred.id.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0))
+      })) || []
+
+      // Create credential
+      const credential = await navigator.credentials.create({
+        publicKey: {
+          ...options,
+          challenge: challengeBuffer,
+          user: {
+            ...options.user,
+            id: userIdBuffer
+          },
+          excludeCredentials
+        }
+      }) as PublicKeyCredential
+
+      if (!credential) {
+        throw new Error('Failed to create credential')
+      }
+
+      // Prepare credential for server
+      const response = credential.response as AuthenticatorAttestationResponse
+      const credentialJSON = {
+        id: credential.id,
+        rawId: btoa(String.fromCharCode(...new Uint8Array(credential.rawId))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
+        response: {
+          clientDataJSON: btoa(String.fromCharCode(...new Uint8Array(response.clientDataJSON))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
+          attestationObject: btoa(String.fromCharCode(...new Uint8Array(response.attestationObject))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
+        },
+        type: credential.type,
+        clientExtensionResults: credential.getClientExtensionResults(),
+        authenticatorAttachment: (credential as any).authenticatorAttachment
+      }
+
+      // Send credential to server for verification
+      const verifyResponse = await axios.post(
+        `${API_URL}/api/webauthn/add-passkey/verify`,
+        {
+          credential: credentialJSON,
+          deviceName: newDeviceName.trim()
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      )
+
+      if (verifyResponse.data.success) {
+        toast.success(t('profile.passkeys.messages.addedSuccess'))
+        setNewDeviceName('')
+        fetchPasskeys()
+      } else {
+        throw new Error(verifyResponse.data.message || 'Failed to verify passkey')
+      }
+    } catch (error: any) {
+      console.error('Add passkey error:', error)
+      if (error.name === 'NotAllowedError') {
+        toast.error(t('profile.passkeys.messages.cancelled'))
+      } else {
+        toast.error(error.response?.data?.message || error.message || 'Failed to add passkey')
+      }
+    } finally {
+      setIsAddingPasskey(false)
+    }
+  }
+
+  const handleProfilePicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Image size must be less than 5MB')
+        return
+      }
+      setProfilePicFile(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setProfilePicPreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleSaveProfile = async () => {
+    setIsSaving(true)
+    try {
+      // First, upload profile picture if changed
+      if (profilePicFile) {
+        const picFormData = new FormData()
+        picFormData.append('profilePicture', profilePicFile)
+
+        const picResponse = await axios.post(`${API_URL}/api/user/profile/picture`, picFormData, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+
+        if (picResponse.data.success) {
+          const updatedUser = { ...user, profilePicUrl: picResponse.data.data.profilePictureUrl, profile_picture_url: picResponse.data.data.profilePictureUrl }
+          updateUser(updatedUser)
+        }
+      }
+
+      // Then update profile data
+      const updateData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        username: formData.username
+      }
+
+      const response = await axios.put(`${API_URL}/api/user/profile`, updateData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if (response.data.success) {
+        // Refresh user data from server
+        const profileResponse = await axios.get(`${API_URL}/api/user/profile`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+
+        if (profileResponse.data.success) {
+          updateUser(profileResponse.data.data)
+        }
+
+        toast.success('Profile updated successfully!')
+        setIsEditing(false)
+        setProfilePicFile(null)
+        setProfilePicPreview(null)
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to update profile')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleLanguageChange = (lang: string) => {
+    i18n.changeLanguage(lang)
+    localStorage.setItem('language', lang)
+    setCurrentLanguage(lang)
+    toast.success('Language changed successfully')
+  }
+
+  const handleDarkModeToggle = () => {
+    const newDarkMode = !isDarkMode
+    localStorage.setItem('darkMode', String(newDarkMode))
+    toast.success(newDarkMode ? 'Dark mode enabled' : 'Light mode enabled')
+    // Reload page to apply theme globally (same as language switcher)
+    window.location.reload()
+  }
+
+  return (
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50'} py-12`}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header - Left Aligned */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-12"
+        >
+          <h1 className="text-5xl md:text-6xl font-serif font-bold bg-gradient-to-r from-pink-500 via-purple-600 to-blue-500 bg-clip-text text-transparent mb-4">
+            {t('profile.title')}
+          </h1>
+          <p className={`text-xl ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            Manage your profile information
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Profile Picture & Quick Info */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="lg:col-span-1"
+          >
+            <div className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-3xl shadow-xl p-8`}>
+              {/* Profile Picture */}
+              <div className="flex flex-col items-center mb-6">
+                <div className="relative mb-4">
+                  <div className="w-40 h-40 rounded-full overflow-hidden bg-gradient-to-br from-pink-500 via-purple-600 to-blue-500 p-1">
+                    <div className={`w-full h-full rounded-full overflow-hidden ${isDarkMode ? 'bg-gray-700' : 'bg-white'} flex items-center justify-center`}>
+                      {profilePicPreview || user?.profilePicUrl || user?.profile_picture_url ? (
+                        <img
+                          src={profilePicPreview || user?.profilePicUrl || user?.profile_picture_url}
+                          alt="Profile picture"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <UserCircleIcon className={`w-24 h-24 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                      )}
+                    </div>
+                  </div>
+                  {isEditing && (
+                    <label className="absolute bottom-2 right-2 w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center cursor-pointer hover:shadow-lg transition-shadow">
+                      <CameraIcon className="w-6 h-6 text-white" />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleProfilePicChange}
+                      />
+                    </label>
+                  )}
+                </div>
+                <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'} mb-2`}>
+                  {formData.firstName} {formData.lastName}
+                </h2>
+                <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>{formData.email}</p>
+                <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{formData.phone || 'Not specified'}</p>
+              </div>
+
+              {/* Edit Button */}
+              {!isEditing && (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="w-full px-6 py-3 bg-gradient-to-r from-pink-500 via-purple-600 to-blue-500 text-white rounded-full hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                >
+                  <PencilIcon className="w-5 h-5" />
+                  Edit
+                </button>
+              )}
+
+              {/* Action Buttons when editing */}
+              {isEditing && (
+                <div className="space-y-3">
+                  <button
+                    onClick={handleSaveProfile}
+                    disabled={isSaving}
+                    className="w-full px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full hover:shadow-lg transition-shadow flex items-center justify-center gap-2 font-medium disabled:opacity-50"
+                  >
+                    <CheckIcon className="w-5 h-5" />
+                    {isSaving ? 'Saving...' : 'Save Changes'}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsEditing(false)
+                      setProfilePicPreview(null)
+                      setProfilePicFile(null)
+                      setFormData({
+                        username: user?.username || user?.email?.split('@')[0] || '',
+                        firstName: user?.first_name || user?.firstName || '',
+                        lastName: user?.last_name || user?.lastName || '',
+                        email: user?.email || '',
+                        phone: user?.phone || ''
+                      })
+                    }}
+                    disabled={isSaving}
+                    className={`w-full px-6 py-3 border-2 ${
+                      isDarkMode ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                    } rounded-full transition-colors flex items-center justify-center gap-2 font-medium`}
+                  >
+                    <XMarkIcon className="w-5 h-5" />
+                    Cancel
+                  </button>
+                </div>
+              )}
+
+              {isEditing && (
+                <p className={`mt-4 text-sm text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                  Click to upload a new profile picture (max 5MB)
+                </p>
+              )}
+            </div>
+          </motion.div>
+
+          {/* Right Column - Profile Details */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="lg:col-span-2 space-y-8"
+          >
+            {/* Personal Information Section */}
+            <div className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-3xl shadow-xl p-8`}>
+              <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'} mb-6`}>
+                Profile Information
+              </h3>
+              <p className={`mb-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                Update your personal details and contact information
+              </p>
+
+              <div className="space-y-5">
+                {/* Username */}
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Username
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.username}
+                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                    disabled={!isEditing}
+                    className={`w-full px-4 py-3 rounded-2xl border-2 transition-all ${
+                      isDarkMode
+                        ? 'bg-gray-700 border-gray-600 text-white'
+                        : 'bg-white border-gray-300 text-gray-900'
+                    } ${!isEditing && 'opacity-60 cursor-not-allowed'} ${isEditing && 'focus:ring-2 focus:ring-pink-500 focus:border-pink-500'}`}
+                  />
+                </div>
+
+                {/* First Name */}
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.firstName}
+                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                    disabled={!isEditing}
+                    className={`w-full px-4 py-3 rounded-2xl border-2 transition-all ${
+                      isDarkMode
+                        ? 'bg-gray-700 border-gray-600 text-white'
+                        : 'bg-white border-gray-300 text-gray-900'
+                    } ${!isEditing && 'opacity-60 cursor-not-allowed'} ${isEditing && 'focus:ring-2 focus:ring-pink-500 focus:border-pink-500'}`}
+                  />
+                </div>
+
+                {/* Last Name */}
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.lastName}
+                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                    disabled={!isEditing}
+                    className={`w-full px-4 py-3 rounded-2xl border-2 transition-all ${
+                      isDarkMode
+                        ? 'bg-gray-700 border-gray-600 text-white'
+                        : 'bg-white border-gray-300 text-gray-900'
+                    } ${!isEditing && 'opacity-60 cursor-not-allowed'} ${isEditing && 'focus:ring-2 focus:ring-pink-500 focus:border-pink-500'}`}
+                  />
+                </div>
+
+                {/* Email (Read-only) */}
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Email Address
+                  </label>
+                  <div className="relative">
+                    <EnvelopeIcon className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                    <input
+                      type="email"
+                      value={formData.email}
+                      disabled
+                      className={`w-full pl-11 pr-4 py-3 rounded-2xl border-2 ${
+                        isDarkMode
+                          ? 'bg-gray-700 border-gray-600 text-gray-400'
+                          : 'bg-gray-100 border-gray-300 text-gray-600'
+                      } cursor-not-allowed`}
+                    />
+                  </div>
+                  <p className={`mt-2 text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                    Contact support to change your email address
+                  </p>
+                </div>
+
+                {/* Phone (Read-only) */}
+                <div>
+                  <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Phone Number
+                  </label>
+                  <div className="relative">
+                    <PhoneIcon className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                    <input
+                      type="tel"
+                      value={formData.phone}
+                      disabled
+                      className={`w-full pl-11 pr-4 py-3 rounded-2xl border-2 ${
+                        isDarkMode
+                          ? 'bg-gray-700 border-gray-600 text-gray-400'
+                          : 'bg-gray-100 border-gray-300 text-gray-600'
+                      } cursor-not-allowed`}
+                    />
+                  </div>
+                  <p className={`mt-2 text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                    Contact support to change your phone number
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Preferences Section */}
+            <div className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-3xl shadow-xl p-8`}>
+              <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'} mb-6`}>
+                Preferences
+              </h3>
+
+              <div className="space-y-6">
+                {/* Language Preference */}
+                <div>
+                  <label className={`block text-sm font-medium mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <GlobeAltIcon className="w-5 h-5 inline mr-2" />
+                    Language
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => handleLanguageChange('en-US')}
+                      className={`px-6 py-3 rounded-2xl border-2 font-medium transition-all ${
+                        currentLanguage === 'en-US'
+                          ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white border-transparent shadow-lg'
+                          : isDarkMode
+                          ? 'border-gray-600 text-gray-300 hover:border-gray-500'
+                          : 'border-gray-300 text-gray-700 hover:border-gray-400'
+                      }`}
+                    >
+                      English
+                    </button>
+                    <button
+                      onClick={() => handleLanguageChange('es-MX')}
+                      className={`px-6 py-3 rounded-2xl border-2 font-medium transition-all ${
+                        currentLanguage === 'es-MX'
+                          ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white border-transparent shadow-lg'
+                          : isDarkMode
+                          ? 'border-gray-600 text-gray-300 hover:border-gray-500'
+                          : 'border-gray-300 text-gray-700 hover:border-gray-400'
+                      }`}
+                    >
+                      Español
+                    </button>
+                  </div>
+                </div>
+
+                {/* Dark Mode Toggle */}
+                <div>
+                  <label className={`block text-sm font-medium mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    {isDarkMode ? <MoonIcon className="w-5 h-5 inline mr-2" /> : <SunIcon className="w-5 h-5 inline mr-2" />}
+                    Theme
+                  </label>
+                  <button
+                    onClick={handleDarkModeToggle}
+                    className={`w-full px-6 py-4 rounded-2xl border-2 font-medium transition-all flex items-center justify-between ${
+                      isDarkMode
+                        ? 'bg-gray-700 border-gray-600 text-white hover:bg-gray-600'
+                        : 'bg-white border-gray-300 text-gray-900 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className="flex items-center gap-3">
+                      {isDarkMode ? (
+                        <>
+                          <MoonIcon className="w-6 h-6 text-purple-400" />
+                          <span>Dark Mode</span>
+                        </>
+                      ) : (
+                        <>
+                          <SunIcon className="w-6 h-6 text-yellow-500" />
+                          <span>Light Mode</span>
+                        </>
+                      )}
+                    </span>
+                    <div className={`w-14 h-8 rounded-full transition-all ${isDarkMode ? 'bg-purple-600' : 'bg-gray-300'} relative`}>
+                      <div className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-all ${isDarkMode ? 'right-1' : 'left-1'}`}></div>
+                    </div>
+                  </button>
+                </div>
+
+                {/* Notification Preferences Link */}
+                <div>
+                  <label className={`block text-sm font-medium mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <BellIcon className="w-5 h-5 inline mr-2" />
+                    Notifications
+                  </label>
+                  <button
+                    onClick={() => navigate('/settings/notifications')}
+                    className={`w-full px-6 py-4 rounded-2xl border-2 font-medium transition-all text-left ${
+                      isDarkMode
+                        ? 'border-gray-600 text-gray-300 hover:border-gray-500 hover:bg-gray-700'
+                        : 'border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50'
+                    }`}
+                  >
+                    Manage notification preferences
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Security Section */}
+            <div className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-3xl shadow-xl p-8`}>
+              <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'} mb-6`}>
+                <ShieldCheckIcon className="w-7 h-7 inline mr-2" />
+                Security
+              </h3>
+
+              <div className="space-y-8">
+                {/* Change Password */}
+                <div>
+                  <button
+                    onClick={() => navigate('/reset-password')}
+                    className={`w-full px-6 py-4 rounded-2xl border-2 font-medium transition-all text-left flex items-center justify-between ${
+                      isDarkMode
+                        ? 'border-gray-600 text-gray-300 hover:border-gray-500 hover:bg-gray-700'
+                        : 'border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className="flex items-center gap-3">
+                      <KeyIcon className="w-5 h-5" />
+                      Change Password
+                    </span>
+                    <span className={isDarkMode ? 'text-gray-500' : 'text-gray-400'}>→</span>
+                  </button>
+                </div>
+
+                {/* Passkey Management */}
+                <div>
+                  <h4 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'} mb-3`}>
+                    {t('profile.passkeys.title')}
+                  </h4>
+                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-4`}>
+                    {t('profile.passkeys.description')}
+                  </p>
+
+                  {loadingPasskeys ? (
+                    <div className={`p-6 rounded-2xl border-2 ${isDarkMode ? 'border-gray-700 bg-gray-700/50' : 'border-gray-200 bg-gray-50'} text-center`}>
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500 mx-auto"></div>
+                    </div>
+                  ) : passkeys.length === 0 ? (
+                    <div className={`p-6 rounded-2xl border-2 ${isDarkMode ? 'border-gray-700 bg-gray-700/50' : 'border-gray-200 bg-gray-50'} text-center`}>
+                      <ShieldCheckIcon className={`w-12 h-12 mx-auto mb-2 ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`} />
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        {t('profile.passkeys.noPasskeys')}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {passkeys.map((passkey) => (
+                        <div
+                          key={passkey.id}
+                          className={`p-4 rounded-2xl border-2 ${
+                            isDarkMode
+                              ? 'border-gray-700 bg-gray-700/50'
+                              : 'border-gray-200 bg-gray-50'
+                          } flex items-center justify-between`}
+                        >
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <ShieldCheckIcon className="w-5 h-5 text-green-500" />
+                              <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                                {passkey.device_name || 'Unnamed Device'}
+                              </span>
+                            </div>
+                            <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                              {t('profile.passkeys.lastUsed')}: {passkey.last_used_at ? new Date(passkey.last_used_at).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              }) : t('profile.passkeys.never')}
+                            </p>
+                            <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                              {t('profile.passkeys.added')}: {new Date(passkey.created_at).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric'
+                              })}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => handleDeletePasskey(passkey.credential_id, passkey.device_name)}
+                            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                              isDarkMode
+                                ? 'bg-red-900/50 text-red-300 hover:bg-red-900'
+                                : 'bg-red-100 text-red-700 hover:bg-red-200'
+                            }`}
+                          >
+                            {t('profile.passkeys.remove')}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Add New Passkey */}
+                  <div className={`mt-6 p-6 rounded-2xl border-2 ${
+                    isDarkMode
+                      ? 'border-gray-700 bg-gray-700/30'
+                      : 'border-gray-200 bg-gradient-to-br from-pink-50 to-purple-50'
+                  }`}>
+                    <h5 className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'} mb-2`}>
+                      {t('profile.passkeys.addDevice.title')}
+                    </h5>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-4`}>
+                      {t('profile.passkeys.addDevice.description')}
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <input
+                        type="text"
+                        value={newDeviceName}
+                        onChange={(e) => setNewDeviceName(e.target.value)}
+                        placeholder={t('profile.passkeys.addDevice.placeholder')}
+                        disabled={isAddingPasskey}
+                        className={`flex-1 px-4 py-3 rounded-2xl border-2 transition-all ${
+                          isDarkMode
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-500'
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                        } ${!isAddingPasskey && 'focus:ring-2 focus:ring-pink-500 focus:border-pink-500'} ${isAddingPasskey && 'opacity-60 cursor-not-allowed'}`}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter' && !isAddingPasskey) {
+                            handleAddPasskey()
+                          }
+                        }}
+                      />
+                      <button
+                        onClick={handleAddPasskey}
+                        disabled={isAddingPasskey || !newDeviceName.trim()}
+                        className={`px-6 py-3 bg-gradient-to-r from-pink-500 via-purple-600 to-blue-500 text-white rounded-full font-medium transition-all ${
+                          (isAddingPasskey || !newDeviceName.trim())
+                            ? 'opacity-50 cursor-not-allowed'
+                            : 'hover:shadow-lg hover:scale-105'
+                        } flex items-center justify-center gap-2 whitespace-nowrap`}
+                      >
+                        <ShieldCheckIcon className="w-5 h-5" />
+                        {isAddingPasskey ? t('profile.passkeys.addDevice.buttonAdding') : t('profile.passkeys.addDevice.button')}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Login History */}
+                <div>
+                  <h4 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'} mb-3`}>
+                    {t('profile.loginHistory.title')}
+                  </h4>
+                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-4`}>
+                    {t('profile.loginHistory.description')}
+                  </p>
+
+                  {loadingHistory ? (
+                    <div className={`p-6 rounded-2xl border-2 ${isDarkMode ? 'border-gray-700 bg-gray-700/50' : 'border-gray-200 bg-gray-50'} text-center`}>
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500 mx-auto"></div>
+                    </div>
+                  ) : loginHistory.length === 0 ? (
+                    <div className={`p-6 rounded-2xl border-2 ${isDarkMode ? 'border-gray-700 bg-gray-700/50' : 'border-gray-200 bg-gray-50'} text-center`}>
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        {t('profile.loginHistory.noHistory')}
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="space-y-2">
+                        {loginHistory.map((login) => (
+                          <div
+                            key={login.id}
+                            className={`p-4 rounded-2xl border-2 ${
+                              isDarkMode
+                                ? 'border-gray-700 bg-gray-700/50'
+                                : 'border-gray-200 bg-gray-50'
+                            }`}
+                          >
+                            <div className="flex items-start justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                {login.success ? (
+                                  <CheckIcon className="w-5 h-5 text-green-500 flex-shrink-0" />
+                                ) : (
+                                  <XMarkIcon className="w-5 h-5 text-red-500 flex-shrink-0" />
+                                )}
+                                <div>
+                                  <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                                    {login.login_method === 'WEBAUTHN' ? t('profile.loginHistory.methods.biometric') :
+                                     login.login_method === 'GOOGLE_OAUTH' ? t('profile.loginHistory.methods.google') :
+                                     t('profile.loginHistory.methods.password')}
+                                  </span>
+                                  {!login.success && login.failure_reason && (
+                                    <span className={`ml-2 text-xs ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>
+                                      ({login.failure_reason})
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                              <span className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                                {new Date(login.created_at).toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </span>
+                            </div>
+                            <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'} space-y-1`}>
+                              {login.ip_address && (
+                                <div>{t('profile.loginHistory.ip')}: {login.ip_address}</div>
+                              )}
+                              {login.device_info && (
+                                <div>{t('profile.loginHistory.device')}: {login.device_info}</div>
+                              )}
+                              {login.location && (
+                                <div>{t('profile.loginHistory.location')}: {login.location}</div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Pagination */}
+                      {loginHistoryTotal > 10 && (
+                        <div className="flex items-center justify-between mt-4">
+                          <button
+                            onClick={() => setLoginHistoryPage(Math.max(0, loginHistoryPage - 1))}
+                            disabled={loginHistoryPage === 0}
+                            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                              loginHistoryPage === 0
+                                ? isDarkMode
+                                  ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                : isDarkMode
+                                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            }`}
+                          >
+                            {t('profile.loginHistory.previous')}
+                          </button>
+                          <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            {t('profile.loginHistory.page', { current: loginHistoryPage + 1, total: Math.ceil(loginHistoryTotal / 10) })}
+                          </span>
+                          <button
+                            onClick={() => setLoginHistoryPage(loginHistoryPage + 1)}
+                            disabled={(loginHistoryPage + 1) * 10 >= loginHistoryTotal}
+                            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                              (loginHistoryPage + 1) * 10 >= loginHistoryTotal
+                                ? isDarkMode
+                                  ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                : isDarkMode
+                                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            }`}
+                          >
+                            {t('profile.loginHistory.next')}
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  )
+}

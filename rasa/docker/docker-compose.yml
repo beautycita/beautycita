@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:
+  rasa-server:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: beautycita-rasa
+    ports:
+      - "5005:5005"
+    environment:
+      - RASA_SERVER_URL=http://localhost:5005
+      - DB_HOST=host.docker.internal
+      - DB_PORT=5432
+      - DB_NAME=beautycita_rasa
+      - DB_USER=rasa_user
+      - DB_PASSWORD=secure_rasa_password_2025
+    volumes:
+      - ../models:/app/models
+      - ../data:/app/data
+      - ../config.yml:/app/config.yml
+      - ../domain.yml:/app/domain.yml
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - beautycita-network
+    mem_limit: 2g
+    cpu_count: 1
+
+  rasa-actions:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: beautycita-rasa-actions
+    ports:
+      - "5055:5055"
+    environment:
+      - RASA_ACTION_SERVER_URL=http://localhost:5055
+      - DB_HOST=host.docker.internal
+      - DB_PORT=5432
+      - DB_NAME=beautycita
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - RASA_DB_HOST=host.docker.internal
+      - RASA_DB_PORT=5432
+      - RASA_DB_NAME=beautycita_rasa
+      - RASA_DB_USER=rasa_user
+      - RASA_DB_PASSWORD=secure_rasa_password_2025
+    volumes:
+      - ../actions:/app/actions
+    command: ["python", "-m", "rasa_sdk", "--actions", "actions", "--port", "5055"]
+    restart: unless-stopped
+    networks:
+      - beautycita-network
+    mem_limit: 1g
+
+  rasa-api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.api
+    container_name: beautycita-rasa-api
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - RASA_SERVER_URL=http://rasa-server:5005
+      - RASA_ACTION_SERVER_URL=http://rasa-actions:5055
+      - JWT_SECRET=beautycita_rasa_secret_2025
+      - BEAUTYCITA_CLIENT_SECRET=beautycita_secret_2025
+      - ADMIN_SECRET=admin_secret_2025
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=1
+    depends_on:
+      - rasa-server
+      - rasa-actions
+      - redis
+    restart: unless-stopped
+    networks:
+      - beautycita-network
+    mem_limit: 512m
+
+  redis:
+    image: redis:7-alpine
+    container_name: beautycita-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    networks:
+      - beautycita-network
+    mem_limit: 256m
+
+networks:
+  beautycita-network:
+    driver: bridge
+
+volumes:
+  redis-data:

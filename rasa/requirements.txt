@@ -1,0 +1,13 @@
+# Core RASA dependencies
+rasa[spacy]==3.6.21
+rasa-sdk==3.6.2
+
+# Database connectivity
+psycopg2-binary==2.9.10
+
+# HTTP requests for API integration
+requests==2.32.5
+
+# Additional utilities
+python-dateutil==2.8.2
+pandas==2.0.3

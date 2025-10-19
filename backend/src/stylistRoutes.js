@@ -1,0 +1,475 @@
+const express = require('express')
+const router = express.Router()
+const db = require('./db')
+
+// Debug middleware to log all requests to this router
+router.use((req, res, next) => {
+  console.log(`📍 Stylist router: ${req.method} ${req.path} from ${req.originalUrl}`);
+  console.log('Query params:', req.query);
+  next();
+});
+
+// Test route to verify router is working
+router.get('/test', (req, res) => {
+  res.json({ message: 'Stylist routes are working!', timestamp: new Date(), version: 'v2' })
+})
+
+// Base route - GET /api/stylists
+router.get('/', async (req, res) => {
+  console.log('Base stylists route hit');
+  try {
+    const query = `
+      SELECT
+        s.*,
+        u.name,
+        u.email
+      FROM stylists s
+      JOIN users u ON s.user_id = u.id
+      WHERE u.is_active = true
+      ORDER BY s.id
+      LIMIT 20
+    `
+    const result = await db.query(query)
+    res.json(result.rows)
+  } catch (error) {
+    console.error('Error fetching stylists:', error)
+    res.status(500).json({ error: 'Failed to fetch stylists' })
+  }
+})
+
+// Haversine formula to calculate distance between two points
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371 // Earth's radius in kilometers
+  const dLat = toRadians(lat2 - lat1)
+  const dLon = toRadians(lon2 - lon1)
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2)
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+  return R * c
+}
+
+function toRadians(degrees) {
+  return degrees * (Math.PI / 180)
+}
+
+// GET /api/stylists/nearby
+// Query params: lat, lng, limit (default 5)
+// Returns nearby stylists sorted by distance
+router.get('/nearby', async (req, res) => {
+  console.log('Nearby stylists endpoint hit with params:', req.query);
+  console.log('🔍 DEBUG: This is the NEW stylistRoutes.js file!');
+
+  try {
+    const { lat, lng, limit = 5 } = req.query
+
+    if (!lat || !lng) {
+      console.error('Missing lat/lng params');
+      return res.status(400).json({
+        success: false,
+        error: 'Latitude and longitude are required'
+      })
+    }
+
+    const userLat = parseFloat(lat)
+    const userLng = parseFloat(lng)
+    const resultLimit = parseInt(limit)
+
+    // Get all active stylists with their location data
+    const query = `
+      SELECT
+        s.id,
+        s.user_id,
+        u.name,
+        u.email,
+        u.phone,
+        COALESCE(s.profile_picture, u.profile_picture_url) as profile_picture,
+        s.business_name,
+        s.bio,
+        s.specialties,
+        s.experience_years as years_of_experience,
+        s.social_media_links->>'instagram' as instagram_handle,
+        s.rating_average as rating,
+        s.rating_count as total_reviews,
+        s.pricing_tier as price_range,
+        s.portfolio_images as portfolio_photos,
+        s.location_coordinates[0] as longitude,
+        s.location_coordinates[1] as latitude,
+        s.location_address as address,
+        s.location_city as city,
+        s.location_state as state,
+        s.location_zip as zip_code,
+        s.is_verified as verified,
+        true as available_now,
+        CURRENT_TIMESTAMP + INTERVAL '1 hour' as next_available,
+        COALESCE(
+          (SELECT json_agg(json_build_object(
+            'id', srv.id,
+            'name', srv.name,
+            'category', srv.category,
+            'price', srv.price,
+            'duration', srv.duration_minutes
+          ))
+          FROM services srv
+          WHERE srv.stylist_id = s.id
+          ), '[]'::json
+        ) as services
+      FROM stylists s
+      JOIN users u ON s.user_id = u.id
+      WHERE u.is_active = true
+        AND s.location_coordinates IS NOT NULL
+    `
+
+    console.log('Executing query for nearby stylists...');
+    const result = await db.query(query)
+    console.log('Query executed, got', result.rows.length, 'stylists');
+
+    // Calculate distance for each stylist and sort
+    const stylistsWithDistance = result.rows.map(stylist => {
+      // If stylist doesn't have coordinates, use default Puerto Vallarta coordinates
+      const stylistLat = stylist.latitude || 20.6134
+      const stylistLng = stylist.longitude || -105.2298
+
+      const distance = calculateDistance(
+        userLat,
+        userLng,
+        stylistLat,
+        stylistLng
+      )
+
+      return {
+        ...stylist,
+        distance: parseFloat(distance.toFixed(2)),
+        distance_unit: 'km'
+      }
+    })
+
+    // Sort by distance and limit results
+    const sortedStylists = stylistsWithDistance
+      .sort((a, b) => a.distance - b.distance)
+      .slice(0, resultLimit)
+
+    res.json({
+      success: true,
+      data: {
+        user_location: {
+          latitude: userLat,
+          longitude: userLng
+        },
+        total_found: sortedStylists.length,
+        stylists: sortedStylists
+      }
+    })
+
+  } catch (error) {
+    console.error('Error fetching nearby stylists:', error)
+    console.error('Error stack:', error.stack)
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch nearby stylists',
+      message: error.message
+    })
+  }
+})
+
+// GET /api/stylists/search
+// Advanced search with filters
+router.get('/search', async (req, res) => {
+  try {
+    const {
+      lat,
+      lng,
+      radius = 25, // km
+      specialty,
+      price_range,
+      rating_min,
+      available_now,
+      verified_only,
+      limit = 20,
+      offset = 0
+    } = req.query
+
+    let query = `
+      SELECT
+        s.id,
+        s.user_id,
+        u.name,
+        u.email,
+        COALESCE(s.profile_picture, u.profile_picture_url) as profile_picture,
+        s.business_name,
+        s.bio,
+        s.specialties,
+        s.experience_years as years_of_experience,
+        s.social_media_links->>'instagram' as instagram_handle,
+        s.rating_average as rating,
+        s.rating_count as total_reviews,
+        s.pricing_tier as price_range,
+        s.location_coordinates[0] as longitude,
+        s.location_coordinates[1] as latitude,
+        s.location_address as address,
+        s.location_city as city,
+        s.is_verified as verified,
+        true as available_now
+      FROM stylists s
+      JOIN users u ON s.user_id = u.id
+      WHERE u.is_active = true
+    `
+
+    const params = []
+    let paramCount = 0
+
+    // Add filters
+    if (specialty) {
+      paramCount++
+      query += ` AND $${paramCount} = ANY(s.specialties)`
+      params.push(specialty)
+    }
+
+    if (price_range) {
+      paramCount++
+      query += ` AND s.pricing_tier = $${paramCount}`
+      params.push(price_range)
+    }
+
+    if (rating_min) {
+      paramCount++
+      query += ` AND s.rating_average >= $${paramCount}`
+      params.push(parseFloat(rating_min))
+    }
+
+    if (available_now === 'true') {
+      // For now all stylists are available
+      query += ` AND true`
+    }
+
+    if (verified_only === 'true') {
+      query += ` AND s.is_verified = true`
+    }
+
+    // Add limit and offset
+    paramCount++
+    query += ` LIMIT $${paramCount}`
+    params.push(parseInt(limit))
+
+    paramCount++
+    query += ` OFFSET $${paramCount}`
+    params.push(parseInt(offset))
+
+    const result = await db.query(query, params)
+
+    // If location provided, calculate distances and filter by radius
+    let stylists = result.rows
+    if (lat && lng) {
+      const userLat = parseFloat(lat)
+      const userLng = parseFloat(lng)
+      const maxRadius = parseFloat(radius)
+
+      stylists = stylists
+        .map(stylist => {
+          const stylistLat = stylist.latitude || 20.6134
+          const stylistLng = stylist.longitude || -105.2298
+
+          const distance = calculateDistance(
+            userLat,
+            userLng,
+            stylistLat,
+            stylistLng
+          )
+
+          return {
+            ...stylist,
+            distance: parseFloat(distance.toFixed(2)),
+            distance_unit: 'km'
+          }
+        })
+        .filter(stylist => stylist.distance <= maxRadius)
+        .sort((a, b) => a.distance - b.distance)
+    }
+
+    res.json({
+      success: true,
+      data: {
+        total_found: stylists.length,
+        stylists: stylists
+      }
+    })
+
+  } catch (error) {
+    console.error('Error searching stylists:', error)
+    res.status(500).json({
+      success: false,
+      error: 'Failed to search stylists'
+    })
+  }
+})
+
+// GET /api/stylists/featured
+// Get featured stylists for landing page (with profile pictures)
+router.get('/featured', async (req, res) => {
+  try {
+    const { limit = 8 } = req.query
+
+    const query = `
+      SELECT
+        s.id,
+        s.user_id,
+        u.name,
+        s.business_name,
+        s.bio,
+        s.specialties,
+        s.profile_picture,
+        s.rating_average as rating,
+        s.rating_count as total_reviews,
+        s.pricing_tier as price_range,
+        s.location_city as city,
+        s.is_verified as verified,
+        s.social_media_links->>'instagram' as instagram_handle
+      FROM stylists s
+      JOIN users u ON s.user_id = u.id
+      WHERE u.is_active = true
+        AND s.profile_picture IS NOT NULL
+      ORDER BY
+        s.is_verified DESC,
+        s.rating_average DESC,
+        s.rating_count DESC
+      LIMIT $1
+    `
+
+    const result = await db.query(query, [parseInt(limit)])
+
+    res.json({
+      success: true,
+      data: result.rows
+    })
+
+  } catch (error) {
+    console.error('Error fetching featured stylists:', error)
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch featured stylists'
+    })
+  }
+})
+
+// GET /api/stylists/popular
+// Get popular/featured stylists
+router.get('/popular', async (req, res) => {
+  try {
+    const { limit = 10 } = req.query
+
+    const query = `
+      SELECT
+        s.id,
+        s.user_id,
+        u.name,
+        COALESCE(s.profile_picture, u.profile_picture_url) as profile_picture,
+        s.business_name,
+        s.specialties,
+        s.rating_average as rating,
+        s.rating_count as total_reviews,
+        s.pricing_tier as price_range,
+        s.location_city as city,
+        s.is_verified as verified,
+        s.social_media_links->>'instagram' as instagram_handle
+      FROM stylists s
+      JOIN users u ON s.user_id = u.id
+      WHERE u.is_active = true
+        AND s.rating_average >= 4.5
+        AND s.rating_count >= 10
+      ORDER BY
+        s.is_verified DESC,
+        s.rating_average DESC,
+        s.rating_count DESC
+      LIMIT $1
+    `
+
+    const result = await db.query(query, [parseInt(limit)])
+
+    res.json({
+      success: true,
+      data: {
+        stylists: result.rows
+      }
+    })
+
+  } catch (error) {
+    console.error('Error fetching popular stylists:', error)
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch popular stylists'
+    })
+  }
+})
+
+// GET /api/stylists/:id
+// Get detailed stylist profile
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const query = `
+      SELECT
+        s.*,
+        u.name,
+        u.email,
+        u.phone,
+        COALESCE(s.profile_picture, u.profile_picture_url) as profile_picture,
+        u.created_at as member_since,
+        COALESCE(
+          (SELECT json_agg(json_build_object(
+            'id', srv.id,
+            'name', srv.name,
+            'category', srv.category,
+            'description', srv.description,
+            'price', srv.price,
+            'duration_minutes', srv.duration_minutes,
+            'is_active', srv.is_active
+          ) ORDER BY srv.category, srv.name)
+          FROM services srv
+          WHERE srv.stylist_id = s.id AND srv.is_active = true
+          ), '[]'::json
+        ) as services,
+        COALESCE(
+          (SELECT json_agg(json_build_object(
+            'id', r.id,
+            'client_name', cu.name,
+            'rating', r.rating,
+            'comment', r.review_text,
+            'created_at', r.created_at
+          ) ORDER BY r.created_at DESC)
+          FROM reviews r
+          JOIN users cu ON r.client_id = cu.id
+          WHERE r.stylist_id = s.id
+          LIMIT 10
+          ), '[]'::json
+        ) as recent_reviews
+      FROM stylists s
+      JOIN users u ON s.user_id = u.id
+      WHERE s.id = $1 AND u.is_active = true
+    `
+
+    const result = await db.query(query, [id])
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Stylist not found'
+      })
+    }
+
+    res.json({
+      success: true,
+      data: result.rows[0]
+    })
+
+  } catch (error) {
+    console.error('Error fetching stylist profile:', error)
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch stylist profile'
+    })
+  }
+})
+
+module.exports = router

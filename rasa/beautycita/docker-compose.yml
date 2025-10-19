@@ -1,0 +1,130 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: beautycita
+      POSTGRES_USER: beautycita_user
+      POSTGRES_PASSWORD: secure_beautycita_2025
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./backend/database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - beautycita
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --requirepass beautycita_redis_password
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - beautycita
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+
+      # Database
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: beautycita
+      DB_USER: beautycita_user
+      DB_PASSWORD: secure_beautycita_2025
+
+      # Redis
+      REDIS_URL: redis://:beautycita_redis_password@redis:6379
+
+      # JWT
+      JWT_SECRET: beautycita_super_secret_jwt_key_2025_very_secure
+      JWT_EXPIRES_IN: 7d
+
+      # CORS
+      CORS_ORIGIN: https://beautycita.com,http://localhost:3000
+
+      # App URLs
+      FRONTEND_URL: https://beautycita.com
+      BACKEND_URL: https://beautycita.com/api
+
+      # RASA
+      RASA_SERVER_URL: http://rasa:5005
+
+    volumes:
+      - uploads_data:/app/uploads
+    ports:
+      - "5000:5000"
+    networks:
+      - beautycita
+
+  # RASA Server
+  rasa:
+    build:
+      context: ../
+      dockerfile: Dockerfile.rasa
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: beautycita_rasa
+      DB_USER: rasa_user
+      DB_PASSWORD: secure_rasa_2025_beautycita
+    volumes:
+      - ../models:/app/models
+      - ../data:/app/data
+      - ../config.yml:/app/config.yml
+      - ../domain.yml:/app/domain.yml
+      - ../endpoints.yml:/app/endpoints.yml
+    ports:
+      - "5005:5005"
+    command: >
+      bash -c "rasa run --enable-api --cors '*' --port 5005 --interface 0.0.0.0 --endpoints endpoints.yml"
+    networks:
+      - beautycita
+
+  # Frontend (Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/beautycita.com.conf:/etc/nginx/sites-available/beautycita.com.conf
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - uploads_data:/var/www/uploads:ro
+    networks:
+      - beautycita
+
+volumes:
+  postgres_data:
+  redis_data:
+  uploads_data:
+
+networks:
+  beautycita:
+    driver: bridge

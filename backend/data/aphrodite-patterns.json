@@ -1,0 +1,42 @@
+{
+  "322": {
+    "+52": {
+      "attempts": 51,
+      "successes": 44,
+      "failures": 7,
+      "lastUpdated": "2025-10-19T15:20:09.695Z"
+    }
+  },
+  "523": {
+    "+52": {
+      "attempts": 59,
+      "successes": 31,
+      "failures": 28,
+      "lastUpdated": "2025-10-19T15:20:09.695Z"
+    }
+  },
+  "527": {
+    "+52": {
+      "attempts": 30,
+      "successes": 23,
+      "failures": 7,
+      "lastUpdated": "2025-10-19T15:20:09.695Z"
+    }
+  },
+  "555": {
+    "+1": {
+      "attempts": 10,
+      "successes": 0,
+      "failures": 10,
+      "lastUpdated": "2025-10-19T15:20:09.695Z"
+    }
+  },
+  "720": {
+    "+52": {
+      "attempts": 38,
+      "successes": 31,
+      "failures": 7,
+      "lastUpdated": "2025-10-19T15:20:09.695Z"
+    }
+  }
+}

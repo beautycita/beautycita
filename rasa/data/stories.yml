@@ -1,0 +1,59 @@
+version: "3.1"
+
+stories:
+
+- story: simple greeting
+  steps:
+  - intent: greet
+  - action: action_enhanced_greeting
+
+- story: simple goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- story: ask for services
+  steps:
+  - intent: ask_services
+  - action: utter_services_available
+
+- story: ask for prices
+  steps:
+  - intent: ask_prices
+  - action: utter_services_available
+
+- story: book appointment simple
+  steps:
+  - intent: book_appointment
+  - action: booking_form
+  - active_loop: booking_form
+
+- story: out of scope
+  steps:
+  - intent: out_of_scope
+  - action: utter_out_of_scope
+
+- story: basic conversation flow
+  steps:
+  - intent: greet
+  - action: action_enhanced_greeting
+  - intent: book_appointment
+  - action: booking_form
+  - active_loop: booking_form
+
+- story: beauty advice conversation
+  steps:
+  - intent: beauty_advice
+  - action: action_openai_response
+
+- story: general conversation
+  steps:
+  - intent: general_conversation
+  - action: action_openai_response
+
+- story: enhanced greeting flow
+  steps:
+  - intent: greet
+  - action: action_enhanced_greeting
+  - intent: beauty_advice
+  - action: action_openai_response

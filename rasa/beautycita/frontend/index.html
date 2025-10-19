@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BeautyCita - Tu plataforma de belleza</title>
+
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Meta tags for SEO -->
+    <meta name="description" content="BeautyCita - La plataforma líder para reservar servicios de belleza con los mejores estilistas. Reserva ahora y descubre tu belleza natural." />
+    <meta name="keywords" content="belleza, estilista, reservas, citas, corte de cabello, maquillaje, manicure, pedicure" />
+    <meta name="author" content="BeautyCita" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="BeautyCita - Tu plataforma de belleza" />
+    <meta property="og:description" content="Reserva servicios de belleza con los mejores estilistas en tu área" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://beautycita.com" />
+    <meta property="og:image" content="https://beautycita.com/og-image.jpg" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="BeautyCita - Tu plataforma de belleza" />
+    <meta name="twitter:description" content="Reserva servicios de belleza con los mejores estilistas en tu área" />
+    <meta name="twitter:image" content="https://beautycita.com/twitter-image.jpg" />
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Theme color -->
+    <meta name="theme-color" content="#8B5CF6" />
+
+    <!-- Loading styles -->
+    <style>
+      /* Loading animation styles */
+      .loading-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+
+      .loading-sparkle {
+        width: 60px;
+        height: 60px;
+        color: white;
+        animation: sparkle 1.5s ease-in-out infinite;
+      }
+
+      @keyframes sparkle {
+        0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        25% { transform: scale(1.1) rotate(90deg); opacity: 0.8; }
+        50% { transform: scale(1.2) rotate(180deg); opacity: 0.6; }
+        75% { transform: scale(1.1) rotate(270deg); opacity: 0.8; }
+      }
+
+      .loading-text {
+        color: white;
+        font-family: 'Inter', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-top: 1rem;
+        opacity: 0.9;
+      }
+
+      /* Hide loading when app is ready */
+      body.app-loaded .loading-container {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Loading screen -->
+    <div class="loading-container">
+      <div class="flex flex-col items-center">
+        <svg class="loading-sparkle" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 0l3.09 6.26L22 9l-6.91 2.74L12 18l-3.09-6.26L2 9l6.91-2.74L12 0z"/>
+        </svg>
+        <div class="loading-text">BeautyCita</div>
+      </div>
+    </div>
+
+    <!-- React app root -->
+    <div id="root"></div>
+
+    <!-- App script -->
+    <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Remove loading screen after app loads -->
+    <script>
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          document.body.classList.add('app-loaded');
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>

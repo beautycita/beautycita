@@ -1,0 +1,705 @@
+/**
+ * BeautyCita Custom Backend Styling for BTCPay Server
+ *
+ * This CSS file customizes the BTCPay Server admin dashboard to match
+ * BeautyCita's brand identity with pink-to-purple gradients.
+ *
+ * Upload this file in BTCPay Server:
+ * Server Settings → Branding → Custom CSS (Server-wide)
+ */
+
+/* ============================================
+   COLORS & VARIABLES
+   ============================================ */
+:root {
+    /* BeautyCita Brand Colors */
+    --bc-pink: #ec4899;
+    --bc-purple: #9333ea;
+    --bc-gradient: linear-gradient(to right, #ec4899, #9333ea);
+
+    /* Override BTCPay defaults */
+    --btcpay-primary: #ec4899;
+    --btcpay-primary-accent: #db2777;
+    --btcpay-primary-shadow: rgba(236, 72, 153, 0.3);
+
+    /* Semantic Colors */
+    --bc-success: #10b981;
+    --bc-warning: #f59e0b;
+    --bc-error: #ef4444;
+    --bc-info: #3b82f6;
+
+    /* Neutrals */
+    --bc-bg-light: #f9fafb;
+    --bc-bg-white: #ffffff;
+    --bc-text-dark: #111827;
+    --bc-text-gray: #6b7280;
+    --bc-border: #e5e7eb;
+}
+
+/* Dark mode variables */
+[data-theme="dark"] {
+    --bc-bg-light: #0f0f0f;
+    --bc-bg-white: #1a1a1a;
+    --bc-text-dark: #ffffff;
+    --bc-text-gray: #d4d4d4;
+    --bc-border: #404040;
+}
+
+/* ============================================
+   GLOBAL OVERRIDES
+   ============================================ */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: 'Playfair Display', serif !important;
+    font-weight: 700 !important;
+}
+
+/* ============================================
+   SIDEBAR / NAVIGATION
+   ============================================ */
+
+/* Sidebar background */
+#mainNav,
+.sidebar,
+.nav-sidebar {
+    background: var(--bc-bg-white) !important;
+    border-right: 1px solid var(--bc-border) !important;
+}
+
+/* Sidebar header with gradient */
+#mainNav .navbar-brand,
+.sidebar-brand {
+    background: var(--bc-gradient) !important;
+    color: white !important;
+    padding: 20px !important;
+    border-radius: 16px;
+    margin: 12px;
+}
+
+/* Navigation items */
+.nav-link,
+.sidebar-nav-link {
+    border-radius: 9999px !important; /* Pill shape */
+    margin: 4px 12px !important;
+    padding: 12px 20px !important;
+    transition: all 200ms ease-in-out;
+    color: var(--bc-text-gray) !important;
+}
+
+.nav-link:hover,
+.sidebar-nav-link:hover {
+    background: rgba(236, 72, 153, 0.1) !important;
+    color: var(--bc-pink) !important;
+    transform: translateX(4px);
+}
+
+.nav-link.active,
+.sidebar-nav-link.active {
+    background: var(--bc-gradient) !important;
+    color: white !important;
+    box-shadow: 0 4px 6px rgba(236, 72, 153, 0.3);
+}
+
+/* Sidebar icons */
+.nav-link svg,
+.sidebar-nav-link svg,
+.nav-link i,
+.sidebar-nav-link i {
+    color: inherit !important;
+}
+
+/* ============================================
+   TOP HEADER / NAVBAR
+   ============================================ */
+
+/* Main header */
+.main-header,
+.top-header,
+#mainNavBar {
+    background: var(--bc-bg-white) !important;
+    border-bottom: 1px solid var(--bc-border) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* User dropdown */
+.user-nav .dropdown-toggle {
+    border-radius: 9999px !important;
+    padding: 8px 16px !important;
+    border: 2px solid var(--bc-border) !important;
+    transition: all 200ms ease-in-out;
+}
+
+.user-nav .dropdown-toggle:hover {
+    border-color: var(--bc-pink) !important;
+    background: rgba(236, 72, 153, 0.05) !important;
+}
+
+/* ============================================
+   BUTTONS - PILL SHAPED
+   ============================================ */
+
+/* Primary buttons */
+.btn-primary,
+button.btn-primary,
+a.btn-primary {
+    background: var(--bc-gradient) !important;
+    border: none !important;
+    border-radius: 9999px !important;
+    padding: 12px 28px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: white !important;
+    box-shadow: 0 4px 6px rgba(236, 72, 153, 0.2) !important;
+    transition: all 200ms ease-in-out;
+}
+
+.btn-primary:hover,
+button.btn-primary:hover,
+a.btn-primary:hover {
+    background: linear-gradient(to right, #db2777, #7e22ce) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(236, 72, 153, 0.3) !important;
+}
+
+.btn-primary:active,
+button.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Secondary buttons */
+.btn-secondary,
+button.btn-secondary,
+a.btn-secondary {
+    background: white !important;
+    color: var(--bc-pink) !important;
+    border: 2px solid var(--bc-pink) !important;
+    border-radius: 9999px !important;
+    padding: 10px 28px !important;
+    font-weight: 600 !important;
+}
+
+.btn-secondary:hover,
+button.btn-secondary:hover,
+a.btn-secondary:hover {
+    background: rgba(236, 72, 153, 0.1) !important;
+    border-color: var(--bc-purple) !important;
+}
+
+/* Other button variants */
+.btn-success {
+    background: var(--bc-success) !important;
+    border: none !important;
+    border-radius: 9999px !important;
+}
+
+.btn-warning {
+    background: var(--bc-warning) !important;
+    border: none !important;
+    border-radius: 9999px !important;
+    color: white !important;
+}
+
+.btn-danger {
+    background: var(--bc-error) !important;
+    border: none !important;
+    border-radius: 9999px !important;
+}
+
+.btn-info {
+    background: var(--bc-info) !important;
+    border: none !important;
+    border-radius: 9999px !important;
+}
+
+/* Outline buttons */
+.btn-outline-primary {
+    border: 2px solid var(--bc-pink) !important;
+    color: var(--bc-pink) !important;
+    background: transparent !important;
+    border-radius: 9999px !important;
+}
+
+.btn-outline-primary:hover {
+    background: rgba(236, 72, 153, 0.1) !important;
+    border-color: var(--bc-purple) !important;
+}
+
+/* Small buttons */
+.btn-sm {
+    padding: 8px 20px !important;
+    font-size: 12px !important;
+}
+
+/* Large buttons */
+.btn-lg {
+    padding: 16px 36px !important;
+    font-size: 16px !important;
+}
+
+/* ============================================
+   CARDS & PANELS
+   ============================================ */
+
+/* Card containers */
+.card,
+.panel,
+.widget {
+    border-radius: 16px !important;
+    border: 1px solid var(--bc-border) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+    overflow: hidden;
+}
+
+.card:hover,
+.panel:hover,
+.widget:hover {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1) !important;
+    transform: translateY(-2px);
+    transition: all 200ms ease-in-out;
+}
+
+/* Card headers */
+.card-header,
+.panel-heading {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%) !important;
+    border-bottom: 2px solid var(--bc-pink) !important;
+    padding: 20px !important;
+    font-weight: 600 !important;
+}
+
+/* Card bodies */
+.card-body,
+.panel-body {
+    padding: 24px !important;
+}
+
+/* Stats cards */
+.stat-card,
+.dashboard-stat {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    border: 2px solid var(--bc-border);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before,
+.dashboard-stat::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: var(--bc-gradient);
+    opacity: 0.1;
+    border-radius: 0 0 0 100%;
+}
+
+/* ============================================
+   FORMS & INPUTS
+   ============================================ */
+
+/* Input fields */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="url"],
+textarea,
+select,
+.form-control {
+    border-radius: 12px !important;
+    border: 2px solid var(--bc-border) !important;
+    padding: 12px 16px !important;
+    transition: all 200ms ease-in-out;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+.form-control:focus {
+    border-color: var(--bc-pink) !important;
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1) !important;
+    outline: none !important;
+}
+
+/* Checkboxes & Radio buttons */
+.form-check-input:checked {
+    background-color: var(--bc-pink) !important;
+    border-color: var(--bc-pink) !important;
+}
+
+/* Form labels */
+.form-label,
+label {
+    font-weight: 500 !important;
+    color: var(--bc-text-dark) !important;
+    margin-bottom: 8px !important;
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+
+/* Table styling */
+.table {
+    border-radius: 16px !important;
+    overflow: hidden;
+}
+
+.table thead {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%) !important;
+}
+
+.table thead th {
+    border-bottom: 2px solid var(--bc-pink) !important;
+    padding: 16px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    color: var(--bc-pink) !important;
+}
+
+.table tbody tr {
+    border-bottom: 1px solid var(--bc-border) !important;
+    transition: background 200ms ease-in-out;
+}
+
+.table tbody tr:hover {
+    background: rgba(236, 72, 153, 0.02) !important;
+}
+
+.table tbody td {
+    padding: 16px !important;
+}
+
+/* ============================================
+   BADGES & STATUS INDICATORS
+   ============================================ */
+
+/* Badge base */
+.badge,
+.label,
+.status-badge {
+    border-radius: 9999px !important;
+    padding: 6px 14px !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Badge variants */
+.badge-primary,
+.label-primary {
+    background: linear-gradient(to right, #ec4899, #9333ea) !important;
+    color: white !important;
+}
+
+.badge-success,
+.label-success {
+    background: rgba(16, 185, 129, 0.15) !important;
+    color: var(--bc-success) !important;
+    border: 2px solid var(--bc-success);
+}
+
+.badge-warning,
+.label-warning {
+    background: rgba(245, 158, 11, 0.15) !important;
+    color: var(--bc-warning) !important;
+    border: 2px solid var(--bc-warning);
+}
+
+.badge-danger,
+.label-danger {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: var(--bc-error) !important;
+    border: 2px solid var(--bc-error);
+}
+
+.badge-info,
+.label-info {
+    background: rgba(59, 130, 246, 0.15) !important;
+    color: var(--bc-info) !important;
+    border: 2px solid var(--bc-info);
+}
+
+/* ============================================
+   ALERTS & NOTIFICATIONS
+   ============================================ */
+
+.alert {
+    border-radius: 12px !important;
+    border-left-width: 4px !important;
+    padding: 16px 20px !important;
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.1) !important;
+    border-left-color: var(--bc-success) !important;
+    color: #065f46 !important;
+}
+
+.alert-warning {
+    background: rgba(245, 158, 11, 0.1) !important;
+    border-left-color: var(--bc-warning) !important;
+    color: #92400e !important;
+}
+
+.alert-danger {
+    background: rgba(239, 68, 68, 0.1) !important;
+    border-left-color: var(--bc-error) !important;
+    color: #991b1b !important;
+}
+
+.alert-info {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%) !important;
+    border-left-color: var(--bc-pink) !important;
+    color: #831843 !important;
+}
+
+/* ============================================
+   MODALS & DIALOGS
+   ============================================ */
+
+.modal-content {
+    border-radius: 24px !important;
+    border: none !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1) !important;
+}
+
+.modal-header {
+    background: var(--bc-gradient) !important;
+    color: white !important;
+    border-radius: 24px 24px 0 0 !important;
+    border-bottom: none !important;
+    padding: 24px !important;
+}
+
+.modal-title {
+    font-family: 'Playfair Display', serif !important;
+    font-weight: 700 !important;
+}
+
+.modal-body {
+    padding: 32px !important;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--bc-border) !important;
+    padding: 20px 32px !important;
+}
+
+/* Close button */
+.modal-header .close,
+.modal-header .btn-close {
+    color: white !important;
+    opacity: 0.8;
+}
+
+.modal-header .close:hover,
+.modal-header .btn-close:hover {
+    opacity: 1;
+}
+
+/* ============================================
+   DASHBOARD SPECIFIC
+   ============================================ */
+
+/* Dashboard title */
+.dashboard-title,
+.page-title {
+    font-family: 'Playfair Display', serif !important;
+    font-size: 32px !important;
+    font-weight: 700 !important;
+    background: var(--bc-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Invoice list */
+.invoice-list-item {
+    border-radius: 12px !important;
+    border: 2px solid var(--bc-border);
+    padding: 20px;
+    margin-bottom: 12px;
+    transition: all 200ms ease-in-out;
+}
+
+.invoice-list-item:hover {
+    border-color: var(--bc-pink);
+    box-shadow: 0 4px 6px rgba(236, 72, 153, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Store selector */
+.store-selector {
+    border-radius: 9999px !important;
+    border: 2px solid var(--bc-pink) !important;
+    background: rgba(236, 72, 153, 0.05) !important;
+}
+
+/* ============================================
+   TABS
+   ============================================ */
+
+.nav-tabs {
+    border-bottom: 2px solid var(--bc-border) !important;
+}
+
+.nav-tabs .nav-link {
+    border-radius: 12px 12px 0 0 !important;
+    border: none !important;
+    color: var(--bc-text-gray) !important;
+    font-weight: 500 !important;
+}
+
+.nav-tabs .nav-link:hover {
+    background: rgba(236, 72, 153, 0.05) !important;
+    color: var(--bc-pink) !important;
+}
+
+.nav-tabs .nav-link.active {
+    background: white !important;
+    color: var(--bc-pink) !important;
+    border-bottom: 3px solid var(--bc-pink) !important;
+}
+
+/* ============================================
+   DROPDOWNS
+   ============================================ */
+
+.dropdown-menu {
+    border-radius: 12px !important;
+    border: 1px solid var(--bc-border) !important;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1) !important;
+    padding: 8px !important;
+}
+
+.dropdown-item {
+    border-radius: 8px !important;
+    padding: 10px 16px !important;
+    transition: all 200ms ease-in-out;
+}
+
+.dropdown-item:hover {
+    background: rgba(236, 72, 153, 0.1) !important;
+    color: var(--bc-pink) !important;
+}
+
+.dropdown-item.active {
+    background: var(--bc-gradient) !important;
+    color: white !important;
+}
+
+/* ============================================
+   PAGINATION
+   ============================================ */
+
+.pagination {
+    gap: 8px;
+}
+
+.page-link {
+    border-radius: 8px !important;
+    border: 2px solid var(--bc-border) !important;
+    color: var(--bc-text-gray) !important;
+    padding: 8px 12px !important;
+    transition: all 200ms ease-in-out;
+}
+
+.page-link:hover {
+    background: rgba(236, 72, 153, 0.1) !important;
+    border-color: var(--bc-pink) !important;
+    color: var(--bc-pink) !important;
+}
+
+.page-item.active .page-link {
+    background: var(--bc-gradient) !important;
+    border-color: transparent !important;
+    color: white !important;
+}
+
+/* ============================================
+   LOADING SPINNERS
+   ============================================ */
+
+.spinner-border {
+    border-top-color: var(--bc-pink) !important;
+    border-right-color: var(--bc-purple) !important;
+}
+
+/* ============================================
+   CUSTOM SCROLLBAR
+   ============================================ */
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bc-bg-light);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--bc-gradient);
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to right, #db2777, #7e22ce);
+}
+
+/* ============================================
+   MOBILE OPTIMIZATIONS
+   ============================================ */
+
+@media (max-width: 768px) {
+    .card,
+    .panel {
+        border-radius: 12px !important;
+    }
+
+    .btn {
+        width: 100% !important;
+        margin-bottom: 8px !important;
+    }
+
+    .modal-content {
+        border-radius: 16px !important;
+    }
+
+    .table {
+        font-size: 14px !important;
+    }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+    .btn,
+    .sidebar,
+    #mainNav,
+    .no-print {
+        display: none !important;
+    }
+
+    .card,
+    .panel {
+        border: 1px solid #000 !important;
+        page-break-inside: avoid;
+    }
+}

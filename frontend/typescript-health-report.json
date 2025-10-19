@@ -1,0 +1,246 @@
+{
+  "timestamp": "2025-09-24T03:28:08.402Z",
+  "errors": [
+    {
+      "file": "src/components/AuthCallback.tsx",
+      "line": 10,
+      "column": 11,
+      "code": "TS2339",
+      "message": "Property 'checkAuthStatus' does not exist on type 'AuthContextType'."
+    },
+    {
+      "file": "src/components/AuthModal.tsx",
+      "line": 210,
+      "column": 30,
+      "code": "TS2339",
+      "message": "Property 'field' does not exist on type 'AuthResponse'."
+    },
+    {
+      "file": "src/components/AuthModal.tsx",
+      "line": 211,
+      "column": 45,
+      "code": "TS2339",
+      "message": "Property 'field' does not exist on type 'AuthResponse'."
+    },
+    {
+      "file": "src/components/AuthModal.tsx",
+      "line": 246,
+      "column": 40,
+      "code": "TS2345",
+      "message": "Argument of type '{ businessName?: string | undefined; experienceYears?: number | undefined; specialties?: string[] | undefined; biography?: string | undefined; workLocation?: { city: string; state: string; address: string; } | undefined; ... 10 more ...; role: \"client\" | \"stylist\"; }' is not assignable to parameter of type 'RegisterForm'."
+    },
+    {
+      "file": "src/components/AuthModal.tsx",
+      "line": 261,
+      "column": 30,
+      "code": "TS2339",
+      "message": "Property 'errors' does not exist on type '{ message: string; }'."
+    },
+    {
+      "file": "src/components/AuthModal.tsx",
+      "line": 262,
+      "column": 42,
+      "code": "TS2339",
+      "message": "Property 'errors' does not exist on type '{ message: string; }'."
+    },
+    {
+      "file": "src/components/AuthModal.tsx",
+      "line": 263,
+      "column": 37,
+      "code": "TS2339",
+      "message": "Property 'field' does not exist on type '{ message: string; }'."
+    },
+    {
+      "file": "src/components/AuthModal.tsx",
+      "line": 264,
+      "column": 45,
+      "code": "TS2339",
+      "message": "Property 'field' does not exist on type '{ message: string; }'."
+    },
+    {
+      "file": "src/components/AuthModal.tsx",
+      "line": 302,
+      "column": 28,
+      "code": "TS2339",
+      "message": "Property 'errors' does not exist on type '{ message: string; }'."
+    },
+    {
+      "file": "src/components/AuthModal.tsx",
+      "line": 303,
+      "column": 40,
+      "code": "TS2339",
+      "message": "Property 'errors' does not exist on type '{ message: string; }'."
+    },
+    {
+      "file": "src/components/AuthModal.tsx",
+      "line": 304,
+      "column": 35,
+      "code": "TS2339",
+      "message": "Property 'field' does not exist on type '{ message: string; }'."
+    },
+    {
+      "file": "src/components/AuthModal.tsx",
+      "line": 305,
+      "column": 43,
+      "code": "TS2339",
+      "message": "Property 'field' does not exist on type '{ message: string; }'."
+    },
+    {
+      "file": "src/components/BookingFlow.tsx",
+      "line": 101,
+      "column": 11,
+      "code": "TS2719",
+      "message": "Type 'Service' is not assignable to type 'Service'. Two different types with this name exist, but they are unrelated."
+    },
+    {
+      "file": "src/components/BookingFlow.tsx",
+      "line": 102,
+      "column": 11,
+      "code": "TS2322",
+      "message": "Type '(booking: BookingDetails) => void' is not assignable to type '(booking: { service: Service; date: string; time: string; notes: string; }) => void'."
+    },
+    {
+      "file": "src/components/EnhancedCalendar.tsx",
+      "line": 81,
+      "column": 37,
+      "code": "TS2339",
+      "message": "Property 'stylist_id' does not exist on type 'User'."
+    },
+    {
+      "file": "src/components/EnhancedCalendar.tsx",
+      "line": 135,
+      "column": 28,
+      "code": "TS2339",
+      "message": "Property 'stylist_id' does not exist on type 'User'."
+    },
+    {
+      "file": "src/components/EnhancedCalendar.tsx",
+      "line": 182,
+      "column": 72,
+      "code": "TS2339",
+      "message": "Property 'stylist_id' does not exist on type 'User'."
+    },
+    {
+      "file": "src/components/EnhancedCalendar.tsx",
+      "line": 478,
+      "column": 14,
+      "code": "TS2322",
+      "message": "Type '{ children: string; jsx: true; }' is not assignable to type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'."
+    },
+    {
+      "file": "src/components/EnhancedSignupModal.tsx",
+      "line": 35,
+      "column": 17,
+      "code": "TS1355",
+      "message": "A 'const' assertions can only be applied to references to enum members, or string, number, boolean, array, or object literals."
+    },
+    {
+      "file": "src/components/ManageServices.tsx",
+      "line": 543,
+      "column": 61,
+      "code": "TS2345",
+      "message": "Argument of type 'number' is not assignable to parameter of type 'string'."
+    },
+    {
+      "file": "src/components/ManageServices.tsx",
+      "line": 547,
+      "column": 45,
+      "code": "TS2345",
+      "message": "Argument of type 'number' is not assignable to parameter of type 'string'."
+    },
+    {
+      "file": "src/components/PaymentCheckout.tsx",
+      "line": 28,
+      "column": 46,
+      "code": "TS2339",
+      "message": "Property 'env' does not exist on type 'ImportMeta'."
+    },
+    {
+      "file": "src/components/PaymentCheckout.tsx",
+      "line": 216,
+      "column": 27,
+      "code": "TS18047",
+      "message": "'user' is possibly 'null'."
+    },
+    {
+      "file": "src/components/PhoneVerificationStep.tsx",
+      "line": 36,
+      "column": 13,
+      "code": "TS7030",
+      "message": "Not all code paths return a value."
+    },
+    {
+      "file": "src/components/PortfolioBuilder.tsx",
+      "line": 119,
+      "column": 29,
+      "code": "TS7030",
+      "message": "Not all code paths return a value."
+    },
+    {
+      "file": "src/components/ServiceBrowser.tsx",
+      "line": 123,
+      "column": 39,
+      "code": "TS7006",
+      "message": "Parameter 'service' implicitly has an 'any' type."
+    },
+    {
+      "file": "src/components/ServiceBrowser.tsx",
+      "line": 134,
+      "column": 27,
+      "code": "TS2345",
+      "message": "Argument of type '{ id: unknown; name: unknown; name_es: unknown; description: unknown; description_es: unknown; icon: string; sort_order: number; is_active: boolean; }[]' is not assignable to parameter of type 'SetStateAction<ServiceCategory[]>'."
+    },
+    {
+      "file": "src/components/Settings.tsx",
+      "line": 182,
+      "column": 45,
+      "code": "TS2339",
+      "message": "Property 'phone' does not exist on type 'User'."
+    },
+    {
+      "file": "src/components/SocialBeautyLanding.tsx",
+      "line": 16,
+      "column": 59,
+      "code": "TS2339",
+      "message": "Property 'checkAuthStatus' does not exist on type 'AuthContextType'."
+    },
+    {
+      "file": "src/contexts/AuthContext.tsx",
+      "line": 199,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '() => Promise<boolean>' is not assignable to type '() => Promise<void>'."
+    },
+    {
+      "file": "src/pages/StylistsPage.tsx",
+      "line": 234,
+      "column": 13,
+      "code": "TS7030",
+      "message": "Not all code paths return a value."
+    }
+  ],
+  "summary": {
+    "totalErrors": 31,
+    "categories": {
+      "Missing types": 0,
+      "Unused variables": 0,
+      "Type mismatches": 7,
+      "Missing properties": 17,
+      "Other": 7
+    }
+  },
+  "recommendations": [
+    {
+      "priority": "High",
+      "action": "Fix type mismatches",
+      "details": "Update types to match actual usage and fix any type casting issues",
+      "count": 7
+    },
+    {
+      "priority": "High",
+      "action": "Update interfaces and types",
+      "details": "Add missing properties to interfaces or make them optional",
+      "count": 17
+    }
+  ]
+}

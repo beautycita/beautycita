@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Pago Confirmado - BeautyCita</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!--[if mso]>
+    <style type="text/css">
+      body, table, td { font-family: Arial, Helvetica, sans-serif !important; }
+    </style>
+    <![endif]-->
+    <style>
+        /* Reset & Base Styles */
+        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; }
+        img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            height: 100% !important;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #ffb3ba 0%, #bae1ff 50%, #bffcc6 100%);
+        }
+
+        @media only screen and (max-width: 600px) {
+            .email-container { width: 100% !important; margin: 10px !important; }
+            .responsive-padding { padding: 20px !important; }
+            .button-text { font-size: 16px !important; padding: 16px 35px !important; }
+        }
+    </style>
+</head>
+<body style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #1a1a1a; max-width: 600px; margin: 0 auto; padding: 0; background: linear-gradient(135deg, #ffb3ba 0%, #bae1ff 50%, #bffcc6 100%);">
+
+    <!-- Main Container -->
+    <div style="background: white; margin: 20px; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 60px rgba(6, 255, 165, 0.3);" class="email-container">
+
+        <!-- Header with Success Gradient -->
+        <div style="background: linear-gradient(135deg, #06ffa5 0%, #3a86ff 50%, #8338ec 100%); padding: 40px 30px; text-align: center; position: relative;" class="responsive-padding">
+            <div style="display: inline-block; background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(10px); padding: 25px 35px; border-radius: 20px; border: 2px solid rgba(255, 255, 255, 0.4);">
+                <div style="font-size: 56px; margin-bottom: 10px;">✓</div>
+                <h1 style="font-family: 'Playfair Display', serif; color: white; margin: 0; font-size: 36px; font-weight: 700; text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);">
+                    ¡Pago Confirmado!
+                </h1>
+                <p style="color: rgba(255, 255, 255, 0.95); font-size: 18px; margin: 10px 0 0 0; font-weight: 600;">
+                    Tu reserva está asegurada 💅✨
+                </p>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div style="padding: 40px 30px; background: linear-gradient(180deg, #ffffff 0%, #fff9fa 100%);" class="responsive-padding">
+
+            <!-- Greeting -->
+            <h2 style="font-family: 'Playfair Display', serif; color: #06ffa5; margin-top: 0; font-size: 28px; font-weight: 700; text-align: center;">
+                💖 ¡Gran noticia! 🎉
+            </h2>
+
+            <p style="font-size: 17px; color: #444; line-height: 1.8; text-align: center; margin: 25px 0;">
+                Tu pago ha sido confirmado. ¡Gracias por elegir <strong style="background: linear-gradient(135deg, #06ffa5, #3a86ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">BeautyCita</strong>! Tu cita está ahora confirmada y estamos emocionados de consentirte.
+            </p>
+
+            <!-- Payment Details Card -->
+            <div style="background: linear-gradient(135deg, rgba(6, 255, 165, 0.1) 0%, rgba(58, 134, 255, 0.1) 100%); border: 2px solid #06ffa5; padding: 25px; margin: 30px 0; border-radius: 16px;">
+                <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+                    <tr>
+                        <td style="font-size: 14px; color: #065f46; font-weight: 600; padding: 8px 0;">Monto del Pago</td>
+                        <td align="right" style="font-size: 22px; color: #065f46; font-weight: 700; padding: 8px 0;">{{AMOUNT}} {{CURRENCY}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding-top: 12px; border-top: 1px dashed rgba(6, 255, 165, 0.3);">
+                            <p style="margin: 8px 0 0 0; font-size: 12px; color: #059669;">
+                                🔗 ID de Transacción: <strong>{{TRANSACTION_ID}}</strong>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Appointment Details -->
+            <div style="background: linear-gradient(135deg, rgba(255, 0, 128, 0.05) 0%, rgba(128, 0, 255, 0.05) 100%); border: 2px solid transparent; background-image: linear-gradient(white, white), linear-gradient(135deg, #ff0080, #8000ff, #00f5ff); background-origin: border-box; background-clip: padding-box, border-box; padding: 30px; margin: 30px 0; border-radius: 20px; box-shadow: 0 10px 30px rgba(255, 0, 128, 0.15);">
+                <h3 style="font-family: 'Playfair Display', serif; margin-top: 0; color: #ff0080; font-size: 22px; text-align: center; margin-bottom: 25px;">
+                    💝 Detalles de tu Cita
+                </h3>
+
+                <div style="background: white; border-radius: 12px; padding: 20px;">
+                    <p style="margin: 12px 0; font-size: 16px;">
+                        <span style="font-size: 24px; margin-right: 12px;">📅</span>
+                        <span><strong style="color: #ff0080;">Fecha:</strong> {{APPOINTMENT_DATE}}</span>
+                    </p>
+                    <p style="margin: 12px 0; font-size: 16px;">
+                        <span style="font-size: 24px; margin-right: 12px;">⏰</span>
+                        <span><strong style="color: #8000ff;">Hora:</strong> {{APPOINTMENT_TIME}}</span>
+                    </p>
+                    <p style="margin: 12px 0; font-size: 16px;">
+                        <span style="font-size: 24px; margin-right: 12px;">💅</span>
+                        <span><strong style="color: #00f5ff;">Servicio:</strong> {{SERVICE_NAME}}</span>
+                    </p>
+                    <p style="margin: 12px 0; font-size: 16px;">
+                        <span style="font-size: 24px; margin-right: 12px;">✨</span>
+                        <span><strong style="color: #06ffa5;">Profesional:</strong> {{STYLIST_NAME}}</span>
+                    </p>
+                    <p style="margin: 12px 0; font-size: 16px;">
+                        <span style="font-size: 24px; margin-right: 12px;">📍</span>
+                        <span><strong style="color: #8338ec;">Ubicación:</strong> {{SALON_ADDRESS}}</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- CTA Button -->
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="{{DASHBOARD_URL}}"
+                   style="background: linear-gradient(135deg, #ff0080 0%, #8000ff 100%);
+                          color: white;
+                          padding: 18px 45px;
+                          text-decoration: none;
+                          border-radius: 50px;
+                          font-weight: 700;
+                          display: inline-block;
+                          font-size: 18px;
+                          box-shadow: 0 10px 30px rgba(255, 0, 128, 0.4), 0 0 40px rgba(255, 0, 128, 0.3);
+                          letter-spacing: 0.5px;"
+                   class="button-text">
+                    📱 Ver Mi Reserva
+                </a>
+            </div>
+
+            <!-- Add to Calendar -->
+            <div style="text-align: center; margin: 25px 0;">
+                <a href="{{ADD_TO_CALENDAR_URL}}"
+                   style="color: #ff0080;
+                          text-decoration: none;
+                          padding: 14px 35px;
+                          border-radius: 50px;
+                          font-weight: 600;
+                          display: inline-block;
+                          font-size: 16px;
+                          border: 2px solid #ff0080;
+                          letter-spacing: 0.5px;">
+                    📅 Agregar al Calendario
+                </a>
+            </div>
+
+            <!-- Tips Section -->
+            <div style="background: linear-gradient(135deg, rgba(6, 255, 165, 0.1) 0%, rgba(58, 134, 255, 0.1) 100%); border-radius: 16px; padding: 25px; margin: 30px 0;">
+                <p style="font-size: 16px; color: #555; margin: 0 0 15px 0;">
+                    💡 <strong>Tips para tu cita:</strong>
+                </p>
+                <ul style="margin: 0; padding-left: 25px; color: #666; font-size: 14px; line-height: 1.8;">
+                    <li>Llega 5-10 minutos antes para hacer check-in</li>
+                    <li>Trae fotos de inspiración si tienes ideas específicas</li>
+                    <li>Relájate y disfruta tu sesión de consentimiento</li>
+                    <li>Siéntete libre de hacer preguntas o pedir ajustes en cualquier momento</li>
+                </ul>
+            </div>
+
+            <!-- Help Section -->
+            <div style="background: rgba(255, 182, 193, 0.15); backdrop-filter: blur(10px); border-radius: 16px; padding: 25px; margin: 30px 0; border: 1px solid rgba(255, 0, 128, 0.2); text-align: center;">
+                <p style="font-size: 16px; color: #666; margin: 0 0 10px 0;">
+                    💬 ¿Necesitas reprogramar?
+                </p>
+                <p style="font-size: 14px; color: #666; margin: 0;">
+                    Por favor contáctanos con al menos 24 horas de anticipación. Visita tu dashboard o escríbenos a <a href="mailto:support@beautycita.com" style="color: #ff0080; text-decoration: none; font-weight: 600;">support@beautycita.com</a>
+                </p>
+            </div>
+
+            <!-- Beauty Emoji Line -->
+            <div style="text-align: center; font-size: 28px; margin: 35px 0; opacity: 0.7;">
+                💄 🌸 ✨ 💖 💅 🎀 ✨ 🌺 💕
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 30px; text-align: center; border-top: 1px solid rgba(6, 255, 165, 0.1);" class="responsive-padding">
+            <p style="color: #666; font-size: 13px; margin: 0 0 10px 0;">
+                © 2025 <strong style="color: #06ffa5;">BeautyCita</strong>. Todos los derechos reservados.
+            </p>
+            <p style="margin: 15px 0;">
+                <a href="https://beautycita.com" style="color: #ff0080; text-decoration: none; font-weight: 600; font-size: 14px; margin: 0 10px;">
+                    ✨ Inicio
+                </a>
+                <span style="color: #ddd;">|</span>
+                <a href="https://beautycita.com/help" style="color: #8000ff; text-decoration: none; font-weight: 600; font-size: 14px; margin: 0 10px;">
+                    💬 Ayuda
+                </a>
+                <span style="color: #ddd;">|</span>
+                <a href="{{UNSUBSCRIBE_URL}}" style="color: #9ca3af; text-decoration: none; font-size: 12px; margin: 0 10px;">
+                    Desuscribirse
+                </a>
+            </p>
+            <p style="color: #999; font-size: 12px; margin: 15px 0 0 0;">
+                Hecho con 💖 para la comunidad de belleza
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>

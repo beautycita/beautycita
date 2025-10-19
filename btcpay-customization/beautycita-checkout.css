@@ -1,0 +1,597 @@
+/**
+ * BeautyCita Custom Checkout Styling for BTCPay Server
+ *
+ * This CSS file customizes the BTCPay checkout/invoice page to match
+ * BeautyCita's brand identity with pink-to-purple gradients and pill-shaped buttons.
+ *
+ * Upload this file in BTCPay Server:
+ * Store Settings → Checkout Appearance → Custom CSS
+ */
+
+/* ============================================
+   COLORS & VARIABLES
+   ============================================ */
+:root {
+    /* BeautyCita Brand Colors */
+    --beautycita-pink: #ec4899;
+    --beautycita-purple: #9333ea;
+    --beautycita-gradient: linear-gradient(to right, #ec4899, #9333ea);
+
+    /* Semantic Colors */
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --error-color: #ef4444;
+
+    /* Neutrals */
+    --bg-light: #f9fafb;
+    --bg-white: #ffffff;
+    --text-dark: #111827;
+    --text-gray: #6b7280;
+    --border-color: #e5e7eb;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-gradient: 0 10px 20px rgba(236, 72, 153, 0.3);
+}
+
+/* ============================================
+   GLOBAL STYLES
+   ============================================ */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg-light);
+    color: var(--text-dark);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+}
+
+/* ============================================
+   INVOICE CONTAINER
+   ============================================ */
+#invoice {
+    background: var(--bg-white);
+    border-radius: 24px;
+    box-shadow: var(--shadow-lg);
+    padding: 32px;
+    max-width: 500px;
+    margin: 40px auto;
+}
+
+/* ============================================
+   HEADER & LOGO
+   ============================================ */
+.top-header {
+    background: var(--beautycita-gradient) !important;
+    border-radius: 24px 24px 0 0;
+    padding: 24px;
+    margin: -32px -32px 24px -32px;
+}
+
+.top-header img {
+    filter: brightness(0) invert(1); /* Make logo white */
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.header__icon {
+    width: 64px;
+    height: 64px;
+    background: var(--beautycita-gradient);
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-gradient);
+}
+
+/* ============================================
+   PAYMENT AMOUNT
+   ============================================ */
+.invoice-amount {
+    text-align: center;
+    margin: 32px 0;
+    padding: 24px;
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+    border-radius: 16px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+}
+
+.invoice-amount::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    padding: 2px;
+    background: var(--beautycita-gradient);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+.invoice-amount__amount {
+    font-size: 48px;
+    font-weight: 700;
+    background: var(--beautycita-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+}
+
+.invoice-amount__currency {
+    font-size: 24px;
+    color: var(--text-gray);
+    margin-top: 8px;
+}
+
+/* ============================================
+   BUTTONS - PILL SHAPED (BeautyCita Style)
+   ============================================ */
+.action-button,
+.btn,
+.btn-primary,
+button[type="submit"],
+.payment-box__button {
+    background: var(--beautycita-gradient) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 9999px !important; /* Pill shape */
+    padding: 12px 32px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    cursor: pointer;
+    transition: all 200ms ease-in-out;
+    box-shadow: var(--shadow-md);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.action-button:hover,
+.btn:hover,
+.btn-primary:hover,
+button[type="submit"]:hover,
+.payment-box__button:hover {
+    background: linear-gradient(to right, #db2777, #7e22ce) !important;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-gradient);
+}
+
+.action-button:active,
+.btn:active,
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Secondary Button */
+.btn-secondary {
+    background: white !important;
+    color: var(--beautycita-pink) !important;
+    border: 2px solid var(--beautycita-pink) !important;
+    border-radius: 9999px !important;
+}
+
+.btn-secondary:hover {
+    background: rgba(236, 72, 153, 0.1) !important;
+    border-color: var(--beautycita-purple) !important;
+}
+
+/* Cancel/Back Buttons */
+.btn-link,
+.cancel-button {
+    color: var(--text-gray) !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 9999px !important;
+    padding: 12px 24px !important;
+}
+
+.btn-link:hover,
+.cancel-button:hover {
+    background: var(--bg-light) !important;
+    color: var(--beautycita-pink) !important;
+}
+
+/* ============================================
+   PAYMENT METHODS
+   ============================================ */
+.payment-method {
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: all 200ms ease-in-out;
+    cursor: pointer;
+}
+
+.payment-method:hover {
+    border-color: var(--beautycita-pink);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.payment-method.active,
+.payment-method--active {
+    border-color: var(--beautycita-pink);
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
+    box-shadow: var(--shadow-gradient);
+}
+
+.payment-method__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--beautycita-gradient);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================================
+   QR CODE
+   ============================================ */
+.qr-container {
+    text-align: center;
+    padding: 24px;
+    background: white;
+    border-radius: 16px;
+    margin: 24px 0;
+    box-shadow: var(--shadow-md);
+}
+
+.qr-code {
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+    display: inline-block;
+}
+
+.qr-code::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    padding: 3px;
+    background: var(--beautycita-gradient);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+#qrCode,
+#qrCode img {
+    border-radius: 8px;
+}
+
+/* ============================================
+   PAYMENT ADDRESS / INVOICE ID
+   ============================================ */
+.payment-box {
+    background: var(--bg-light);
+    border-radius: 16px;
+    padding: 20px;
+    margin: 24px 0;
+}
+
+.payment-box__address,
+.invoice-details {
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 13px;
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    word-break: break-all;
+    color: var(--text-dark);
+}
+
+/* Copy Button */
+.copy-button,
+.btn-copy {
+    background: var(--beautycita-gradient) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 9999px !important;
+    padding: 8px 20px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    margin-left: 12px;
+    transition: all 200ms ease-in-out;
+}
+
+.copy-button:hover,
+.btn-copy:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   STATUS BADGES
+   ============================================ */
+.badge,
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 9999px; /* Pill shape */
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-success,
+.status-badge--paid {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
+    border: 2px solid var(--success-color);
+}
+
+.badge-warning,
+.status-badge--pending {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warning-color);
+    border: 2px solid var(--warning-color);
+}
+
+.badge-error,
+.status-badge--expired {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--error-color);
+    border: 2px solid var(--error-color);
+}
+
+.badge-primary,
+.status-badge--processing {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+    color: var(--beautycita-pink);
+    border: 2px solid var(--beautycita-pink);
+}
+
+/* ============================================
+   TIMER / COUNTDOWN
+   ============================================ */
+.timer,
+.countdown-timer {
+    text-align: center;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
+    border-radius: 12px;
+    margin: 20px 0;
+}
+
+.timer__time {
+    font-size: 32px;
+    font-weight: 700;
+    background: var(--beautycita-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.timer__label {
+    font-size: 14px;
+    color: var(--text-gray);
+    margin-top: 4px;
+}
+
+/* ============================================
+   TRANSACTION DETAILS
+   ============================================ */
+.transaction-details {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin: 24px 0;
+    border: 1px solid var(--border-color);
+}
+
+.transaction-details__row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--bg-light);
+}
+
+.transaction-details__row:last-child {
+    border-bottom: none;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.transaction-details__label {
+    color: var(--text-gray);
+}
+
+.transaction-details__value {
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.invoice-footer {
+    text-align: center;
+    padding: 24px;
+    margin-top: 32px;
+    border-top: 1px solid var(--border-color);
+}
+
+.powered-by {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--text-gray);
+    font-size: 12px;
+}
+
+.powered-by__logo {
+    height: 20px;
+    width: auto;
+}
+
+/* ============================================
+   LOADING SPINNER
+   ============================================ */
+.spinner,
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--bg-light);
+    border-top-color: var(--beautycita-pink);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   ALERTS & NOTIFICATIONS
+   ============================================ */
+.alert {
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin: 16px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.1);
+    border-left: 4px solid var(--success-color);
+    color: var(--success-color);
+}
+
+.alert-warning {
+    background: rgba(245, 158, 11, 0.1);
+    border-left: 4px solid var(--warning-color);
+    color: var(--warning-color);
+}
+
+.alert-error {
+    background: rgba(239, 68, 68, 0.1);
+    border-left: 4px solid var(--error-color);
+    color: var(--error-color);
+}
+
+.alert-info {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+    border-left: 4px solid var(--beautycita-pink);
+    color: var(--beautycita-pink);
+}
+
+/* ============================================
+   MOBILE OPTIMIZATIONS
+   ============================================ */
+@media (max-width: 640px) {
+    #invoice {
+        margin: 20px auto;
+        padding: 24px;
+        border-radius: 16px;
+    }
+
+    .invoice-amount__amount {
+        font-size: 36px;
+    }
+
+    .timer__time {
+        font-size: 24px;
+    }
+
+    .payment-method {
+        padding: 16px;
+    }
+
+    .action-button,
+    .btn,
+    .btn-primary {
+        width: 100%;
+        padding: 16px 24px !important;
+    }
+}
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-light: #0f0f0f;
+        --bg-white: #1a1a1a;
+        --text-dark: #ffffff;
+        --text-gray: #d4d4d4;
+        --border-color: #404040;
+    }
+
+    body {
+        background: var(--bg-light);
+        color: var(--text-dark);
+    }
+
+    #invoice {
+        background: var(--bg-white);
+        border: 1px solid var(--border-color);
+    }
+
+    .payment-box__address,
+    .invoice-details {
+        background: #252525;
+        border-color: var(--border-color);
+        color: var(--text-dark);
+    }
+
+    .qr-code {
+        background: white;
+    }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-up {
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hover effects */
+.hover-lift {
+    transition: transform 200ms ease-in-out;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+}

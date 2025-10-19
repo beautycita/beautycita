@@ -1,0 +1,261 @@
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - hola
+    - buenos días
+    - buenas tardes
+    - buenas noches
+    - hey
+    - qué tal
+    - saludos
+    - hola, ¿cómo estás?
+    - buenas
+    - hi
+    - hello
+    - good morning
+    - good afternoon
+
+- intent: goodbye
+  examples: |
+    - adiós
+    - hasta luego
+    - nos vemos
+    - chao
+    - hasta pronto
+    - me voy
+    - gracias, adiós
+    - bye
+    - goodbye
+    - see you later
+    - hasta la vista
+
+- intent: affirm
+  examples: |
+    - sí
+    - claro
+    - por supuesto
+    - exacto
+    - correcto
+    - ok
+    - está bien
+    - perfecto
+    - de acuerdo
+    - yes
+    - sure
+    - of course
+    - absolutely
+
+- intent: deny
+  examples: |
+    - no
+    - no gracias
+    - no, gracias
+    - nope
+    - no quiero
+    - no me interesa
+    - negativo
+    - para nada
+    - no way
+    - no thanks
+
+- intent: book_appointment
+  examples: |
+    - quiero hacer una cita
+    - me gustaría agendar una cita
+    - necesito una cita
+    - quiero reservar
+    - quisiera una cita de belleza
+    - puedo hacer una reserva
+    - necesito agendar
+    - quiero una cita para cortarme el pelo
+    - me gustaría reservar un servicio de manicura
+    - necesito una cita para [mañana](date)
+    - quiero una cita a las [3 pm](time)
+    - necesito agendar para el [viernes](date)
+    - book an appointment
+    - I need an appointment
+    - schedule appointment
+
+- intent: check_availability
+  examples: |
+    - ¿hay disponibilidad?
+    - ¿tienen horarios libres?
+    - ¿está disponible el [lunes](date)?
+    - ¿hay espacio para mañana?
+    - ¿qué horarios tienen?
+    - ¿cuándo tienen disponible?
+    - ¿tienen citas libres?
+    - check availability
+    - what times are available
+    - do you have openings
+
+- intent: cancel_booking
+  examples: |
+    - quiero cancelar mi cita
+    - necesito cancelar
+    - no puedo ir a mi cita
+    - cancela mi reserva
+    - quiero cancelar la reserva
+    - ya no necesito la cita
+    - cancel my appointment
+    - I need to cancel
+    - cancel booking
+
+- intent: reschedule_booking
+  examples: |
+    - quiero cambiar mi cita
+    - necesito reprogramar
+    - ¿puedo mover mi cita?
+    - cambiar fecha de mi cita
+    - reprogramar mi reserva
+    - mover mi cita para otro día
+    - reschedule appointment
+    - change my appointment
+    - move my booking
+
+- intent: ask_services
+  examples: |
+    - ¿qué servicios ofrecen?
+    - ¿cuáles son sus servicios?
+    - qué hacen aquí
+    - servicios disponibles
+    - ¿qué tipo de servicios tienen?
+    - what services do you offer
+    - what do you do
+    - services available
+
+- intent: ask_prices
+  examples: |
+    - ¿cuánto cuesta?
+    - ¿cuáles son sus precios?
+    - precios de servicios
+    - ¿cuánto cobran por un corte?
+    - ¿cuál es el precio de una manicura?
+    - costos de servicios
+    - how much does it cost
+    - what are your prices
+    - pricing information
+
+- intent: ask_location
+  examples: |
+    - ¿dónde están ubicados?
+    - ¿cuál es su dirección?
+    - ubicación del salón
+    - ¿dónde los encuentro?
+    - where are you located
+    - what's your address
+    - salon location
+
+- intent: ask_stylists
+  examples: |
+    - ¿quiénes son sus estilistas?
+    - ¿qué estilistas tienen?
+    - quiero conocer a los estilistas
+    - información sobre estilistas
+    - who are your stylists
+    - stylist information
+
+- intent: provide_name
+  examples: |
+    - mi nombre es [María](name)
+    - me llamo [Ana](name)
+    - soy [Carlos](name)
+    - [Fernanda](name)
+    - mi nombre es [José Luis](name)
+    - me dicen [Sofía](name)
+    - my name is [John](name)
+    - I'm [Sarah](name)
+
+- intent: provide_phone
+  examples: |
+    - mi teléfono es [5551234567](phone)
+    - [55 1234 5678](phone)
+    - mi número es [+52 55 1234 5678](phone)
+    - [5512345678](phone)
+    - puedes llamarme al [555-123-4567](phone)
+    - my phone is [555-123-4567](phone)
+
+- intent: provide_date
+  examples: |
+    - para [mañana](date)
+    - el [lunes](date)
+    - [la próxima semana](date)
+    - para el [15 de marzo](date)
+    - [este viernes](date)
+    - el [sábado](date)
+    - [pasado mañana](date)
+    - for [tomorrow](date)
+    - [next Monday](date)
+    - [March 15th](date)
+
+- intent: provide_time
+  examples: |
+    - a las [10 am](time)
+    - a las [3 de la tarde](time)
+    - [por la mañana](time)
+    - a las [2:30 pm](time)
+    - [en la tarde](time)
+    - a las [11:00](time)
+    - at [2 pm](time)
+    - [in the morning](time)
+    - at [3:30](time)
+
+- intent: provide_service
+  examples: |
+    - quiero un [corte](service)
+    - necesito [color](service)
+    - me gustaría [manicura](service)
+    - [pedicura](service) por favor
+    - quiero [peinado](service)
+    - necesito [tratamiento facial](service)
+    - I want a [haircut](service)
+    - I need [manicure](service)
+
+- intent: out_of_scope
+  examples: |
+    - ¿qué tiempo hace?
+    - háblame del clima
+    - ¿cómo cocinar pasta?
+    - noticias del día
+    - ¿qué es la inteligencia artificial?
+    - what's the weather
+    - how to cook
+    - news today
+    - tell me a joke
+
+- intent: beauty_advice
+  examples: |
+    - dame un consejo de belleza
+    - qué me recomiendas para mi cabello
+    - consejos para el cuidado de la piel
+    - cómo puedo mejorar mi look
+    - qué está de moda ahora
+    - tendencias de belleza
+    - cómo cuidar mis uñas
+    - tips de maquillaje
+    - rutina de skincare
+    - qué color de cabello me queda
+    - cómo elegir un corte de cabello
+    - beauty tips
+    - skincare advice
+    - hair care tips
+    - makeup recommendations
+
+- intent: general_conversation
+  examples: |
+    - hola cómo estás
+    - qué tal tu día
+    - cuéntame algo interesante
+    - eres muy inteligente
+    - me gusta hablar contigo
+    - qué opinas sobre
+    - platícame de ti
+    - eres divertida
+    - tell me about yourself
+    - you're smart
+    - I like chatting with you
+    - what do you think about
+    - how are you doing
+    - that's interesting

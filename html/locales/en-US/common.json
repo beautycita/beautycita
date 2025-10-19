@@ -1,0 +1,233 @@
+{
+  "header": {
+    "signIn": "Sign In",
+    "bookNow": "Book Now",
+    "clientPortal": "Client Portal",
+    "patientPortal": "Patient Portal",
+    "bookConsultation": "Book Consultation",
+    "bookExperience": "Book Experience",
+    "joinEliteTeam": "Join Elite Team",
+    "joinOurTeam": "Join Our Team",
+    "joinMedicalTeam": "Join Medical Team",
+    "aboutClinic": "About Clinic",
+    "ourAtelier": "Our Atelier",
+    "contact": "Contact",
+    "privacyPolicy": "Privacy Policy"
+  },
+  "hero": {
+    "title": "Your Beauty, Our Passion",
+    "artistry": "Artistry.",
+    "redefined": "Redefined.",
+    "medicalGrade": "Medical-Grade",
+    "beautySolutions": "Beauty Solutions",
+    "subtitle": "Connect with certified beauty professionals in your area",
+    "medicalSubtitle": "Experience safe, professional treatments with board-certified specialists in our medical spa environment.",
+    "luxurySubtitle": "Where exceptional artistry meets luxury experience. Discover beauty redefined by master artists.",
+    "socialSubtitle": "Join the most vibrant beauty community. Discover trends, share your style, and connect with amazing artists.",
+    "cta": "Get Started",
+    "beginJourney": "Begin Your Journey",
+    "scheduleFreeConsultation": "Schedule Free Consultation",
+    "bookLuxuryExperience": "Book Luxury Experience"
+  },
+  "services": {
+    "title": "Our Services",
+    "bookThisService": "Book This Service",
+    "medicalDermatology": "Medical Dermatology",
+    "clinicalSkincare": "Clinical Skincare",
+    "wellnessTherapy": "Wellness Therapy",
+    "preventiveCare": "Preventive Care",
+    "popularTreatments": "Popular Treatments:",
+    "medicalDermatologyDesc": "FDA-approved treatments administered by licensed medical professionals",
+    "clinicalSkincareDesc": "Evidence-based facial treatments with medical-grade protocols",
+    "wellnessTherapyDesc": "Therapeutic body treatments for health and wellness",
+    "preventiveCareDesc": "Long-term skin health and maintenance programs"
+  },
+  "features": {
+    "boardCertifiedDermatologists": "Board Certified Dermatologists",
+    "fdaApprovedTreatments": "FDA Approved Treatments Only",
+    "medicalGradeFacility": "Medical Grade Facility",
+    "sterileEnvironmentProtocol": "Sterile Environment Protocol",
+    "patientSatisfaction": "99.8% Patient Satisfaction",
+    "insuranceCoverage": "Insurance & Liability Coverage",
+    "masterArtists": "Master Artists",
+    "luxuryProducts": "Luxury Products",
+    "privateStudio": "Private Studio",
+    "bespokeService": "Bespoke Service",
+    "awarding": "Award-winning",
+    "premiumOnly": "Premium only",
+    "exclusiveSpace": "Exclusive space",
+    "tailoredToYou": "Tailored to you"
+  },
+  "stats": {
+    "yearsExperience": "Years Experience",
+    "happyPatients": "Happy Patients",
+    "happyClients": "Happy Clients",
+    "luxuryExperiences": "Luxury Experiences",
+    "averageRating": "Average Rating",
+    "perfectRating": "Perfect Rating",
+    "licensedStaff": "Licensed Staff",
+    "eliteArtists": "Elite Artists",
+    "concierge": "Concierge"
+  },
+  "cta": {
+    "areYouProfessional": "Are you a licensed beauty professional?",
+    "areYouExceptional": "Are you an exceptional beauty artist?",
+    "joinOurMedicalTeam": "Join Our Medical Team",
+    "joinOurEliteTeam": "Join Our Elite Team"
+  },
+  "modal": {
+    "readyToBook": "Ready to Book? 🏥",
+    "beginLuxuryExperience": "Begin Your Luxury Experience ✨",
+    "scheduleConsultation": "Schedule Consultation",
+    "bookConsultation": "Book Consultation",
+    "learnMoreFirst": "Learn More First",
+    "exploreOurArtists": "Explore Our Artists",
+    "maybeLater": "Maybe later",
+    "notReadyYet": "Not ready yet"
+  },
+  "artist": {
+    "signature": "Signature",
+    "experience": "Experience",
+    "eliteMasterArtist": "Elite Master Artist",
+    "bookWith": "Book with {{name}}",
+    "maitreArtiste": "Maître Artiste de Beauté",
+    "editorialMakeupVirtuoso": "Editorial Makeup Virtuoso",
+    "architecturalHairDesigner": "Architectural Hair Designer",
+    "luxuryTransformationSpecialist": "Luxury Transformation Specialist",
+    "bridalBeautySpecialist": "Bridal Beauty Specialist",
+    "dramaticEditorialMetamorphosis": "Dramatic Editorial Metamorphosis",
+    "avantgardeStructuralDesign": "Avant-garde Structural Design",
+    "timelessBridalBeauty": "Timeless Bridal Beauty",
+    "vipOnly": "VIP Only"
+  },
+  "trust": {
+    "fdaApproved": "FDA Approved • Licensed Professionals",
+    "medicalLicense": "Medical License #12345",
+    "fdaCompliance": "FDA Compliance Certified",
+    "aaasfAccredited": "AAAASF Accredited",
+    "oshaCompliant": "OSHA Compliant",
+    "reviews": "2,847+ Reviews",
+    "professionalLiability": "$2M Professional Liability"
+  },
+  "achievements": {
+    "vogueCoverArtist": "Vogue Cover Artist",
+    "cfdaBeautyAward": "CFDA Beauty Award",
+    "parisFashionWeek": "Paris Fashion Week"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Select language",
+    "spanish": "Español (México)",
+    "english": "English (US)"
+  },
+  "landing": {
+    "expertProfessionals": "Expert Professionals",
+    "expertProfessionalsDesc": "Verified beauty professionals with years of experience and outstanding portfolios.",
+    "easyBooking": "Easy Booking",
+    "easyBookingDesc": "Book appointments instantly with real-time availability and secure payments.",
+    "businessTools": "Business Tools",
+    "businessToolsDesc": "Analytics & management",
+    "fastPayouts": "Fast Payouts",
+    "fastPayoutsDesc": "Daily direct deposits",
+    "aiMatching": "AI Matching",
+    "aiMatchingDesc": "Perfect client connections",
+    "verifiedProfessionals": "Verified Professionals",
+    "citiesServed": "Cities Served",
+    "commissionRate": "3% Commission",
+    "commissionDesc": "Keep 97% of earnings"
+  },
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "stylists": "Stylists",
+    "blog": "Blog",
+    "login": "Login",
+    "register": "Register",
+    "profile": "Profile",
+    "bookings": "Bookings",
+    "dashboard": "Dashboard",
+    "logout": "Logout"
+  },
+  "chat": {
+    "welcome": "Hi! I'm Aphrodite, your beauty assistant. How can I help you today?",
+    "assistant": "Your Beauty Assistant",
+    "placeholder": "Type your message...",
+    "retry": "Try Again",
+    "support": "Contact Support",
+    "buttons": {
+      "services": "View Services 💄",
+      "stylists": "Find Stylists ✨",
+      "booking": "Book Appointment 📅"
+    },
+    "errors": {
+      "init": "Sorry, I'm having trouble starting our conversation. Please try refreshing the page.",
+      "general": "Sorry, I'm experiencing technical difficulties. Could you try again in a moment? 💄",
+      "network": "It looks like there's a connection issue. Please check your internet and try again.",
+      "unavailable": "I'm temporarily unavailable. Please try again shortly.",
+      "server": "Something went wrong on our end. Our team has been notified."
+    }
+  },
+  "pages": {
+    "commissions": {
+      "title": "Commission Structure",
+      "subtitle": "Transparent pricing for beauty professionals",
+      "overview": "Simple & Transparent Pricing",
+      "overviewDesc": "BeautyCita uses a straightforward commission structure. Clients pay the exact price you set, and we keep only a small platform fee.",
+      "youKeep": "You Keep",
+      "fromEveryService": "From every service you provide",
+      "platformFee": "BeautyCita Platform Fee: 3%",
+      "platformFeeDesc": "Non-refundable, covers payment processing & platform costs",
+      "paymentsTitle": "Automatic Payouts",
+      "paymentsDesc": "Your earnings are processed automatically when clients confirm service completion. Here's how it works:",
+      "step1": "Service Completion",
+      "step1Desc": "Client confirms service is finished",
+      "step2": "Review Period",
+      "step2Desc": "Client can optionally leave a review",
+      "step3": "Automatic Payout",
+      "step3Desc": "Processed at midnight daily",
+      "step4": "Payment Received",
+      "step4Desc": "97% of service price in your account",
+      "bonusesTitle": "Additional Benefits",
+      "bonusesDesc": "Premium stylists may qualify for promotional bonuses and featured placement opportunities."
+    },
+    "blog": {
+      "title": "BeautyCita Blog",
+      "subtitle": "Beauty trends, tips, and insights from professionals",
+      "loadingPosts": "Loading posts...",
+      "errorLoading": "Error loading blog posts",
+      "noPostsFound": "No posts found",
+      "readMore": "Read More",
+      "author": "Author",
+      "publishedOn": "Published on",
+      "backToBlog": "Back to Blog"
+    }
+  },
+  "terms": {
+    "stylist": {
+      "title": "Stylist Terms & Conditions",
+      "effectiveDate": "Effective Date: January 1, 2025",
+      "acceptance": "Acceptance of Terms",
+      "acceptanceDesc": "By registering as a stylist on BeautyCita, you agree to be bound by these Stylist Terms & Conditions as well as our Client Terms of Service.",
+      "requirements": "Professional Requirements",
+      "requirementsDesc": "To join BeautyCita as a stylist, you must:",
+      "req1": "Hold a valid cosmetology or beauty license in your operating jurisdiction",
+      "req2": "Maintain current liability insurance (minimum $1M coverage recommended)",
+      "req3": "Be at least 18 years old",
+      "req4": "Provide accurate credentials and certifications",
+      "req5": "Complete our verification process",
+      "req6": "Maintain professional standards and conduct",
+      "commissionStructure": "Commission Structure & Payments",
+      "platformFeeTitle": "Platform Fee: 3% | Keep 97% of Your Earnings",
+      "dailyPayouts": "Daily Automatic Payouts After Service Completion",
+      "platformFeeDetails": "Platform Fee Details",
+      "platformFeeDetailsDesc": "BeautyCita charges a transparent 3% platform fee on all completed bookings. You retain 97% of the service price you set. Clients pay exactly what you quote - no hidden fees added to them. Our platform fee covers payment processing, platform maintenance, customer support, and marketing that brings clients to you.",
+      "payoutSchedule": "Payout Schedule",
+      "payoutFreq": "Daily automatic payouts processed at midnight",
+      "payoutTrigger": "Client confirms service completion (reviews optional)",
+      "payoutTime": "Same day after midnight processing",
+      "payoutAmount": "97% of your quoted service price",
+      "payoutFeeStatus": "3% platform fee is non-refundable",
+      "paymentTerms": "Payment Terms",
+      "paymentTermsDesc": "Payments are automatically processed when clients confirm service completion. The 3% platform fee is deducted immediately and is non-refundable. Disputed services may have payouts held pending resolution. You are responsible for all applicable taxes on your earnings."
+    }
+  }
+}

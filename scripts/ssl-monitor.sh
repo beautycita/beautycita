@@ -1,0 +1,212 @@
+#!/bin/bash
+
+# BeautyCita SSL Certificate Monitor
+# Monitors SSL certificate expiration and renewal status
+
+set -euo pipefail
+
+LOG_FILE="/var/log/beautycita-ssl-monitor.log"
+ALERT_THRESHOLD_DAYS=30
+CRITICAL_THRESHOLD_DAYS=7
+
+# Logging function
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
+}
+
+# Check SSL certificate expiration
+check_ssl_expiration() {
+    local domain="beautycita.com"
+
+    log "Checking SSL certificate for $domain"
+
+    # Get certificate expiration date
+    local cert_info=$(echo | openssl s_client -servername "$domain" -connect "$domain:443" 2>/dev/null | openssl x509 -noout -dates 2>/dev/null)
+    local expiry_date=$(echo "$cert_info" | grep "notAfter" | cut -d= -f2)
+
+    if [ -z "$expiry_date" ]; then
+        log "ERROR: Could not retrieve certificate expiration date"
+        return 1
+    fi
+
+    # Calculate days until expiration
+    local expiry_timestamp=$(date -d "$expiry_date" +%s)
+    local current_timestamp=$(date +%s)
+    local days_until_expiry=$(( (expiry_timestamp - current_timestamp) / 86400 ))
+
+    log "Certificate expires on: $expiry_date"
+    log "Days until expiration: $days_until_expiry"
+
+    # Check thresholds and alert
+    if [ $days_until_expiry -lt $CRITICAL_THRESHOLD_DAYS ]; then
+        log "🚨 CRITICAL: SSL certificate expires in $days_until_expiry days!"
+        send_alert "CRITICAL" "SSL certificate for $domain expires in $days_until_expiry days"
+        return 2
+    elif [ $days_until_expiry -lt $ALERT_THRESHOLD_DAYS ]; then
+        log "⚠️  WARNING: SSL certificate expires in $days_until_expiry days"
+        send_alert "WARNING" "SSL certificate for $domain expires in $days_until_expiry days"
+        return 1
+    else
+        log "✅ SSL certificate is valid for $days_until_expiry more days"
+        return 0
+    fi
+}
+
+# Check certbot renewal status
+check_certbot_status() {
+    log "Checking certbot automatic renewal status"
+
+    # Check if certbot timer is active
+    if systemctl is-active --quiet certbot.timer; then
+        log "✅ Certbot timer is active"
+
+        # Get next run time
+        local next_run=$(systemctl status certbot.timer | grep "Trigger:" | awk '{print $2, $3, $4, $5}' || echo "unknown")
+        log "Next renewal check: $next_run"
+    else
+        log "❌ Certbot timer is not active"
+        send_alert "CRITICAL" "Certbot automatic renewal is not running"
+        return 1
+    fi
+
+    # Check recent certbot logs for errors
+    if journalctl -u certbot.service --since "24 hours ago" | grep -i "error\|failed" >/dev/null 2>&1; then
+        log "⚠️  Recent certbot errors detected in logs"
+        send_alert "WARNING" "Certbot errors detected in recent logs"
+    else
+        log "✅ No recent certbot errors"
+    fi
+
+    return 0
+}
+
+# Test certificate renewal (dry run)
+test_renewal() {
+    log "Testing certificate renewal process (dry run)"
+
+    # Run a quick dry run test with timeout
+    if timeout 60 certbot renew --dry-run --quiet >/dev/null 2>&1; then
+        log "✅ Certificate renewal test passed"
+        return 0
+    else
+        local exit_code=$?
+        if [ $exit_code -eq 124 ]; then
+            log "⚠️  Certificate renewal test timed out (may be normal)"
+            return 0
+        else
+            log "❌ Certificate renewal test failed"
+            send_alert "WARNING" "Certificate renewal dry run test failed"
+            return 1
+        fi
+    fi
+}
+
+# Send alert notification
+send_alert() {
+    local level=$1
+    local message=$2
+
+    # Log the alert
+    log "ALERT [$level]: $message"
+
+    # Save to alerts file for monitoring system
+    local alert_file="/var/log/beautycita-ssl-alerts.jsonl"
+    echo "{\"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ)\", \"level\": \"$level\", \"message\": \"$message\", \"component\": \"ssl-monitor\"}" >> "$alert_file"
+
+    # Future: Send to external alerting system (email, Slack, webhook)
+    # webhook_url="your-webhook-url"
+    # curl -X POST "$webhook_url" -H "Content-Type: application/json" -d "{\"text\": \"[$level] BeautyCita SSL Alert: $message\"}"
+}
+
+# Generate SSL status report
+generate_report() {
+    local domain="beautycita.com"
+
+    log "Generating SSL status report"
+
+    # Get detailed certificate information
+    local cert_details=$(certbot certificates 2>/dev/null | grep -A 10 "Certificate Name: $domain" || echo "Certificate info not available")
+
+    cat << EOF > "/var/log/beautycita-ssl-report.txt"
+BeautyCita SSL Certificate Status Report
+Generated: $(date)
+========================================
+
+Domain: $domain
+Certificate Details:
+$cert_details
+
+Certbot Timer Status:
+$(systemctl status certbot.timer --no-pager -l | head -20)
+
+Recent SSL-related Logs:
+$(journalctl -u certbot.service --since "7 days ago" --no-pager | tail -20)
+
+========================================
+Report generated by ssl-monitor.sh
+EOF
+
+    log "SSL status report saved to /var/log/beautycita-ssl-report.txt"
+}
+
+# Main function
+main() {
+    log "Starting SSL certificate monitoring"
+
+    local exit_code=0
+
+    # Check certificate expiration
+    if ! check_ssl_expiration; then
+        exit_code=$?
+    fi
+
+    # Check certbot status
+    if ! check_certbot_status; then
+        exit_code=1
+    fi
+
+    # Test renewal process (only if not in critical state)
+    if [ $exit_code -lt 2 ]; then
+        test_renewal || true  # Don't fail the whole script if test fails
+    fi
+
+    # Generate status report
+    generate_report
+
+    log "SSL monitoring completed with exit code: $exit_code"
+    return $exit_code
+}
+
+# CLI usage
+case "${1:-monitor}" in
+    "monitor"|"")
+        main
+        ;;
+    "status")
+        check_ssl_expiration
+        ;;
+    "test")
+        test_renewal
+        ;;
+    "report")
+        generate_report
+        cat "/var/log/beautycita-ssl-report.txt"
+        ;;
+    "install-cron")
+        # Add to crontab if not already present
+        if ! crontab -l 2>/dev/null | grep -q "ssl-monitor.sh"; then
+            (crontab -l 2>/dev/null; echo "0 2 * * * /var/www/beautycita.com/scripts/ssl-monitor.sh monitor") | crontab -
+            echo "SSL monitoring scheduled to run daily at 2 AM"
+        else
+            echo "SSL monitoring already scheduled in crontab"
+        fi
+        ;;
+    *)
+        echo "Usage: $0 [monitor|status|test|report|install-cron]"
+        echo "  monitor      - Run full SSL monitoring (default)"
+        echo "  status       - Check certificate expiration only"
+        echo "  test         - Test renewal process"
+        echo "  report       - Generate and display status report"
+        echo "  install-cron - Install daily monitoring in crontab"
+        ;;
+esac

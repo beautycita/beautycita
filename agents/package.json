@@ -1,0 +1,30 @@
+{
+  "name": "@beautycita/senior-engineering-team",
+  "version": "1.0.0",
+  "description": "Elite team of 9 senior expert agents for comprehensive development support",
+  "main": "AgentOrchestrator.js",
+  "bin": {
+    "beautycita-agents": "./cli.js"
+  },
+  "scripts": {
+    "list": "node cli.js list",
+    "team": "node cli.js team",
+    "help": "node cli.js help",
+    "task": "node cli.js task"
+  },
+  "keywords": [
+    "agents",
+    "ai",
+    "development",
+    "code-review",
+    "automation",
+    "beautycita"
+  ],
+  "author": "BeautyCita Engineering Team",
+  "license": "PROPRIETARY",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

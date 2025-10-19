@@ -1,0 +1,22 @@
+{
+  "0": "affirm",
+  "1": "ask_location",
+  "2": "ask_prices",
+  "3": "ask_services",
+  "4": "ask_stylists",
+  "5": "beauty_advice",
+  "6": "book_appointment",
+  "7": "cancel_booking",
+  "8": "check_availability",
+  "9": "deny",
+  "10": "general_conversation",
+  "11": "goodbye",
+  "12": "greet",
+  "13": "out_of_scope",
+  "14": "provide_date",
+  "15": "provide_name",
+  "16": "provide_phone",
+  "17": "provide_service",
+  "18": "provide_time",
+  "19": "reschedule_booking"
+}

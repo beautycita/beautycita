@@ -1,0 +1,233 @@
+{
+  "header": {
+    "signIn": "Iniciar Sesión",
+    "bookNow": "Reservar Ahora",
+    "clientPortal": "Portal del Cliente",
+    "patientPortal": "Portal del Paciente",
+    "bookConsultation": "Reservar Consulta",
+    "bookExperience": "Reservar Experiencia",
+    "joinEliteTeam": "Únete al Equipo Elite",
+    "joinOurTeam": "Únete a Nuestro Equipo",
+    "joinMedicalTeam": "Únete al Equipo Médico",
+    "aboutClinic": "Acerca de la Clínica",
+    "ourAtelier": "Nuestro Atelier",
+    "contact": "Contacto",
+    "privacyPolicy": "Política de Privacidad"
+  },
+  "hero": {
+    "title": "Tu Belleza, Nuestra Pasión",
+    "artistry": "Arte.",
+    "redefined": "Redefinido.",
+    "medicalGrade": "Grado Médico",
+    "beautySolutions": "Soluciones de Belleza",
+    "subtitle": "Conecta con profesionales de la belleza certificados en tu área",
+    "medicalSubtitle": "Experimenta tratamientos seguros y profesionales con especialistas certificados en nuestro ambiente de spa médico.",
+    "luxurySubtitle": "Donde el arte excepcional se encuentra con la experiencia de lujo. Descubre la belleza redefinida por artistas maestros.",
+    "socialSubtitle": "Únete a la comunidad de belleza más vibrante. Descubre tendencias, comparte tu estilo y conecta con artistas increíbles.",
+    "cta": "Comenzar",
+    "beginJourney": "Comienza tu Viaje",
+    "scheduleFreeConsultation": "Agendar Consulta Gratuita",
+    "bookLuxuryExperience": "Reservar Experiencia de Lujo"
+  },
+  "services": {
+    "title": "Nuestros Servicios",
+    "bookThisService": "Reservar Este Servicio",
+    "medicalDermatology": "Dermatología Médica",
+    "clinicalSkincare": "Cuidado Clínico de la Piel",
+    "wellnessTherapy": "Terapia de Bienestar",
+    "preventiveCare": "Cuidado Preventivo",
+    "popularTreatments": "Tratamientos Populares:",
+    "medicalDermatologyDesc": "Tratamientos aprobados por la FDA administrados por profesionales médicos licenciados",
+    "clinicalSkincareDesc": "Tratamientos faciales basados en evidencia con protocolos de grado médico",
+    "wellnessTherapyDesc": "Tratamientos corporales terapéuticos para la salud y el bienestar",
+    "preventiveCareDesc": "Programas de salud y mantenimiento de la piel a largo plazo"
+  },
+  "features": {
+    "boardCertifiedDermatologists": "Dermatólogos Certificados",
+    "fdaApprovedTreatments": "Tratamientos Aprobados por FDA",
+    "medicalGradeFacility": "Instalación de Grado Médico",
+    "sterileEnvironmentProtocol": "Protocolo de Ambiente Estéril",
+    "patientSatisfaction": "99.8% Satisfacción del Paciente",
+    "insuranceCoverage": "Seguro y Cobertura de Responsabilidad",
+    "masterArtists": "Artistas Maestros",
+    "luxuryProducts": "Productos de Lujo",
+    "privateStudio": "Estudio Privado",
+    "bespokeService": "Servicio Personalizado",
+    "awarding": "Galardonado",
+    "premiumOnly": "Solo Premium",
+    "exclusiveSpace": "Espacio Exclusivo",
+    "tailoredToYou": "Hecho para Ti"
+  },
+  "stats": {
+    "yearsExperience": "Años de Experiencia",
+    "happyPatients": "Pacientes Felices",
+    "happyClients": "Clientes Felices",
+    "luxuryExperiences": "Experiencias de Lujo",
+    "averageRating": "Calificación Promedio",
+    "perfectRating": "Calificación Perfecta",
+    "licensedStaff": "Personal Licenciado",
+    "eliteArtists": "Artistas Elite",
+    "concierge": "Concierge"
+  },
+  "cta": {
+    "areYouProfessional": "¿Eres un profesional de la belleza licenciado?",
+    "areYouExceptional": "¿Eres un artista de belleza excepcional?",
+    "joinOurMedicalTeam": "Únete a Nuestro Equipo Médico",
+    "joinOurEliteTeam": "Únete a Nuestro Equipo Elite"
+  },
+  "modal": {
+    "readyToBook": "¿Listo para Reservar? 🏥",
+    "beginLuxuryExperience": "Comienza tu Experiencia de Lujo ✨",
+    "scheduleConsultation": "Agendar Consulta",
+    "bookConsultation": "Reservar Consulta",
+    "learnMoreFirst": "Aprender Más Primero",
+    "exploreOurArtists": "Explorar Nuestros Artistas",
+    "maybeLater": "Tal vez Después",
+    "notReadyYet": "Aún no Estoy Listo"
+  },
+  "artist": {
+    "signature": "Firma",
+    "experience": "Experiencia",
+    "eliteMasterArtist": "Artista Maestro Elite",
+    "bookWith": "Reservar con {{name}}",
+    "maitreArtiste": "Maître Artiste de Beauté",
+    "editorialMakeupVirtuoso": "Virtuoso del Maquillaje Editorial",
+    "architecturalHairDesigner": "Diseñador Arquitectónico de Cabello",
+    "luxuryTransformationSpecialist": "Especialista en Transformación de Lujo",
+    "bridalBeautySpecialist": "Especialista en Belleza Nupcial",
+    "dramaticEditorialMetamorphosis": "Metamorfosis Editorial Dramática",
+    "avantgardeStructuralDesign": "Diseño Estructural de Vanguardia",
+    "timelessBridalBeauty": "Belleza Nupcial Atemporal",
+    "vipOnly": "Solo VIP"
+  },
+  "trust": {
+    "fdaApproved": "Aprobado por FDA • Profesionales Licenciados",
+    "medicalLicense": "Licencia Médica #12345",
+    "fdaCompliance": "Certificado de Cumplimiento FDA",
+    "aaasfAccredited": "Acreditado AAAASF",
+    "oshaCompliant": "Cumple con OSHA",
+    "reviews": "2,847+ Reseñas",
+    "professionalLiability": "$2M Responsabilidad Profesional"
+  },
+  "achievements": {
+    "vogueCoverArtist": "Artista de Portada Vogue",
+    "cfdaBeautyAward": "Premio de Belleza CFDA",
+    "parisFashionWeek": "Semana de la Moda de París"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Seleccionar idioma",
+    "spanish": "Español (México)",
+    "english": "English (US)"
+  },
+  "landing": {
+    "expertProfessionals": "Profesionales Expertos",
+    "expertProfessionalsDesc": "Profesionales de belleza verificados con años de experiencia y portafolios excepcionales.",
+    "easyBooking": "Reserva Fácil",
+    "easyBookingDesc": "Reserva citas al instante con disponibilidad en tiempo real y pagos seguros.",
+    "businessTools": "Herramientas de Negocio",
+    "businessToolsDesc": "Análisis y gestión",
+    "fastPayouts": "Pagos Rápidos",
+    "fastPayoutsDesc": "Depósitos directos diarios",
+    "aiMatching": "Emparejamiento IA",
+    "aiMatchingDesc": "Conexiones perfectas con clientes",
+    "verifiedProfessionals": "Profesionales Verificados",
+    "citiesServed": "Ciudades Atendidas",
+    "commissionRate": "3% Comisión",
+    "commissionDesc": "Mantén el 97% de tus ganancias"
+  },
+  "nav": {
+    "home": "Inicio",
+    "services": "Servicios",
+    "stylists": "Estilistas",
+    "blog": "Blog",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "profile": "Perfil",
+    "bookings": "Reservas",
+    "dashboard": "Panel",
+    "logout": "Cerrar Sesión"
+  },
+  "chat": {
+    "welcome": "¡Hola! Soy Aphrodite, tu asistente de belleza. ¿En qué puedo ayudarte hoy?",
+    "assistant": "Tu Asistente de Belleza",
+    "placeholder": "Escribe tu mensaje...",
+    "retry": "Intentar de Nuevo",
+    "support": "Contactar Soporte",
+    "buttons": {
+      "services": "Ver Servicios 💄",
+      "stylists": "Buscar Estilistas ✨",
+      "booking": "Agendar Cita 📅"
+    },
+    "errors": {
+      "init": "Disculpa, tengo problemas para iniciar nuestra conversación. Por favor, intenta refrescar la página.",
+      "general": "Disculpa, estoy teniendo problemas técnicos. ¿Podrías intentar de nuevo en un momento? 💄",
+      "network": "Parece que hay un problema de conexión. Por favor, verifica tu internet e intenta de nuevo.",
+      "unavailable": "No estoy disponible temporalmente. Por favor, intenta de nuevo en un momento.",
+      "server": "Algo salió mal de nuestro lado. Nuestro equipo ha sido notificado."
+    }
+  },
+  "pages": {
+    "commissions": {
+      "title": "Estructura de Comisiones",
+      "subtitle": "Precios transparentes para profesionales de la belleza",
+      "overview": "Precios Simples y Transparentes",
+      "overviewDesc": "BeautyCita usa una estructura de comisiones directa. Los clientes pagan exactamente el precio que estableces, y nosotros solo conservamos una pequeña tarifa de plataforma.",
+      "youKeep": "Tú Te Quedas",
+      "fromEveryService": "De cada servicio que proporcionas",
+      "platformFee": "Tarifa de Plataforma BeautyCita: 3%",
+      "platformFeeDesc": "No reembolsable, cubre procesamiento de pagos y costos de plataforma",
+      "paymentsTitle": "Pagos Automáticos",
+      "paymentsDesc": "Tus ganancias se procesan automáticamente cuando los clientes confirman la finalización del servicio. Así es como funciona:",
+      "step1": "Finalización del Servicio",
+      "step1Desc": "El cliente confirma que el servicio está terminado",
+      "step2": "Período de Reseña",
+      "step2Desc": "El cliente puede opcionalmente dejar una reseña",
+      "step3": "Pago Automático",
+      "step3Desc": "Procesado diariamente a medianoche",
+      "step4": "Pago Recibido",
+      "step4Desc": "97% del precio del servicio en tu cuenta",
+      "bonusesTitle": "Beneficios Adicionales",
+      "bonusesDesc": "Los estilistas premium pueden calificar para bonos promocionales y oportunidades de ubicación destacada."
+    },
+    "blog": {
+      "title": "Blog BeautyCita",
+      "subtitle": "Tendencias de belleza, consejos y perspectivas de profesionales",
+      "loadingPosts": "Cargando publicaciones...",
+      "errorLoading": "Error al cargar las publicaciones del blog",
+      "noPostsFound": "No se encontraron publicaciones",
+      "readMore": "Leer Más",
+      "author": "Autor",
+      "publishedOn": "Publicado el",
+      "backToBlog": "Volver al Blog"
+    }
+  },
+  "terms": {
+    "stylist": {
+      "title": "Términos y Condiciones del Estilista",
+      "effectiveDate": "Fecha Efectiva: 1 de Enero, 2025",
+      "acceptance": "Aceptación de Términos",
+      "acceptanceDesc": "Al registrarte como estilista en BeautyCita, aceptas estar sujeto a estos Términos y Condiciones del Estilista así como a nuestros Términos de Servicio del Cliente.",
+      "requirements": "Requisitos Profesionales",
+      "requirementsDesc": "Para unirte a BeautyCita como estilista, debes:",
+      "req1": "Poseer una licencia válida de cosmetología o belleza en tu jurisdicción operativa",
+      "req2": "Mantener un seguro de responsabilidad civil actual (mínimo $1M de cobertura recomendado)",
+      "req3": "Ser mayor de 18 años",
+      "req4": "Proporcionar credenciales y certificaciones precisas",
+      "req5": "Completar nuestro proceso de verificación",
+      "req6": "Mantener estándares y conducta profesional",
+      "commissionStructure": "Estructura de Comisiones y Pagos",
+      "platformFeeTitle": "Tarifa de Plataforma: 3% | Conservas 97% de tus Ganancias",
+      "dailyPayouts": "Pagos Automáticos Diarios Después de Completar el Servicio",
+      "platformFeeDetails": "Detalles de la Tarifa de Plataforma",
+      "platformFeeDetailsDesc": "BeautyCita cobra una tarifa de plataforma transparente del 3% en todas las reservas completadas. Conservas el 97% del precio del servicio que estableces. Los clientes pagan exactamente lo que cotizas - no se les agregan tarifas ocultas. Nuestra tarifa de plataforma cubre el procesamiento de pagos, mantenimiento de la plataforma, atención al cliente y marketing que te trae clientes.",
+      "payoutSchedule": "Programa de Pagos",
+      "payoutFreq": "Pagos automáticos diarios procesados a medianoche",
+      "payoutTrigger": "El cliente confirma la finalización del servicio (reseñas opcionales)",
+      "payoutTime": "Procesamiento el mismo día después de medianoche",
+      "payoutAmount": "97% del precio cotizado de tu servicio",
+      "payoutFeeStatus": "La tarifa de plataforma del 3% no es reembolsable",
+      "paymentTerms": "Términos de Pago",
+      "paymentTermsDesc": "Los pagos se procesan automáticamente cuando los clientes confirman la finalización del servicio. La tarifa de plataforma del 3% se deduce inmediatamente y no es reembolsable. Los servicios disputados pueden tener pagos retenidos pendiente de resolución. Eres responsable de todos los impuestos aplicables sobre tus ganancias."
+    }
+  }
+}

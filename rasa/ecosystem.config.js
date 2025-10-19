@@ -1,0 +1,96 @@
+// PM2 Ecosystem Configuration for BeautyCita RASA
+module.exports = {
+  apps: [
+    {
+      name: 'beautycita-rasa-server',
+      script: 'venv/bin/rasa',
+      args: 'run --enable-api --cors "*" --port 5005 --interface 0.0.0.0 --endpoints endpoints.yml',
+      interpreter: 'none',
+      cwd: '/var/www/beautycita.com/rasa',
+      instances: 1,
+      exec_mode: 'fork',
+      max_memory_restart: '3G',
+      env: {
+        NODE_ENV: 'production',
+        PYTHONPATH: '/var/www/beautycita.com/rasa',
+        PORT: 5005,
+        PYTHONUNBUFFERED: '1'
+      },
+      error_file: '/var/www/beautycita.com/rasa/logs/rasa-server-error.log',
+      out_file: '/var/www/beautycita.com/rasa/logs/rasa-server-out.log',
+      log_file: '/var/www/beautycita.com/rasa/logs/rasa-server.log',
+      time: true,
+      autorestart: true,
+      max_restarts: 50,
+      min_uptime: '60s',
+      restart_delay: 10000,
+      watch: false,
+      ignore_watch: ['node_modules', 'logs', 'models', '__pycache__'],
+      kill_timeout: 10000,
+      wait_ready: true,
+      listen_timeout: 30000
+    },
+    {
+      name: 'beautycita-rasa-actions',
+      script: 'venv/bin/rasa',
+      args: 'run actions --port 5055',
+      interpreter: 'none',
+      cwd: '/var/www/beautycita.com/rasa',
+      instances: 1,
+      exec_mode: 'fork',
+      max_memory_restart: '1G',
+      env: {
+        NODE_ENV: 'production',
+        PYTHONPATH: '/var/www/beautycita.com/rasa',
+        PORT: 5055,
+        PYTHONUNBUFFERED: '1'
+      },
+      error_file: '/var/www/beautycita.com/rasa/logs/rasa-actions-error.log',
+      out_file: '/var/www/beautycita.com/rasa/logs/rasa-actions-out.log',
+      log_file: '/var/www/beautycita.com/rasa/logs/rasa-actions.log',
+      time: true,
+      autorestart: true,
+      max_restarts: 25,
+      min_uptime: '45s',
+      restart_delay: 5000,
+      watch: false,
+      ignore_watch: ['node_modules', 'logs', 'models', '__pycache__'],
+      kill_timeout: 8000
+    },
+    {
+      name: 'beautycita-rasa-api',
+      script: 'venv/bin/python',
+      args: 'app.py',
+      interpreter: 'none',
+      cwd: '/var/www/beautycita.com/rasa/api',
+      instances: 1,
+      exec_mode: 'fork',
+      max_memory_restart: '512M',
+      env: {
+        FLASK_ENV: 'production',
+        PYTHONPATH: '/var/www/beautycita.com/rasa/api',
+        RASA_SERVER_URL: 'http://localhost:5005',
+        RASA_ACTION_SERVER_URL: 'http://localhost:5055',
+        JWT_SECRET: 'beautycita_rasa_secret_2025',
+        BEAUTYCITA_CLIENT_SECRET: 'beautycita_secret_2025',
+        ADMIN_SECRET: 'admin_secret_2025',
+        REDIS_HOST: 'localhost',
+        REDIS_PORT: 6379,
+        REDIS_DB: 1,
+        PORT: 5000,
+        PYTHONUNBUFFERED: '1'
+      },
+      error_file: '/var/www/beautycita.com/rasa/logs/rasa-api-error.log',
+      out_file: '/var/www/beautycita.com/rasa/logs/rasa-api-out.log',
+      log_file: '/var/www/beautycita.com/rasa/logs/rasa-api.log',
+      time: true,
+      autorestart: true,
+      max_restarts: 25,
+      min_uptime: '45s',
+      restart_delay: 3000,
+      watch: false,
+      ignore_watch: ['node_modules', 'logs', '__pycache__'],
+      kill_timeout: 8000
+    }
+  ]
+};

@@ -1,0 +1,679 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "confirm": "Confirmar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar",
+    "close": "Cerrar",
+    "open": "Abrir",
+    "view": "Ver",
+    "select": "Seleccionar",
+    "clear": "Limpiar",
+    "apply": "Aplicar",
+    "reset": "Reiniciar",
+    "submit": "Enviar",
+    "required": "Requerido",
+    "optional": "Opcional",
+    "yes": "Sí",
+    "no": "No",
+    "or": "o",
+    "and": "y"
+  },
+  "nav": {
+    "home": "Inicio",
+    "services": "Servicios",
+    "stylists": "Estilistas",
+    "about": "Acerca de",
+    "contact": "Contacto",
+    "profile": "Perfil",
+    "dashboard": "Panel",
+    "bookings": "Citas",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar Sesión"
+  },
+  "auth": {
+    "loginTitle": "Bienvenido de Vuelta",
+    "loginSubtitle": "Inicia sesión en tu cuenta para continuar",
+    "registerTitle": "Únete a BeautyCita",
+    "registerSubtitle": "Crea tu cuenta y descubre tu belleza natural",
+    "stylistRegisterTitle": "Únete como Estilista",
+    "stylistRegisterSubtitle": "Comparte tu talento con miles de clientes",
+
+    "fields": {
+      "email": "Email",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "phone": "Teléfono",
+      "dateOfBirth": "Fecha de Nacimiento",
+      "businessName": "Nombre del Negocio",
+      "bio": "Biografía",
+      "experience": "Años de Experiencia",
+      "specialties": "Especialidades",
+      "locationCity": "Ciudad",
+      "locationState": "Estado",
+      "instagramUrl": "Instagram (opcional)"
+    },
+
+    "placeholders": {
+      "email": "tu@email.com",
+      "password": "••••••••",
+      "firstName": "Juan",
+      "lastName": "Pérez",
+      "phone": "+52 55 1234 5678",
+      "dateOfBirth": "dd/mm/aaaa",
+      "businessName": "Salón de Belleza María",
+      "bio": "Cuéntanos sobre ti, tu experiencia y lo que te apasiona de la belleza...",
+      "instagramUrl": "@tuinstagram o https://instagram.com/tuinstagram"
+    },
+
+    "actions": {
+      "signIn": "Iniciar Sesión",
+      "signUp": "Crear Cuenta",
+      "signUpStylist": "Únete como Estilista",
+      "next": "Siguiente",
+      "previous": "Anterior",
+      "submit": "Enviar Solicitud",
+      "uploadImages": "Subir Imágenes",
+      "removeImage": "Eliminar",
+      "selectAll": "Seleccionar Todo",
+      "back": "Atrás"
+    },
+
+    "options": {
+      "rememberMe": "Recordarme",
+      "acceptTerms": "Acepto los términos y condiciones",
+      "acceptStylistTerms": "Acepto los términos y condiciones para estilistas",
+      "1year": "1 año",
+      "2years": "2 años",
+      "3years": "3 años",
+      "4years": "4 años",
+      "5years": "5+ años",
+      "10years": "10+ años",
+      "selectExp": "Selecciona...",
+      "selectSpecialties": "Selecciona tus áreas de especialización"
+    },
+
+    "links": {
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "noAccount": "¿No tienes una cuenta?",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "signUpHere": "Regístrate aquí",
+      "signInHere": "Inicia sesión aquí",
+      "joinAsStylist": "Únete como estilista",
+      "beautyProfessional": "¿Eres un profesional de la belleza?",
+      "termsOfService": "Términos de Servicio",
+      "privacyPolicy": "Política de Privacidad"
+    },
+
+    "stylistSteps": {
+      "step1": {
+        "title": "Información Personal",
+        "description": "Datos básicos y de contacto"
+      },
+      "step2": {
+        "title": "Información Profesional",
+        "description": "Experiencia y especialidades"
+      },
+      "step3": {
+        "title": "Ubicación y Contacto",
+        "description": "Dirección y redes sociales"
+      },
+      "step4": {
+        "title": "Portfolio",
+        "description": "Imágenes de tu trabajo"
+      },
+      "step5": {
+        "title": "Finalizar",
+        "description": "Revisión y confirmación"
+      }
+    },
+
+    "portfolio": {
+      "title": "Muestra tu Trabajo",
+      "subtitle": "Sube hasta 6 imágenes de tu mejor trabajo (máximo 5MB cada una)",
+      "uploadText": "Haz clic para seleccionar imágenes",
+      "uploadHint": "PNG, JPG hasta 5MB cada una",
+      "maxImages": "Máximo 6 imágenes permitidas",
+      "imageAlt": "Imagen del portfolio"
+    },
+
+    "review": {
+      "title": "¡Casi Terminamos!",
+      "subtitle": "Revisa tu información antes de enviar tu solicitud",
+      "personalInfo": "Información Personal",
+      "professionalInfo": "Información Profesional",
+      "location": "Ubicación",
+      "portfolioImages": "Portfolio",
+      "imagesSelected": "imágenes seleccionadas"
+    },
+
+    "benefits": {
+      "title": "Beneficios de crear una cuenta:",
+      "easyBooking": "Reserva citas fácilmente",
+      "serviceHistory": "Accede a tu historial de servicios",
+      "personalizedOffers": "Recibe ofertas personalizadas",
+      "reviewServices": "Evalúa y reseña servicios"
+    },
+
+    "validation": {
+      "emailRequired": "El email es requerido",
+      "emailInvalid": "Email inválido",
+      "passwordRequired": "La contraseña es requerida",
+      "passwordMinLength": "La contraseña debe tener al menos 6 caracteres",
+      "passwordStrong": "La contraseña debe contener al menos una mayúscula, una minúscula y un número",
+      "passwordsNotMatch": "Las contraseñas no coinciden",
+      "firstNameRequired": "El nombre es requerido",
+      "firstNameMinLength": "El nombre debe tener al menos 2 caracteres",
+      "lastNameRequired": "El apellido es requerido",
+      "lastNameMinLength": "El apellido debe tener al menos 2 caracteres",
+      "phoneInvalid": "Número de teléfono inválido",
+      "dateOfBirthRequired": "La fecha de nacimiento es requerida",
+      "dateOfBirthInvalid": "Por favor ingresa una fecha válida",
+      "mustBe18": "Debes tener al menos 18 años",
+      "termsRequired": "Debes aceptar los términos y condiciones",
+      "businessNameRequired": "El nombre del negocio es requerido",
+      "experienceRequired": "La experiencia es requerida",
+      "specialtiesRequired": "Las especialidades son requeridas",
+      "cityRequired": "La ciudad es requerida",
+      "stateRequired": "El estado es requerido",
+      "phoneRequired": "El teléfono es requerido",
+      "confirmPassword": "Confirma tu contraseña"
+    },
+
+    "specialties": [
+      "Corte de Cabello",
+      "Coloración",
+      "Peinados",
+      "Tratamientos Capilares",
+      "Maquillaje",
+      "Cejas y Pestañas",
+      "Manicure",
+      "Pedicure",
+      "Tratamientos Faciales",
+      "Depilación",
+      "Masajes",
+      "Extensiones"
+    ],
+
+    "messages": {
+      "loginSuccess": "¡Bienvenido de vuelta!",
+      "registerSuccess": "¡Cuenta creada exitosamente! Por favor verifica tu email.",
+      "stylistRegisterSuccess": "¡Registro exitoso! Te contactaremos pronto para la verificación.",
+      "loginError": "Error al iniciar sesión",
+      "registerError": "Error al crear la cuenta",
+      "authError": "Error de autenticación",
+      "networkError": "Problema de conexión. Verifica tu internet e intenta de nuevo.",
+      "invalidCredentials": "Email o contraseña inválidos"
+    },
+
+    "legal": {
+      "termsAcceptance": "Al iniciar sesión, aceptas nuestros",
+      "and": "y",
+      "termsLink": "Términos de Servicio",
+      "privacyLink": "Política de Privacidad"
+    }
+  },
+  "services": {
+    "title": "Servicios de Belleza",
+    "searchPlaceholder": "Buscar servicios...",
+    "categories": "Categorías",
+    "priceRange": "Rango de Precio",
+    "duration": "Duración",
+    "book": "Reservar Ahora",
+    "from": "Desde",
+    "minutes": "minutos",
+    "popular": "Popular",
+    "new": "Nuevo",
+    "subtitle": {
+      "mobile": "Desliza para descubrir servicios increíbles",
+      "desktop": "Descubre servicios de belleza increíbles"
+    },
+    "categories": {
+      "all": "Todos",
+      "hair": "Cabello",
+      "nails": "Uñas",
+      "makeup": "Maquillaje",
+      "skincare": "Skincare"
+    },
+    "noResults": {
+      "title": "No se encontraron servicios",
+      "subtitle": "No encontramos servicios que coincidan con tu búsqueda. Prueba con otros filtros o términos.",
+      "viewAll": "Ver todos los servicios"
+    },
+    "completed": {
+      "title": "¡Has visto todos los servicios!",
+      "withLikes": "Te gustaron {count} servicios",
+      "tryFilters": "Prueba con diferentes filtros",
+      "startOver": "Empezar de nuevo"
+    },
+    "summary": "Mostrando {count} servicio{plural} {category}",
+    "serviceData": {
+      "trendyHaircut": {
+        "name": "Corte y Peinado Trendy",
+        "description": "Corte moderno con técnicas de última generación. Ideal para looks urbanos y sofisticados."
+      },
+      "rainbowColoring": {
+        "name": "Coloración Arcoíris",
+        "description": "Dale vida a tu cabello con colores vibrantes y técnicas de degradado profesional."
+      },
+      "holographicManicure": {
+        "name": "Manicure Holográfico",
+        "description": "Diseños únicos con efectos holográficos que brillan con cada movimiento."
+      },
+      "editorialMakeup": {
+        "name": "Maquillaje Editorial",
+        "description": "Looks de maquillaje artístico perfecto para sesiones de fotos y eventos especiales."
+      },
+      "colorfulExtensions": {
+        "name": "Extensiones Coloridas",
+        "description": "Agrega longitud y color a tu cabello con extensiones de alta calidad."
+      },
+      "nailArt3D": {
+        "name": "Nail Art 3D",
+        "description": "Diseños tridimensionales que convierten tus uñas en obras de arte."
+      },
+      "kBeautyFacial": {
+        "name": "K-Beauty Facial",
+        "description": "Rutina coreana completa para una piel perfecta y radiante como las idols."
+      },
+      "hdBrows": {
+        "name": "Cejas HD Perfectas",
+        "description": "Diseño y definición de cejas con técnicas profesionales para un look impecable."
+      },
+      "chromeMirror": {
+        "name": "Uñas Chrome Mirror",
+        "description": "Efecto espejo ultra brillante que refleja como un cristal. Tendencia viral."
+      }
+    }
+  },
+  "stylists": {
+    "title": "Encuentra tu Estilista",
+    "searchPlaceholder": "Buscar estilistas...",
+    "location": "Ubicación",
+    "specialties": "Especialidades",
+    "rating": "Calificación",
+    "experience": "Experiencia",
+    "verified": "Verificado",
+    "available": "Disponible",
+    "years": "años",
+    "reviews": "reseñas",
+    "viewProfile": "Ver Perfil"
+  },
+  "booking": {
+    "title": "Reservar Cita",
+    "selectDate": "Seleccionar Fecha",
+    "selectTime": "Seleccionar Hora",
+    "notes": "Notas Adicionales",
+    "summary": "Resumen de Reserva",
+    "total": "Total",
+    "confirm": "Confirmar Reserva",
+    "payment": "Pago",
+    "success": "¡Reserva Confirmada!",
+    "phoneVerificationRequired": "Se requiere verificación de teléfono para reservar",
+    "loginRequired": "Por favor inicia sesión para reservar este servicio"
+  },
+  "phoneVerification": {
+    "title": "Verifica tu Teléfono",
+    "subtitle": "Necesitamos verificar tu número de teléfono para completar tu reserva",
+    "sendCode": "Enviar Código de Verificación",
+    "enterCode": "Ingresa el Código de Verificación",
+    "resendCode": "Reenviar Código",
+    "verify": "Verificar",
+    "codeSent": "Código de verificación enviado a {phone}",
+    "codeExpires": "El código expira en {time}",
+    "invalidCode": "Código de verificación inválido",
+    "codePlaceholder": "Ingresa código de 6 dígitos",
+    "phoneRequired": "El número de teléfono es requerido",
+    "verificationSuccess": "¡Teléfono verificado exitosamente!",
+    "verificationFailed": "Verificación fallida. Por favor intenta de nuevo.",
+    "resendSuccess": "Nuevo código enviado exitosamente",
+    "tooManyAttempts": "Demasiados intentos. Por favor intenta más tarde.",
+    "registrationTitle": "Verifica tu Número de Teléfono",
+    "registrationSubtitle": "Necesitamos verificar tu número de teléfono antes de que puedas continuar con tu registro",
+    "mustVerifyToContinue": "Debes verificar tu número de teléfono antes de continuar al siguiente paso",
+    "verifyPhoneButton": "Verificar Número de Teléfono",
+    "phoneNotVerified": "Número de teléfono no verificado",
+    "phoneVerified": "Número de teléfono verificado",
+    "verificationRequired": "La verificación de teléfono es requerida para continuar"
+  },
+  "profile": {
+    "title": "Mi Perfil",
+    "personalInfo": "Información Personal",
+    "preferences": "Preferencias",
+    "security": "Seguridad",
+    "notifications": "Notificaciones",
+    "updateProfile": "Actualizar Perfil",
+    "changePassword": "Cambiar Contraseña"
+  },
+  "messages": {
+    "welcomeBack": "¡Bienvenido de vuelta!",
+    "loginSuccess": "Sesión iniciada correctamente",
+    "logoutSuccess": "Sesión cerrada correctamente",
+    "profileUpdated": "Perfil actualizado correctamente",
+    "bookingConfirmed": "Reserva confirmada correctamente",
+    "errorOccurred": "Ocurrió un error",
+    "networkError": "Error de red, intenta de nuevo",
+    "invalidCredentials": "Email o contraseña incorrectos",
+    "emailRequired": "El email es requerido",
+    "passwordRequired": "La contraseña es requerida",
+    "phoneInvalid": "Por favor ingresa un número de teléfono válido"
+  },
+  "pages": {
+    "about": {
+      "title": "Acerca de BeautyCita",
+      "subtitle": "Revolucionando las Citas de Belleza con IA",
+      "mission": "Nuestra Misión",
+      "missionText": "En BeautyCita, creemos que todos merecen verse y sentirse lo mejor posible. Estamos revolucionando la industria de la belleza conectando clientes con profesionales de la belleza de primer nivel a través de tecnología de IA de vanguardia.",
+      "story": "Nuestra Historia",
+      "storyText": "Fundada por entusiastas de la belleza e innovadores tecnológicos, BeautyCita nació de la frustración de encontrar el estilista perfecto. Combinamos inteligencia artificial con experiencia humana para crear una plataforma que realmente entiende tus necesidades de belleza.",
+      "values": "Nuestros Valores",
+      "innovation": "Innovación",
+      "innovationText": "Empujando constantemente los límites con recomendaciones impulsadas por IA",
+      "quality": "Calidad",
+      "qualityText": "Asociándose solo con profesionales de la belleza verificados y hábiles",
+      "accessibility": "Accesibilidad",
+      "accessibilityText": "Haciendo que los servicios de belleza premium estén disponibles para todos"
+    },
+    "careers": {
+      "title": "Únete a Nuestro Equipo",
+      "subtitle": "Ayúdanos a revolucionar la industria de la belleza",
+      "intro": "Buscamos personas apasionadas que quieran hacer la diferencia en cómo las personas experimentan los servicios de belleza.",
+      "openPositions": "Posiciones Abiertas",
+      "benefits": "Por Qué Trabajar Con Nosotros",
+      "benefit1": "Salario competitivo y participación accionaria",
+      "benefit2": "Beneficios de salud integrales",
+      "benefit3": "Opciones de trabajo remoto flexible",
+      "benefit4": "Presupuesto para desarrollo profesional",
+      "benefit5": "Subsidio para servicios de belleza",
+      "noOpenings": "No hay vacantes actuales, pero siempre buscamos talento excepcional. ¡Envíanos tu currículum!"
+    },
+    "press": {
+      "title": "Prensa y Medios",
+      "subtitle": "Últimas noticias y cobertura sobre BeautyCita",
+      "latestNews": "Últimas Noticias",
+      "mediaKit": "Kit de Medios",
+      "pressContact": "Contacto de Prensa",
+      "pressEmail": "prensa@beautycita.com",
+      "newsItem1": "BeautyCita Asegura $5M Serie A para Expandir Plataforma de Belleza con IA",
+      "newsItem2": "App Revolucionaria de Belleza Se Lanza con Tecnología Aphrodite AI",
+      "newsItem3": "BeautyCita Se Asocia con las Mejores Escuelas de Belleza de México"
+    },
+    "blog": {
+      "title": "Blog de Belleza",
+      "subtitle": "Consejos, tendencias e insights de expertos en belleza",
+      "latestPosts": "Últimas Publicaciones",
+      "categories": "Categorías",
+      "trends": "Tendencias de Belleza",
+      "tips": "Consejos de Belleza",
+      "tutorials": "Tutoriales",
+      "industry": "Noticias de la Industria",
+      "post1": "Tendencias de Belleza 2024: Lo Que Está de Moda Este Año",
+      "post2": "Cómo la IA Está Transformando las Recomendaciones de Belleza Personal",
+      "post3": "Encontrar Tu Estilista Perfecto: Una Guía Completa"
+    },
+    "help": {
+      "title": "Centro de Ayuda",
+      "subtitle": "Encuentra respuestas a tus preguntas",
+      "searchPlaceholder": "Buscar ayuda...",
+      "popularTopics": "Temas Populares",
+      "booking": "Reservar Servicios",
+      "payments": "Pagos y Facturación",
+      "account": "Gestión de Cuenta",
+      "technical": "Soporte Técnico",
+      "faq": "Preguntas Frecuentes",
+      "contactSupport": "Contactar Soporte",
+      "stillNeedHelp": "¿Aún necesitas ayuda? Estamos aquí para ti."
+    },
+    "contact": {
+      "title": "Contáctanos",
+      "subtitle": "Nos encantaría saber de ti",
+      "getInTouch": "Ponte en Contacto",
+      "generalInquiries": "Consultas Generales",
+      "support": "Atención al Cliente",
+      "partnerships": "Asociaciones",
+      "press": "Prensa y Medios",
+      "name": "Nombre",
+      "email": "Email",
+      "subject": "Asunto",
+      "message": "Mensaje",
+      "send": "Enviar Mensaje",
+      "location": "Nuestra Ubicación",
+      "hours": "Horario de Atención"
+    },
+    "status": {
+      "title": "Estado del Sistema",
+      "subtitle": "Estado actual de los servicios de BeautyCita",
+      "allSystems": "Todos los Sistemas Operativos",
+      "services": "Servicios",
+      "website": "Sitio Web",
+      "mobileApp": "App Móvil",
+      "api": "API",
+      "payments": "Procesamiento de Pagos",
+      "notifications": "Notificaciones",
+      "operational": "Operativo",
+      "degraded": "Rendimiento Degradado",
+      "outage": "Interrupción",
+      "maintenance": "Mantenimiento",
+      "lastUpdated": "Última actualización"
+    },
+    "report": {
+      "title": "Reportar un Problema",
+      "subtitle": "Ayúdanos a mejorar reportando problemas",
+      "issueType": "Tipo de Problema",
+      "technical": "Problema Técnico",
+      "inappropriate": "Contenido Inapropiado",
+      "spam": "Spam",
+      "fraud": "Fraude/Estafa",
+      "other": "Otro",
+      "description": "Descripción",
+      "screenshots": "Capturas de pantalla (opcional)",
+      "submit": "Enviar Reporte",
+      "thankYou": "Gracias por tu reporte. Lo revisaremos prontamente."
+    },
+    "privacy": {
+      "title": "Política de Privacidad",
+      "subtitle": "Cómo protegemos y usamos tu información",
+      "lastUpdated": "Última actualización: 1 de enero, 2024",
+      "intro": "En BeautyCita, tomamos tu privacidad en serio. Esta política explica cómo recopilamos, usamos y protegemos tu información personal.",
+      "dataCollection": "Recopilación de Datos",
+      "dataUse": "Cómo Usamos Tus Datos",
+      "dataSharing": "Compartir Datos",
+      "security": "Medidas de Seguridad",
+      "rights": "Tus Derechos",
+      "contact": "Contáctanos Sobre Privacidad"
+    },
+    "terms": {
+      "title": "Términos de Servicio",
+      "subtitle": "Términos y condiciones para usar BeautyCita",
+      "lastUpdated": "Última actualización: 1 de enero, 2024",
+      "acceptance": "Aceptación de Términos",
+      "services": "Descripción de Servicios",
+      "accounts": "Cuentas de Usuario",
+      "conduct": "Conducta del Usuario",
+      "payment": "Términos de Pago",
+      "cancellation": "Política de Cancelación",
+      "liability": "Limitación de Responsabilidad",
+      "modifications": "Modificaciones a los Términos"
+    },
+    "cookies": {
+      "title": "Política de Cookies",
+      "subtitle": "Cómo usamos cookies y tecnologías similares",
+      "lastUpdated": "Última actualización: 1 de enero, 2024",
+      "whatAreCookies": "Qué Son las Cookies",
+      "howWeUse": "Cómo Usamos las Cookies",
+      "typesOfCookies": "Tipos de Cookies",
+      "essential": "Cookies Esenciales",
+      "analytics": "Cookies de Análisis",
+      "marketing": "Cookies de Marketing",
+      "managing": "Gestionar Cookies",
+      "thirdParty": "Cookies de Terceros"
+    },
+    "licenses": {
+      "title": "Licencias de Software",
+      "subtitle": "Licencias de código abierto y terceros",
+      "intro": "BeautyCita usa varios software de código abierto y terceros. A continuación están las licencias de estos componentes.",
+      "openSource": "Componentes de Código Abierto",
+      "thirdParty": "Servicios de Terceros",
+      "react": "React - Licencia MIT",
+      "typescript": "TypeScript - Licencia Apache 2.0",
+      "tailwind": "Tailwind CSS - Licencia MIT"
+    },
+    "resources": {
+      "title": "Recursos para Estilistas",
+      "subtitle": "Herramientas y guías para profesionales de la belleza",
+      "gettingStarted": "Comenzando",
+      "setupGuide": "Guía de Configuración de Cuenta",
+      "bestPractices": "Mejores Prácticas",
+      "marketing": "Marketing de Tus Servicios",
+      "clientManagement": "Gestión de Clientes",
+      "pricing": "Estrategias de Precios",
+      "downloads": "Descargas",
+      "brandKit": "Kit de Marca",
+      "templates": "Plantillas de Servicios",
+      "webinars": "Seminarios de Entrenamiento"
+    },
+    "policies": {
+      "title": "Políticas de Estilistas",
+      "subtitle": "Directrices y requisitos para profesionales de la belleza",
+      "professionalStandards": "Estándares Profesionales",
+      "qualifications": "Calificaciones Requeridas",
+      "conduct": "Código de Conducta",
+      "clientSafety": "Requisitos de Seguridad del Cliente",
+      "cancellation": "Política de Cancelación",
+      "disputes": "Resolución de Disputas",
+      "verification": "Proceso de Verificación",
+      "compliance": "Requisitos de Cumplimiento"
+    },
+    "commissions": {
+      "title": "Estructura de Comisiones",
+      "subtitle": "Cómo funcionan las ganancias de estilistas en BeautyCita",
+      "overview": "Resumen de Comisiones",
+      "rates": "Tarifas de Comisión",
+      "tier1": "Estilistas Nuevos: 80% del precio del servicio",
+      "tier2": "Estilistas Verificados: 85% del precio del servicio",
+      "tier3": "Estilistas Premium: 90% del precio del servicio",
+      "payments": "Calendario de Pagos",
+      "paymentInfo": "Las comisiones se pagan semanalmente vía depósito directo",
+      "fees": "Tarifas de Plataforma",
+      "feeInfo": "Las tarifas de procesamiento de pagos se deducen de las ganancias brutas",
+      "bonuses": "Bonos de Rendimiento",
+      "bonusInfo": "Ganancias adicionales disponibles para estilistas de alto rendimiento"
+    }
+  },
+  "homepage": {
+    "hero": {
+      "title": "Tu Belleza,",
+      "subtitle": "Nuestra Pasión ✨",
+      "description": "Conectamos a los mejores estilistas con clientes que buscan realzar su belleza natural",
+      "exploreServices": "✨ Explorar Servicios",
+      "joinStylist": "💫 Únete como Estilista"
+    },
+    "features": {
+      "title": "¿Por qué elegir BeautyCita? 💖",
+      "subtitle": "Ofrecemos una experiencia única que conecta a clientes con profesionales de la belleza",
+      "easyBooking": {
+        "title": "Reservas Fáciles",
+        "description": "Programa tu cita en segundos con nuestro sistema intuitivo"
+      },
+      "verifiedStylists": {
+        "title": "Estilistas Verificados",
+        "description": "Todos nuestros profesionales están certificados y verificados"
+      },
+      "securePayments": {
+        "title": "Pagos Seguros",
+        "description": "Procesa tus pagos de forma segura con tecnología de última generación"
+      },
+      "realReviews": {
+        "title": "Reseñas Reales",
+        "description": "Lee opiniones auténticas de otros clientes"
+      }
+    },
+    "services": {
+      "title": "Servicios Populares 🔥",
+      "subtitle": "Descubre los tratamientos de belleza más solicitados por nuestros clientes",
+      "viewAll": "✨ Ver Todos los Servicios",
+      "popular": "🔥 Popular",
+      "haircut": "Corte y Peinado",
+      "coloring": "Coloración",
+      "manicure": "Manicure",
+      "makeup": "Maquillaje",
+      "from": "Desde"
+    },
+    "cta": {
+      "title": "¿Listo para tu transformación?",
+      "subtitle": "Únete a miles de clientes satisfechos que han encontrado a su estilista ideal",
+      "createAccount": "Crear Cuenta",
+      "findStylists": "Buscar Estilistas"
+    },
+    "stats": {
+      "happyClients": "Clientes Satisfechos",
+      "verifiedStylists": "Estilistas Verificados",
+      "averageRating": "Calificación Promedio"
+    }
+  },
+  "chat": {
+    "welcome": "¡Hola! Soy Aphrodite, tu asistente de belleza. ¿En qué puedo ayudarte hoy?",
+    "placeholder": "Escribe tu mensaje... ✨",
+    "assistant": "Tu asistente de belleza personal",
+    "buttons": {
+      "services": "Ver Servicios",
+      "stylists": "Buscar Estilistas",
+      "booking": "Reservar Cita"
+    },
+    "errors": {
+      "general": "Lo siento, hubo un error al procesar tu mensaje. Intenta de nuevo.",
+      "network": "Problema de conexión. Verifica tu internet e intenta de nuevo.",
+      "unavailable": "El servicio de chat está temporalmente no disponible. Intenta en unos minutos.",
+      "server": "Error del servidor. Nuestro equipo ha sido notificado.",
+      "init": "Lo siento, hay un problema con el chat en este momento. Por favor intenta más tarde."
+    },
+    "retry": "Reintentar",
+    "support": "Contactar Soporte"
+  },
+  "footer": {
+    "company": {
+      "careers": "Carreras",
+      "press": "Prensa",
+      "blog": "Blog"
+    },
+    "support": {
+      "helpCenter": "Centro de Ayuda",
+      "serviceStatus": "Estado del Servicio",
+      "reportProblem": "Reportar Problema"
+    },
+    "legal": {
+      "privacy": "Privacidad",
+      "terms": "Términos",
+      "cookies": "Cookies",
+      "licenses": "Licencias"
+    },
+    "stylists": {
+      "joinStylist": "Únete como Estilista",
+      "resources": "Centro de Recursos",
+      "policies": "Políticas",
+      "commissions": "Comisiones"
+    },
+    "description": "La plataforma líder que conecta a clientes con los mejores profesionales de la belleza. Tu transformación comienza aquí.",
+    "newsletter": {
+      "title": "Mantente al día con las últimas tendencias",
+      "subtitle": "Recibe consejos de belleza, ofertas especiales y novedades directamente en tu email",
+      "placeholder": "Tu email",
+      "subscribe": "Suscribirse"
+    },
+    "madeWith": "Hecho con",
+    "inMexico": "en México"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "appId": "com.beautycita.app",
+  "appName": "BeautyCita",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#ec4899",
+      "showSpinner": true,
+      "spinnerColor": "#9333ea"
+    },
+    "StatusBar": {
+      "style": "dark",
+      "backgroundColor": "#ec4899"
+    }
+  }
+}

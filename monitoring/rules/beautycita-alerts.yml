@@ -1,0 +1,290 @@
+# ==================== BEAUTYCITA ALERTING RULES ====================
+# Production alerting rules for BeautyCita platform
+
+groups:
+  # ==================== SERVICE AVAILABILITY ====================
+  - name: service_availability
+    rules:
+      - alert: BackendDown
+        expr: up{job="beautycita-backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: backend
+        annotations:
+          summary: "BeautyCita Backend is down"
+          description: "Backend service has been down for more than 1 minute"
+
+      - alert: FrontendDown
+        expr: up{job="beautycita-frontend"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: frontend
+        annotations:
+          summary: "BeautyCita Frontend is down"
+          description: "Frontend service has been down for more than 2 minutes"
+
+      - alert: DatabaseDown
+        expr: up{job="postgres-exporter"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          service: database
+        annotations:
+          summary: "PostgreSQL database is down"
+          description: "Database has been unreachable for more than 30 seconds"
+
+      - alert: RedisDown
+        expr: up{job="redis-exporter"} == 0
+        for: 1m
+        labels:
+          severity: high
+          service: cache
+        annotations:
+          summary: "Redis cache is down"
+          description: "Redis service has been down for more than 1 minute"
+
+  # ==================== PERFORMANCE ALERTS ====================
+  - name: performance
+    rules:
+      - alert: HighResponseTime
+        expr: avg(nginx_http_request_duration_seconds{quantile="0.95"}) > 2
+        for: 5m
+        labels:
+          severity: warning
+          service: nginx
+        annotations:
+          summary: "High response time detected"
+          description: "95th percentile response time is {{ $value }}s for 5 minutes"
+
+      - alert: HighErrorRate
+        expr: |
+          (
+            rate(nginx_http_requests_total{status=~"5.."}[5m]) /
+            rate(nginx_http_requests_total[5m])
+          ) * 100 > 5
+        for: 3m
+        labels:
+          severity: warning
+          service: nginx
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value }}% for 3 minutes"
+
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "High CPU usage"
+          description: "CPU usage is {{ $value }}% on {{ $labels.instance }}"
+
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage is {{ $value }}% on {{ $labels.instance }}"
+
+      - alert: HighDiskUsage
+        expr: (1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "High disk usage"
+          description: "Disk usage is {{ $value }}% on {{ $labels.instance }}"
+
+  # ==================== APPLICATION-SPECIFIC ALERTS ====================
+  - name: application_alerts
+    rules:
+      - alert: HighBookingFailureRate
+        expr: |
+          (
+            rate(beautycita_bookings_failed_total[5m]) /
+            rate(beautycita_bookings_total[5m])
+          ) * 100 > 10
+        for: 3m
+        labels:
+          severity: high
+          service: booking
+        annotations:
+          summary: "High booking failure rate"
+          description: "Booking failure rate is {{ $value }}% for 3 minutes"
+
+      - alert: PaymentProcessingIssue
+        expr: rate(beautycita_payments_failed_total[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: high
+          service: payment
+        annotations:
+          summary: "Payment processing issues detected"
+          description: "Payment failures detected: {{ $value }} failures/second"
+
+      - alert: AIChatUnavailable
+        expr: up{job="beautycita-backend", endpoint="/api/aphrodite/health"} == 0
+        for: 2m
+        labels:
+          severity: warning
+          service: ai_chat
+        annotations:
+          summary: "AI Chat service unavailable"
+          description: "Aphrodite AI chat service has been unavailable for 2 minutes"
+
+      - alert: HighActiveUsers
+        expr: beautycita_active_users > 1000
+        for: 1m
+        labels:
+          severity: info
+          service: application
+        annotations:
+          summary: "High number of active users"
+          description: "{{ $value }} active users detected"
+
+  # ==================== SECURITY ALERTS ====================
+  - name: security_alerts
+    rules:
+      - alert: UnusualTrafficSpike
+        expr: rate(nginx_http_requests_total[1m]) > rate(nginx_http_requests_total[1h] offset 1h) * 5
+        for: 2m
+        labels:
+          severity: warning
+          service: security
+        annotations:
+          summary: "Unusual traffic spike detected"
+          description: "Traffic is 5x higher than usual: {{ $value }} requests/second"
+
+      - alert: HighFailedLogins
+        expr: rate(beautycita_auth_failures_total[5m]) > 5
+        for: 2m
+        labels:
+          severity: warning
+          service: security
+        annotations:
+          summary: "High number of failed login attempts"
+          description: "{{ $value }} failed login attempts per second"
+
+      - alert: SSLCertificateExpiringSoon
+        expr: (probe_ssl_earliest_cert_expiry - time()) / 86400 < 30
+        for: 1h
+        labels:
+          severity: warning
+          service: security
+        annotations:
+          summary: "SSL certificate expiring soon"
+          description: "SSL certificate for {{ $labels.instance }} expires in {{ $value }} days"
+
+  # ==================== BUSINESS METRICS ALERTS ====================
+  - name: business_alerts
+    rules:
+      - alert: LowBookingConversionRate
+        expr: |
+          (
+            rate(beautycita_bookings_completed_total[1h]) /
+            rate(beautycita_booking_attempts_total[1h])
+          ) * 100 < 10
+        for: 30m
+        labels:
+          severity: warning
+          service: business
+        annotations:
+          summary: "Low booking conversion rate"
+          description: "Booking conversion rate is {{ $value }}% (below 10%)"
+
+      - alert: RevenueDropAlert
+        expr: |
+          (
+            rate(beautycita_revenue_total[1h]) <
+            rate(beautycita_revenue_total[1h] offset 24h) * 0.7
+          )
+        for: 2h
+        labels:
+          severity: high
+          service: business
+        annotations:
+          summary: "Significant revenue drop detected"
+          description: "Revenue is 30% lower than the same time yesterday"
+
+      - alert: HighCustomerServiceLoad
+        expr: beautycita_support_tickets_open > 50
+        for: 30m
+        labels:
+          severity: warning
+          service: support
+        annotations:
+          summary: "High customer service load"
+          description: "{{ $value }} open support tickets"
+
+  # ==================== EXTERNAL DEPENDENCIES ====================
+  - name: external_dependencies
+    rules:
+      - alert: StripeAPIDown
+        expr: probe_success{instance="https://api.stripe.com/v1/account"} == 0
+        for: 3m
+        labels:
+          severity: high
+          service: payment
+        annotations:
+          summary: "Stripe API is unreachable"
+          description: "Stripe API has been unreachable for 3 minutes"
+
+      - alert: GoogleMapsAPIDown
+        expr: probe_success{instance="https://maps.googleapis.com"} == 0
+        for: 5m
+        labels:
+          severity: warning
+          service: maps
+        annotations:
+          summary: "Google Maps API is unreachable"
+          description: "Google Maps API has been unreachable for 5 minutes"
+
+      - alert: AnthropicAPIDown
+        expr: probe_success{instance="https://api.anthropic.com"} == 0
+        for: 5m
+        labels:
+          severity: warning
+          service: ai
+        annotations:
+          summary: "Anthropic API is unreachable"
+          description: "Anthropic API has been unreachable for 5 minutes"
+
+  # ==================== INFRASTRUCTURE ALERTS ====================
+  - name: infrastructure
+    rules:
+      - alert: HighContainerRestarts
+        expr: increase(kube_pod_container_status_restarts_total[1h]) > 5
+        for: 5m
+        labels:
+          severity: warning
+          service: infrastructure
+        annotations:
+          summary: "Container restarting frequently"
+          description: "Container {{ $labels.container }} in pod {{ $labels.pod }} has restarted {{ $value }} times in the last hour"
+
+      - alert: DatabaseConnectionPoolExhaustion
+        expr: pg_stat_activity_count / pg_settings_max_connections * 100 > 80
+        for: 2m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "Database connection pool nearly exhausted"
+          description: "{{ $value }}% of database connections are in use"
+
+      - alert: RedisMemoryUsageHigh
+        expr: redis_memory_used_bytes / redis_memory_max_bytes * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: cache
+        annotations:
+          summary: "Redis memory usage is high"
+          description: "Redis memory usage is {{ $value }}%"

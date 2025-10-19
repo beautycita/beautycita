@@ -1,0 +1,46 @@
+language: es
+recipe: default.v1
+
+pipeline:
+- name: WhitespaceTokenizer
+- name: RegexFeaturizer
+- name: LexicalSyntacticFeaturizer
+- name: CountVectorsFeaturizer
+- name: CountVectorsFeaturizer
+  analyzer: char_wb
+  min_ngram: 1
+  max_ngram: 4
+- name: DIETClassifier
+  epochs: 50
+  constrain_similarities: true
+- name: EntitySynonymMapper
+- name: ResponseSelector
+  epochs: 50
+  constrain_similarities: true
+- name: FallbackClassifier
+  threshold: 0.3
+  ambiguity_threshold: 0.1
+
+policies:
+- name: MemoizationPolicy
+- name: RulePolicy
+- name: TEDPolicy
+  max_history: 5
+  epochs: 50
+  constrain_similarities: true
+
+# Database configuration for conversation tracking
+endpoints:
+  tracker_store:
+    type: SQL
+    dialect: postgresql
+    url: localhost
+    port: 5432
+    db: beautycita_rasa
+    username: rasa_user
+    password: secure_rasa_password_2025
+    login_db: beautycita_rasa
+
+  action_endpoint:
+    url: "http://localhost:5055/webhook"
+assistant_id: 20250922-141833-archaic-popup
