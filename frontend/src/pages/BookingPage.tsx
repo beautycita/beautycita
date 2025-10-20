@@ -19,6 +19,7 @@ import { useAuthStore } from '../store/authStore'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import { useTranslation } from 'react-i18next'
+import TimeSlotPicker from '../components/booking/TimeSlotPicker'
 
 interface BookingFormValues {
   stylistId: string
@@ -54,7 +55,6 @@ export default function BookingPage() {
   const [stylist, setStylist] = useState<Stylist | null>(null)
   const [service, setService] = useState<StylistService | null>(null)
   const [loading, setLoading] = useState(true)
-  const [availableSlots, setAvailableSlots] = useState<string[]>([])
   const [paymentMethods, setPaymentMethods] = useState<any[]>([])
   const [isDarkMode, setIsDarkMode] = useState(false)
 
@@ -109,36 +109,6 @@ export default function BookingPage() {
       toast.error(t('booking.messages.loadError'))
     } finally {
       setLoading(false)
-    }
-  }
-
-  const loadAvailableSlots = async (date: string) => {
-    try {
-      const response = await axios.get(`/api/availability/${stylistId}`, {
-        params: { date },
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      })
-
-      if (response.data && response.data.slots) {
-        setAvailableSlots(response.data.slots)
-      } else {
-        // Generate sample time slots if API doesn't return any
-        const slots = []
-        for (let hour = 9; hour <= 17; hour++) {
-          slots.push(`${hour.toString().padStart(2, '0')}:00`)
-          slots.push(`${hour.toString().padStart(2, '0')}:30`)
-        }
-        setAvailableSlots(slots)
-      }
-    } catch (error) {
-      console.error('Error loading available slots:', error)
-      // Fallback time slots
-      const slots = []
-      for (let hour = 9; hour <= 17; hour++) {
-        slots.push(`${hour.toString().padStart(2, '0')}:00`)
-        slots.push(`${hour.toString().padStart(2, '0')}:30`)
-      }
-      setAvailableSlots(slots)
     }
   }
 
@@ -347,56 +317,42 @@ export default function BookingPage() {
                         {t('booking.labels.selectDateTime')}
                       </h2>
 
-                      <div>
-                        <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                          {t('booking.labels.date')}
-                        </label>
-                        <Field
-                          type="date"
-                          name="date"
-                          min={new Date().toISOString().split('T')[0]}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                            setFieldValue('date', e.target.value)
-                            setFieldValue('time', '') // Reset time when date changes
-                            if (e.target.value) {
-                              loadAvailableSlots(e.target.value)
-                            }
-                          }}
-                          className={`w-full px-4 py-3 rounded-xl border ${
-                            isDarkMode
-                              ? 'bg-gray-700 border-gray-600 text-white'
-                              : 'bg-white border-gray-300 text-gray-900'
-                          } focus:ring-2 focus:ring-pink-500 focus:border-transparent`}
-                        />
-                        <ErrorMessage name="date" component="div" className="text-red-500 text-sm mt-1" />
-                      </div>
+                      <TimeSlotPicker
+                        stylistId={parseInt(stylistId!)}
+                        serviceId={parseInt(serviceId!)}
+                        serviceDuration={service.duration_minutes}
+                        onSelectSlot={(date, time) => {
+                          setFieldValue('date', date)
+                          setFieldValue('time', time)
+                        }}
+                        selectedDate={values.date}
+                        selectedTime={values.time}
+                      />
 
-                      {values.date && (
-                        <div>
-                          <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                            {t('booking.labels.availableSlots')}
-                          </label>
-                          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                            {availableSlots.map((slot) => (
-                              <button
-                                key={slot}
-                                type="button"
-                                onClick={() => setFieldValue('time', slot)}
-                                className={`px-4 py-3 rounded-xl font-medium transition-all ${
-                                  values.time === slot
-                                    ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg'
-                                    : isDarkMode
-                                    ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                }`}
-                              >
-                                {slot}
-                              </button>
-                            ))}
+                      {values.date && values.time && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          className="p-4 bg-green-50 border-2 border-green-200 rounded-2xl"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-green-500 rounded-full">
+                              <CheckCircleIcon className="h-6 w-6 text-white" />
+                            </div>
+                            <div>
+                              <p className="font-semibold text-green-900">
+                                Time Slot Selected
+                              </p>
+                              <p className="text-sm text-green-700">
+                                {new Date(values.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} at {values.time}
+                              </p>
+                            </div>
                           </div>
-                          <ErrorMessage name="time" component="div" className="text-red-500 text-sm mt-1" />
-                        </div>
+                        </motion.div>
                       )}
+
+                      <ErrorMessage name="date" component="div" className="text-red-500 text-sm mt-1" />
+                      <ErrorMessage name="time" component="div" className="text-red-500 text-sm mt-1" />
                     </div>
                   )}
 
