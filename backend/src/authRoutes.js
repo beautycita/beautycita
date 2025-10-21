@@ -1996,9 +1996,20 @@ router.post('/upgrade-to-stylist', async (req, res) => {
 
 router.patch('/profile', async (req, res) => {
   try {
+    // DEBUG: Log incoming request
+    console.log('🔍 [PROFILE_UPDATE] Request received:', {
+      body: req.body,
+      headers: {
+        authorization: req.headers.authorization ? 'Bearer [TOKEN]' : 'MISSING',
+        contentType: req.headers['content-type']
+      },
+      timestamp: new Date().toISOString()
+    });
+
     // Extract token from Authorization header
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.log('❌ [PROFILE_UPDATE] No auth token provided');
       return res.status(401).json({
         success: false,
         message: 'Access token required'
@@ -2011,7 +2022,9 @@ router.patch('/profile', async (req, res) => {
     let decoded;
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET || 'beautycita-secret');
+      console.log('✅ [PROFILE_UPDATE] Token verified for user:', decoded.id);
     } catch (error) {
+      console.log('❌ [PROFILE_UPDATE] Invalid token:', error.message);
       return res.status(401).json({
         success: false,
         message: 'Invalid or expired token'
@@ -2020,6 +2033,17 @@ router.patch('/profile', async (req, res) => {
 
     const userId = decoded.id;
     const { firstName, lastName, phone, profilePictureUrl, email, profile_complete, username } = req.body;
+
+    console.log('📝 [PROFILE_UPDATE] Fields to update:', {
+      userId,
+      firstName: firstName !== undefined ? firstName : '[NOT PROVIDED]',
+      lastName: lastName !== undefined ? lastName : '[NOT PROVIDED]',
+      phone: phone !== undefined ? phone : '[NOT PROVIDED]',
+      profilePictureUrl: profilePictureUrl !== undefined ? profilePictureUrl : '[NOT PROVIDED]',
+      email: email !== undefined ? email : '[NOT PROVIDED]',
+      profile_complete: profile_complete !== undefined ? profile_complete : '[NOT PROVIDED]',
+      username: username !== undefined ? username : '[NOT PROVIDED]'
+    });
 
     // Build update query dynamically
     const updates = [];
@@ -2038,6 +2062,7 @@ router.patch('/profile', async (req, res) => {
       const name = `${firstName || ''} ${lastName || ''}`.trim();
       updates.push(`name = $${paramCount++}`);
       values.push(name);
+      console.log('📝 [PROFILE_UPDATE] Computed full name:', name);
     }
     if (phone !== undefined) {
       updates.push(`phone = $${paramCount++}`);
@@ -2054,10 +2079,12 @@ router.patch('/profile', async (req, res) => {
     if (profile_complete !== undefined) {
       updates.push(`profile_complete = $${paramCount++}`);
       values.push(profile_complete);
+      console.log('📝 [PROFILE_UPDATE] Setting profile_complete to:', profile_complete);
     }
     if (username !== undefined) {
       // Validate username format
       if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
+        console.log('❌ [PROFILE_UPDATE] Invalid username format:', username);
         return res.status(400).json({
           success: false,
           message: 'Username must be 3-20 characters (letters, numbers, underscores only)'
@@ -2071,6 +2098,7 @@ router.patch('/profile', async (req, res) => {
       );
 
       if (existingUsername.rows.length > 0) {
+        console.log('❌ [PROFILE_UPDATE] Username already taken:', username);
         return res.status(400).json({
           success: false,
           message: 'Username already taken'
@@ -2084,6 +2112,7 @@ router.patch('/profile', async (req, res) => {
     }
 
     if (updates.length === 0) {
+      console.log('⚠️ [PROFILE_UPDATE] No fields to update');
       return res.status(400).json({
         success: false,
         message: 'No fields to update'
@@ -2101,9 +2130,16 @@ router.patch('/profile', async (req, res) => {
       RETURNING id, first_name, last_name, name, email, phone, role, profile_picture_url, phone_verified, email_verified, is_active, profile_complete, username
     `;
 
+    console.log('🗄️ [PROFILE_UPDATE] Executing query:', {
+      updates: updates,
+      valuesCount: values.length,
+      userId: userId
+    });
+
     const result = await query(updateQuery, values);
 
     if (result.rows.length === 0) {
+      console.log('❌ [PROFILE_UPDATE] User not found:', userId);
       return res.status(404).json({
         success: false,
         message: 'User not found'
@@ -2112,7 +2148,14 @@ router.patch('/profile', async (req, res) => {
 
     const updatedUser = result.rows[0];
 
-    res.json({
+    console.log('✅ [PROFILE_UPDATE] Successfully updated user:', {
+      userId: updatedUser.id,
+      name: updatedUser.name,
+      profile_complete: updatedUser.profile_complete,
+      updated_at: updatedUser.updated_at
+    });
+
+    const responseData = {
       success: true,
       message: 'Profile updated successfully',
       data: {
@@ -2133,10 +2176,23 @@ router.patch('/profile', async (req, res) => {
         profile_complete: updatedUser.profile_complete,
         username: updatedUser.username
       }
+    };
+
+    console.log('📤 [PROFILE_UPDATE] Sending response:', {
+      success: true,
+      userId: updatedUser.id,
+      dataKeys: Object.keys(responseData.data)
     });
+
+    res.json(responseData);
 
     logger.info('Profile updated successfully', { userId });
   } catch (error) {
+    console.error('💥 [PROFILE_UPDATE] Error:', {
+      message: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
+    });
     logger.error('Error updating profile:', error);
     res.status(500).json({ success: false, message: 'Failed to update profile' });
   }

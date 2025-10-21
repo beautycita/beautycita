@@ -39,7 +39,15 @@ class AuthService {
   }
 
   async updateProfile(data: Partial<User>): Promise<ApiResponse<User>> {
-    return apiClient.patch<User>('/auth/profile', data)
+    console.log('🔍 [FRONTEND] updateProfile called with:', data)
+    const response = await apiClient.patch<User>('/auth/profile', data)
+    console.log('📥 [FRONTEND] updateProfile response:', {
+      success: response.success,
+      hasData: !!response.data,
+      dataKeys: response.data ? Object.keys(response.data) : [],
+      data: response.data
+    })
+    return response
   }
 
   async changePassword(data: {

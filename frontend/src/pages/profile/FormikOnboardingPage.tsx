@@ -163,9 +163,22 @@ export default function FormikOnboardingPage() {
         await updateProfile({ profilePictureUrl: values.selectedAvatar })
       }
 
-      // 4. Mark complete
-      await updateProfile({ profile_complete: true })
-
+      // 4. Mark complete and wait for state to persist
+      console.log('[ONBOARDING] Marking profile as complete...')
+      const success = await updateProfile({ profile_complete: true })
+      
+      if (!success) {
+        console.error('[ONBOARDING] Failed to mark profile complete')
+        toast.error('Failed to save profile. Please try again.')
+        return
+      }
+      
+      console.log('[ONBOARDING] Profile marked complete, waiting for state to persist...')
+      
+      // Wait 500ms for Zustand persist to flush to localStorage
+      await new Promise(resolve => setTimeout(resolve, 500))
+      
+      console.log('[ONBOARDING] Redirecting to panel...')
       toast.success('Welcome to BeautyCita!')
 
       // Use window.location for full page reload to ensure state is fresh
