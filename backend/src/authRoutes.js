@@ -981,10 +981,10 @@ router.post('/send-verification', async (req, res) => {
         // Create temporary user record for Google OAuth edge case
         console.log('AuthRoutes - Creating new temporary user for Google OAuth');
         const newUser = await query(`
-          INSERT INTO users (email, role, is_active, phone_verified, created_at, updated_at)
-          VALUES ($1, $2, false, false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+          INSERT INTO users (name, email, role, is_active, phone_verified, created_at, updated_at)
+          VALUES ($1, $2, $3, false, false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
           RETURNING *
-        `, [email, role?.toUpperCase() || 'CLIENT']);
+        `, ['Temporary User', email, role?.toUpperCase() || 'CLIENT']);
         user = newUser.rows[0];
         userId = user.id;
         console.log('AuthRoutes - Created new user:', { userId: user.id, email: user.email, role: user.role });
