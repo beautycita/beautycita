@@ -946,4 +946,104 @@ router.get('/login-history', async (req, res) => {
   }
 });
 
+/**
+ * PUT /api/user/preferences
+ * Update user preferences (language, theme, notifications, etc.)
+ */
+router.put('/preferences', async (req, res) => {
+  try {
+    const { user } = req;
+    const { language, theme, currency, timezone, notifications } = req.body;
+
+    // Check if user has preferences record
+    const existingPrefs = await query(
+      'SELECT id FROM user_preferences WHERE user_id = $1',
+      [user.id]
+    );
+
+    if (existingPrefs.rows.length > 0) {
+      // Update existing preferences
+      await query(
+        `UPDATE user_preferences 
+         SET language = COALESCE($1, language),
+             theme = COALESCE($2, theme),
+             currency = COALESCE($3, currency),
+             timezone = COALESCE($4, timezone),
+             notifications = COALESCE($5, notifications),
+             updated_at = NOW()
+         WHERE user_id = $6`,
+        [language, theme, currency, timezone, notifications ? JSON.stringify(notifications) : null, user.id]
+      );
+    } else {
+      // Insert new preferences
+      await query(
+        `INSERT INTO user_preferences 
+         (user_id, language, theme, currency, timezone, notifications, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())`,
+        [user.id, language || 'en', theme || 'light', currency || 'USD', timezone || 'UTC', notifications ? JSON.stringify(notifications) : '{}']
+      );
+    }
+
+    // Fetch updated preferences
+    const result = await query(
+      'SELECT * FROM user_preferences WHERE user_id = $1',
+      [user.id]
+    );
+
+    return res.json({
+      success: true,
+      message: 'Preferences updated successfully',
+      data: result.rows[0]
+    });
+
+  } catch (error) {
+    console.error('Error updating preferences:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+});
+
+/**
+ * GET /api/user/preferences
+ * Get user preferences
+ */
+router.get('/preferences', async (req, res) => {
+  try {
+    const { user } = req;
+
+    const result = await query(
+      'SELECT * FROM user_preferences WHERE user_id = $1',
+      [user.id]
+    );
+
+    if (result.rows.length === 0) {
+      // Return default preferences
+      return res.json({
+        success: true,
+        data: {
+          language: 'en',
+          theme: 'light',
+          currency: 'USD',
+          timezone: 'UTC',
+          notifications: {}
+        }
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: result.rows[0]
+    });
+
+  } catch (error) {
+    console.error('Error fetching preferences:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+});
+
 module.exports = router;

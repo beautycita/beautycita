@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import axios from 'axios'
+import toast from 'react-hot-toast'
 import { CurrencyDollarIcon, ArrowTrendingUpIcon, CalendarDaysIcon, CreditCardIcon } from '@heroicons/react/24/outline'
+import { useAuthStore } from '../../store/authStore'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 
@@ -15,6 +17,7 @@ interface EarningsStats {
 }
 
 export default function BusinessEarnings() {
+  const { token } = useAuthStore()
   const [stats, setStats] = useState<EarningsStats>({
     today: 0,
     week: 0,
@@ -24,6 +27,7 @@ export default function BusinessEarnings() {
     paid: 0
   })
   const [loading, setLoading] = useState(true)
+  const [requesting, setRequesting] = useState(false)
 
   useEffect(() => {
     fetchEarnings()
@@ -32,7 +36,6 @@ export default function BusinessEarnings() {
   const fetchEarnings = async () => {
     try {
       setLoading(true)
-      const token = localStorage.getItem('authToken')
       const response = await axios.get(`${API_URL}/api/stylists/earnings`, {
         headers: { Authorization: `Bearer ${token}` }
       })
@@ -44,6 +47,33 @@ export default function BusinessEarnings() {
       console.error('Failed to fetch earnings:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleRequestPayout = async () => {
+    if (stats.pending === 0) {
+      toast.error('No pending balance to payout')
+      return
+    }
+
+    try {
+      setRequesting(true)
+      
+      const response = await axios.post(
+        `${API_URL}/api/stylists/request-payout`,
+        { amount: stats.pending },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+
+      if (response.data.success) {
+        toast.success('Payout request submitted successfully!')
+        fetchEarnings() // Refresh earnings
+      }
+    } catch (error: any) {
+      console.error('Failed to request payout:', error)
+      toast.error(error.response?.data?.message || 'Failed to request payout')
+    } finally {
+      setRequesting(false)
     }
   }
 
@@ -67,8 +97,12 @@ export default function BusinessEarnings() {
           <div className="text-center py-8">
             <p className="text-5xl font-bold text-yellow-600 mb-2">${stats.pending.toFixed(2)}</p>
             <p className="text-gray-600">Available for payout</p>
-            <button className="mt-6 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-3 rounded-full hover:shadow-lg transition-all">
-              Request Payout
+            <button 
+              onClick={handleRequestPayout}
+              disabled={requesting || stats.pending === 0}
+              className="mt-6 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-3 rounded-full hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {requesting ? 'Processing...' : 'Request Payout'}
             </button>
           </div>
         </div>
@@ -99,8 +133,10 @@ function EarningsCard({ title, value, icon: Icon, color }: EarningsCardProps) {
       animate={{ opacity: 1, scale: 1 }}
       className="bg-white rounded-3xl shadow-lg p-6"
     >
-      <div className={`inline-flex rounded-2xl p-3 bg-gradient-to-br ${color} mb-4`}>
-        <Icon className="h-8 w-8 text-white" />
+      <div className="flex items-center justify-between mb-4">
+        <div className={`p-3 bg-gradient-to-br ${color} rounded-2xl`}>
+          <Icon className="h-8 w-8 text-white" />
+        </div>
       </div>
       <p className="text-sm text-gray-500 mb-2">{title}</p>
       <p className="text-3xl font-bold text-gray-900">${value.toFixed(2)}</p>
