@@ -3,11 +3,9 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { HeartIcon, MapPinIcon, StarIcon } from '@heroicons/react/24/outline'
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid'
-import axios from 'axios'
+import { apiClient } from "../services/api"
 import toast from 'react-hot-toast'
 import { useAuthStore } from '../store/authStore'
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 
 interface FavoriteStylist {
   stylist_id: number
@@ -25,6 +23,7 @@ interface FavoriteStylist {
 export default function FavoritesPage() {
   const { user } = useAuthStore()
   const [favorites, setFavorites] = useState<FavoriteStylist[]>([])
+  const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -33,18 +32,18 @@ export default function FavoritesPage() {
 
   const fetchFavorites = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/client/favorites`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
-      })
+      setError(null)
+      const response = await apiClient.get<FavoriteStylist[]>('/client/favorites')
 
-      if (response.data.success) {
-        setFavorites(response.data.data || [])
+      if (response.success && response.data) {
+        setFavorites(response.data)
+      } else {
+        setFavorites([])
       }
     } catch (error: any) {
       console.error('Failed to fetch favorites:', error)
-      if (error.response?.status !== 404) {
-        toast.error('Failed to load favorites')
-      }
+      setError(error.message || 'Failed to load favorites')
+      setFavorites([])
     } finally {
       setLoading(false)
     }
@@ -52,13 +51,11 @@ export default function FavoritesPage() {
 
   const removeFavorite = async (stylistId: number) => {
     try {
-      await axios.delete(`${API_URL}/api/client/favorites/${stylistId}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
-      })
-
+      await apiClient.delete(`/client/favorites/${stylistId}`)
       setFavorites(favorites.filter(f => f.stylist_id !== stylistId))
-      // toast.success('Removed from favorites') // Removed: UI update is enough
+      toast.success('Removed from favorites')
     } catch (error) {
+      console.error('Failed to remove favorite:', error)
       toast.error('Failed to remove favorite')
     }
   }
