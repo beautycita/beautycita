@@ -1,0 +1,92 @@
+{
+  "name": "BeautyCita - Beauty Services Platform",
+  "short_name": "BeautyCita",
+  "description": "AI-powered beauty services booking platform connecting clients with professional stylists",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ec4899",
+  "orientation": "portrait",
+  "categories": ["lifestyle", "business", "shopping"],
+  "icons": [
+    {
+      "src": "/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/screenshots/desktop-1.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/assets/screenshots/mobile-1.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://beautycita.com/downloads/android/beautycita-v1.3.5-20251021.apk",
+      "id": "com.beautycita.app"
+    }
+  ],
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Find Stylists",
+      "short_name": "Find",
+      "url": "/stylists",
+      "icons": [{ "src": "/assets/shortcuts/search.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "My Bookings",
+      "short_name": "Bookings",
+      "url": "/dashboard/bookings",
+      "icons": [{ "src": "/assets/shortcuts/calendar.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Messages",
+      "short_name": "Chat",
+      "url": "/messages",
+      "icons": [{ "src": "/assets/shortcuts/messages.png", "sizes": "192x192" }]
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "image",
+          "accept": ["image/*"]
+        }
+      ]
+    }
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "file_handlers": [],
+  "protocol_handlers": [],
+  "scope": "/",
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  }
+}
