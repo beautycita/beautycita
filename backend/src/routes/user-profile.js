@@ -4,6 +4,7 @@ const { query } = require('../db');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs').promises;
+const { processImage } = require('../utils/imageProcessor');
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -247,7 +248,6 @@ router.post('/profile/picture', upload.single('profilePicture'), async (req, res
       });
     }
 
-    // Delete old profile picture if exists
     const oldPicResult = await query(
       'SELECT profile_picture_url FROM users WHERE id = $1',
       [user.id]
@@ -257,14 +257,19 @@ router.post('/profile/picture', upload.single('profilePicture'), async (req, res
       const oldPicPath = path.join(__dirname, '../../', oldPicResult.rows[0].profile_picture_url);
       try {
         await fs.unlink(oldPicPath);
+        const webpPath = oldPicPath.replace(/\.(jpg|jpeg|png|gif)$/, '.webp');
+        await fs.unlink(webpPath).catch(() => {});
       } catch (err) {
         console.error('Error deleting old profile picture:', err);
-        // Continue even if deletion fails
       }
     }
 
-    // Update database with new profile picture URL
-    const profilePictureUrl = `/uploads/profiles/${req.file.filename}`;
+    const uploadDir = path.join(__dirname, '../../uploads/profiles');
+    const baseFilename = `profile-${user.id}-${Date.now()}`;
+    
+    const processResult = await processImage(req.file.path, uploadDir, baseFilename);
+    const processedFilename = path.basename(processResult.mainImage);
+    const profilePictureUrl = `/uploads/profiles/${processedFilename}`;
 
     await query(
       'UPDATE users SET profile_picture_url = $1, updated_at = NOW() WHERE id = $2',
@@ -273,7 +278,7 @@ router.post('/profile/picture', upload.single('profilePicture'), async (req, res
 
     return res.json({
       success: true,
-      message: 'Profile picture uploaded successfully',
+      message: 'Profile picture uploaded and processed successfully',
       data: {
         profilePictureUrl: profilePictureUrl
       }
@@ -282,7 +287,6 @@ router.post('/profile/picture', upload.single('profilePicture'), async (req, res
   } catch (error) {
     console.error('Error uploading profile picture:', error);
 
-    // Clean up uploaded file if database update fails
     if (req.file) {
       try {
         await fs.unlink(req.file.path);
@@ -293,15 +297,10 @@ router.post('/profile/picture', upload.single('profilePicture'), async (req, res
 
     return res.status(500).json({
       success: false,
-      message: 'Internal server error'
+      message: 'Internal server error: ' + error.message
     });
   }
 });
-
-/**
- * DELETE /api/user/profile/picture
- * Remove profile picture
- */
 router.delete('/profile/picture', async (req, res) => {
   try {
     const { user } = req;
