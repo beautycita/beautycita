@@ -26,7 +26,7 @@ interface AccountStatus {
 }
 
 export default function StripeConnectSetup({ stylistId }: StripeConnectSetupProps) {
-  const { token } = useAuth()
+  const { token, user } = useAuth()
   const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const [accountStatus, setAccountStatus] = useState<AccountStatus | null>(null)
@@ -78,7 +78,7 @@ export default function StripeConnectSetup({ stylistId }: StripeConnectSetupProp
           },
           body: JSON.stringify({
             stylistId,
-            email: 'stylist@email.com', // TODO: Get from user context
+            email: user?.email || 'stylist@email.com',
             userId: stylistId
           })
         }

@@ -121,25 +121,39 @@ export default function SettingsPage() {
   }
 
   const handleDeleteAccount = async () => {
+    // Validate password and confirmation
+    if (!deletePassword || deletePassword.trim() === '') {
+      toast.error('Please enter your password')
+      return
+    }
+
+    if (deleteConfirmText !== 'DELETE') {
+      toast.error('Please type DELETE to confirm')
+      return
+    }
+
     try {
       setIsDeleting(true)
-      // TODO: Implement actual account deletion API call
-      // await axios.delete(`${API_URL}/api/users/account`, {
-      //   headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
-      //   data: { password: deletePassword }
-      // })
+      
+      await axios.delete(`${API_URL}/api/user/account`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+        data: { password: deletePassword }
+      })
 
-      toast.success('Account deletion request submitted')
+      toast.success('Account deletion request submitted. You will be logged out.')
       setShowDeleteDialog(false)
+      
       // Logout and redirect
-      // navigate('/login')
+      setTimeout(() => {
+        localStorage.removeItem('authToken')
+        window.location.href = '/login'
+      }, 2000)
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Failed to delete account')
     } finally {
       setIsDeleting(false)
     }
   }
-
   const renderCategoryContent = () => {
     switch (activeCategory) {
       case 'preferences':

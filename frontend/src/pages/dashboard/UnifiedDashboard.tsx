@@ -170,20 +170,46 @@ export default function UnifiedDashboard() {
             console.error('Failed to fetch admin stats:', error)
           }
         } else {
-          // TODO: Fetch client/stylist stats from real API
-          setStats({
-            totalBookings: 0,
-            upcomingBookings: 0,
-            completedBookings: 0,
-            totalRevenue: 0,
-            averageRating: 0,
-            favoriteStylists: 0,
-            totalSpent: 0,
-            todayAppointments: 0,
-            weekAppointments: 0,
-            totalClientsServed: 0,
-            pendingBookings: 0
-          })
+          try {
+            const statsResponse = await axios.get(`${API_URL}/api/analytics/dashboard/${userRole}`, {
+              headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` }
+            })
+
+            if (statsResponse.data.success) {
+              const data = statsResponse.data.data
+              
+              if (isStylist) {
+                setStats({
+                  todayAppointments: data.todayAppointments || 0,
+                  weeklyRevenue: data.weeklyRevenue || 0,
+                  totalRevenue: data.monthlyRevenue || 0,
+                  totalClientsServed: data.clientsServed || 0,
+                  averageRating: data.rating || 0
+                })
+              } else if (isClient) {
+                setStats({
+                  upcomingBookings: data.upcomingBookings || 0,
+                  completedBookings: data.completedBookings || 0,
+                  favoriteStylists: data.favoriteStylists || 0
+                })
+              }
+            }
+          } catch (error) {
+            console.error("Failed to fetch stats:", error)
+            setStats({
+              totalBookings: 0,
+              upcomingBookings: 0,
+              completedBookings: 0,
+              totalRevenue: 0,
+              averageRating: 0,
+              favoriteStylists: 0,
+              totalSpent: 0,
+              todayAppointments: 0,
+              weekAppointments: 0,
+              totalClientsServed: 0,
+              pendingBookings: 0
+            })
+          }
         }
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error)
