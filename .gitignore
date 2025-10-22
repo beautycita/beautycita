@@ -125,3 +125,21 @@ secrets.json
 \!.env.example
 \!.env.*.example
 *.apk
+
+# Build artifacts - DO NOT COMMIT
+*.aab
+*.apk
+*.ipa
+*.tar.gz
+*.tgz
+/frontend/android/app/build/
+/frontend/ios/App/build/
+/frontend/dist/
+
+# Large media files
+*.mp4
+*.mov
+*.avi
+
+# AI/ML directories
+/rasa/
