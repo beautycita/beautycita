@@ -14,7 +14,8 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   CalendarIcon,
-  UserIcon
+  UserIcon,
+  SparklesIcon,
 } from '@heroicons/react/24/outline'
 import { HeartIcon as HeartSolidIcon, StarIcon as StarSolidIcon } from '@heroicons/react/24/solid'
 
@@ -55,7 +56,7 @@ export const ServiceCard = ({
       {/* Image */}
       <div className="relative h-48 bg-gradient-to-br from-beauty-lavender to-beauty-mint">
         {image ? (
-          <img src={image} alt={title} className="w-full h-full object-cover" />
+          <img loading="lazy" src={image} alt={title} className="w-full h-full object-cover" />
         ) : (
           <div className="flex items-center justify-center h-full">
             <SparklesIcon className="w-16 h-16 text-white/50" />
@@ -171,7 +172,7 @@ export const StylistCard = ({
       <div className="relative h-32 bg-gradient-to-br from-primary-100 to-secondary-100">
         <div className="absolute -bottom-12 left-6">
           <div className="relative">
-            <img
+            <img loading="lazy"
               src={image || '/media/img/avatar/A0.png'}
               alt={name}
               className="w-24 h-24 rounded-3xl border-4 border-white shadow-beauty-soft object-cover"
@@ -341,7 +342,7 @@ export const BookingCard = ({
         {/* Image */}
         <div className="w-24 h-24 flex-shrink-0 bg-gradient-to-br from-beauty-lavender to-beauty-mint">
           {image ? (
-            <img src={image} alt={serviceName} className="w-full h-full object-cover" />
+            <img loading="lazy" src={image} alt={serviceName} className="w-full h-full object-cover" />
           ) : (
             <div className="flex items-center justify-center h-full">
               <CalendarIcon className="w-8 h-8 text-white/50" />

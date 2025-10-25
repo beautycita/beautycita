@@ -16,6 +16,10 @@ const { query } = require('./db');
 const { validateJWT } = require('./middleware/auth');
 const promClient = require('prom-client');
 const cacheService = require('./services/cacheService');
+const { initializeModernArchitecture } = require('./modernArchIntegration');
+// Security middleware
+const { contentSecurityPolicy, securityHeaders, rateLimitPresets, auditLog, initializeRedis } = require('./security-middleware');
+const { requireAccessToken } = require('./auth-security');
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -240,6 +244,8 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 1000, // limit each IP to 1000 requests per windowMs
   skip: (req) => {
+    // Skip rate limiting in test mode or for download endpoints
+    if (process.env.NODE_ENV === 'test') return true;
     // Skip rate limiting for download endpoints
     return req.path.startsWith('/api/app-downloads/');
   }
@@ -337,12 +343,46 @@ app.use('/api/auth', (req, res, next) => {
 });
 
 // Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
+app.use((req, res, next) => {
+  if (req.path === '/graphql') return next();
+  express.json({ limit: '10mb' })(req, res, next);
+});
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Cookie parsing middleware (required for CSRF protection)
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
+
+// ==================== SECURITY MIDDLEWARE ====================
+console.log('🔐 Initializing security features...');
+
+// Initialize Redis for rate limiting
+(async () => {
+  try {
+    await initializeRedis();
+    console.log('✅ Redis initialized for rate limiting');
+  } catch (error) {
+    console.warn('⚠️  Redis initialization failed:', error.message);
+  }
+})();
+
+// Apply global security headers
+app.use(contentSecurityPolicy());
+app.use(securityHeaders());
+console.log('✅ Security headers enabled (CSP, HSTS, X-Frame-Options)');
+
+// Apply rate limiting
+app.use('/api/auth/login', rateLimitPresets.auth);
+app.use('/api/auth/register', rateLimitPresets.registration);
+app.use('/api/auth/reset-password', rateLimitPresets.passwordReset);
+app.use('/api/upload', rateLimitPresets.upload);
+app.use('/api', rateLimitPresets.api);
+console.log('✅ Rate limiting enabled');
+
+// Apply audit logging
+app.use('/api/admin', auditLog(query));
+console.log('✅ Audit logging enabled');
+
 
 // Production-grade session configuration with Redis
 const redisStore = new RedisStore({
@@ -417,6 +457,8 @@ const webauthnRoutes = require('./routes/webauthn');
 const onboardingRoutes = require('./routes/onboarding');
 app.use('/api/webauthn', webauthnRoutes);
 app.use('/api/onboarding', validateJWT, onboardingRoutes);
+const clientOnboardingRoutes = require("./routes/client-onboarding");
+app.use("/api/onboarding", validateJWT, clientOnboardingRoutes);
 
 // Import Twilio Verify routes for SMS verification (hybrid approach)
 const twilioVerifyAuthRoutes = require('./routes/twilioVerifyAuth');
@@ -453,6 +495,7 @@ app.get('/api/health', async (req, res) => {
       sessionSecretConfigured: !!process.env.SESSION_SECRET
     };
 
+    logger.info("Health check successful", { services: { database: dbTest.rows[0].test === 1 ? "connected" : "error", redis: redisStatus === "PONG" ? "connected" : "error" } });
     res.json({
       status: 'ok',
       message: 'BeautyCita API is running',
@@ -804,7 +847,15 @@ const paymentRoutes = require('./paymentRoutes');
 
 // Register route handlers
 app.use('/api/stylists', stylistRoutes);
+// GDPR public routes (must be before validateJWT middleware)
+const gdprPublic = require("./routes/gdpr-public");
+app.use("/api", gdprPublic);
 app.use('/api/availability', availabilityRoutes);
+
+// Services routes (public and stylist service management) - MUST be before /api middleware
+const servicesRoutes = require('./routes/services');
+app.use('/api/services', servicesRoutes);
+
 app.use('/api/bookings', validateJWT, bookingRoutes);
 app.use('/api/location', locationRoutes);
 app.use('/api', validateJWT, paymentRoutes);
@@ -919,6 +970,53 @@ app.post('/api/users/check-username', async (req, res) => {
 });
 
 // Update user profile (authenticated, for onboarding)
+
+// GET /api/users/profile-completion
+// Get user's profile completion status
+app.get('/api/users/profile-completion', validateJWT, async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    // Get user data
+    const userResult = await query(
+      `SELECT email_verified, phone_verified, profile_picture_url, bio FROM users WHERE id = $1`,
+      [userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const user = userResult.rows[0];
+
+    // Get client preferences if client
+    const clientResult = await query(
+      `SELECT preferences FROM clients WHERE user_id = $1`,
+      [userId]
+    );
+
+    const client = clientResult.rows.length > 0 ? clientResult.rows[0] : null;
+    const preferences = client?.preferences || {};
+
+    // Calculate completion items
+    const completion = {
+      email_verified: user.email_verified || false,
+      phone_verified: user.phone_verified || false,
+      location_set: !!(preferences.location?.city && preferences.location?.zip),
+      profile_picture: !!user.profile_picture_url,
+      bio_complete: !!(user.bio && user.bio.length > 20),
+      preferences_set: !!(preferences.favoriteServices && preferences.favoriteServices.length > 0)
+    };
+
+    res.json(completion);
+  } catch (error) {
+    console.error('Profile completion error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get profile completion'
+    });
+  }
+});
 app.post('/api/users/update-profile', validateJWT, async (req, res) => {
   try {
     const userId = req.user.id;
@@ -1196,10 +1294,6 @@ app.use('/api/notifications', validateJWT, notificationsRoutes);
 // Stripe Connect routes (for stylist payouts)
 const stripeConnectRoutes = require('./routes/stripeConnect');
 app.use('/api/stripe-connect', stripeConnectRoutes);
-
-// Services routes (public and stylist service management)
-const servicesRoutes = require('./routes/services');
-app.use('/api/services', servicesRoutes);
 
 // Schedule routes (stylist availability management)
 const scheduleRoutes = require('./routes/schedule');
@@ -1685,6 +1779,20 @@ app.post('/api/auth/logout', (req, res) => {
 app.get('/api/stylists', async (req, res) => {
   try {
     const { city, specialties, pricing_tier, limit = 20, offset = 0 } = req.query;
+    
+    // Generate cache key from query parameters
+    const cacheKey = "stylists:" + JSON.stringify({ city, specialties, pricing_tier, limit, offset });
+    
+    // Try to get from cache first
+    try {
+      const cachedData = await redisClient.get(cacheKey);
+      if (cachedData) {
+        logger.info("Returning cached stylists data", { cacheKey });
+        return res.json(JSON.parse(cachedData));
+      }
+    } catch (cacheError) {
+      logger.warn("Cache read error, falling back to database", { error: cacheError.message });
+    }
 
     let query_text = `
       SELECT s.*, u.name, u.profile_picture_url, u.email
@@ -1718,7 +1826,15 @@ app.get('/api/stylists', async (req, res) => {
     params.push(parseInt(limit), parseInt(offset));
 
     const result = await query(query_text, params);
-    console.log('Stylists query successful, returning', result.rows.length, 'stylists');
+    logger.info('Stylists query successful', { count: result.rows.length });
+    
+    // Cache the result for 5 minutes (300 seconds)
+    try {
+      await redisClient.setEx(cacheKey, 300, JSON.stringify(result.rows));
+      logger.info("Cached stylists data", { cacheKey, ttl: 300 });
+    } catch (cacheError) {
+      logger.warn("Cache write error", { error: cacheError.message });
+    }
     res.json(result.rows);
   } catch (error) {
     console.error('Error fetching stylists:', error);
@@ -2675,6 +2791,10 @@ const securityRoutes = require('./securityRoutes');
 // Contact form routes
 const contactRoutes = require('./routes/contact');
 app.use('/api/contact', contactRoutes);
+const gdprRoutes = require("./routes/gdpr");
+const calendarRoutes = require("./routes/calendar");
+app.use("/api/users", gdprRoutes);
+app.use("/api", calendarRoutes);
 
 app.use('/api', securityRoutes);
 
@@ -2692,7 +2812,7 @@ app.get(/^(?!\/api).*/, (req, res) => {
 const bookingExpirationService = require('./bookingExpiration');
 
 // Initialize notification scheduler
-const NotificationScheduler = require('./services/notificationScheduler');
+const NotificationScheduler = require('./services/EnhancedNotificationScheduler');
 const notificationScheduler = new NotificationScheduler();
 
 // Import appointment reminder service
@@ -2701,7 +2821,8 @@ const appointmentReminderService = require('./appointmentReminderService');
 // Import Aphrodite pattern learning
 const { initPatternDB, updatePatternsFromDB } = require('./utils/aphroditePatterns');
 
-// Start server with Socket.io support
+// Start server with Socket.io support (skip in test mode)
+if (process.env.NODE_ENV !== 'test') {
 httpServer.listen(PORT, async () => {
   console.log(`🌸 BeautyCita server running on port ${PORT}`);
   console.log(`🚀 Socket.io enabled for real-time features`);
@@ -2710,6 +2831,13 @@ httpServer.listen(PORT, async () => {
   // Initialize Aphrodite AI pattern database
   await initPatternDB();
   console.log('🤖 Aphrodite AI pattern database initialized');
+
+  // Initialize modern architecture (GraphQL, BFF, Message Queues)
+  try {
+    await initializeModernArchitecture(app);
+  } catch (error) {
+    console.error('❌ Failed to initialize modern architecture:', error);
+  }
 
   // Start booking expiration service in production
   if (process.env.NODE_ENV === 'production') {
@@ -2743,8 +2871,9 @@ httpServer.listen(PORT, async () => {
     // Start notification scheduler
     notificationScheduler.start();
     console.log('📱 Notification scheduler started');
-  }
+}
 });
+}
 
 // Graceful shutdown handling
 process.on('SIGTERM', () => {
@@ -2763,3 +2892,6 @@ process.on('SIGINT', () => {
   process.exit(0);
 });
 
+
+// Export app for testing
+module.exports = app;

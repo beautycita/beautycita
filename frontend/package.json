@@ -8,7 +8,15 @@
     "build": "vite build",
     "build-with-check": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report"
   },
   "dependencies": {
     "@aparajita/capacitor-biometric-auth": "^9.0.0",
@@ -35,8 +43,9 @@
     "@types/google.maps": "^3.58.1",
     "@types/qrcode": "^1.5.5",
     "axios": "^1.6.5",
+    "canvas-confetti": "^1.9.3",
     "chart.js": "^4.5.0",
-    "date-fns": "^3.2.0",
+    "date-fns": "^3.6.0",
     "formik": "^2.4.6",
     "framer-motion": "^10.18.0",
     "i18next-browser-languagedetector": "^8.2.0",
@@ -63,6 +72,10 @@
     "zustand": "^4.4.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^24.5.2",
     "@types/react": "^18.2.43",
     "@types/react-datepicker": "^4.19.5",
@@ -70,16 +83,20 @@
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
     "@vitejs/plugin-react": "^5.0.4",
+    "@vitest/ui": "^3.2.4",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.55.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "i18next": "^23.16.8",
+    "jsdom": "^27.0.1",
+    "playwright": "^1.56.1",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.2.2",
     "vite": "^7.1.10",
     "vite-plugin-pwa": "^1.1.0",
+    "vitest": "^3.2.4",
     "workbox-window": "^7.3.0"
   }
 }
