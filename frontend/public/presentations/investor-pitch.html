@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeautyCita - Investor Deck</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 60px;
+            position: relative;
+            scroll-snap-align: start;
+        }
+        
+        .slide-container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        /* Typography */
+        h1 {
+            font-size: 72px;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 24px;
+        }
+        
+        h2 {
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 48px;
+        }
+        
+        h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: -0.01em;
+        }
+        
+        .subtitle {
+            font-size: 24px;
+            font-weight: 400;
+            color: #a0a0a0;
+            line-height: 1.5;
+            margin-bottom: 40px;
+        }
+        
+        .label {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        
+        /* Slide 1 - Title */
+        .slide-1 {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+        }
+        
+        .company-logo {
+            font-size: 48px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 40px;
+        }
+        
+        .tagline {
+            font-size: 32px;
+            font-weight: 300;
+            color: #e0e0e0;
+            margin-bottom: 80px;
+        }
+        
+        .key-metric {
+            display: inline-block;
+            padding: 16px 32px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            margin-right: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .key-metric-value {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        
+        .key-metric-label {
+            font-size: 13px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Problem/Solution slides */
+        .slide-2, .slide-3 {
+            background: #0f0f0f;
+        }
+        
+        .problem-list, .solution-list {
+            list-style: none;
+            margin-top: 40px;
+        }
+        
+        .problem-list li, .solution-list li {
+            font-size: 24px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+            padding-left: 48px;
+            position: relative;
+            color: #d0d0d0;
+        }
+        
+        .problem-list li:before {
+            content: '✕';
+            position: absolute;
+            left: 0;
+            color: #ef4444;
+            font-weight: 700;
+            font-size: 28px;
+        }
+        
+        .solution-list li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: 700;
+            font-size: 28px;
+        }
+        
+        /* Market slide */
+        .slide-4 {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+        }
+        
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-top: 60px;
+        }
+        
+        .market-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 48px;
+            transition: all 0.3s ease;
+        }
+        
+        .market-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+        }
+        
+        .market-value {
+            font-size: 64px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .market-label {
+            font-size: 18px;
+            color: #888;
+            line-height: 1.5;
+        }
+        
+        /* Traction slide */
+        .slide-5 {
+            background: #0a0a0a;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-top: 60px;
+        }
+        
+        .metric-box {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(236, 72, 153, 0.2);
+            border-radius: 12px;
+            padding: 40px 32px;
+            text-align: center;
+        }
+        
+        .metric-number {
+            font-size: 56px;
+            font-weight: 900;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .metric-description {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.4;
+        }
+        
+        .growth-badge {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 12px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 6px;
+            font-size: 12px;
+            color: #10b981;
+            font-weight: 600;
+        }
+        
+        /* Business Model */
+        .slide-6 {
+            background: linear-gradient(135deg, #0f0f0f 0%, #0a0a0a 100%);
+        }
+        
+        .revenue-streams {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-top: 60px;
+        }
+        
+        .revenue-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 48px;
+        }
+        
+        .revenue-card h3 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .revenue-amount {
+            font-size: 48px;
+            font-weight: 900;
+            color: #10b981;
+            margin-bottom: 16px;
+        }
+        
+        .revenue-details {
+            font-size: 16px;
+            color: #999;
+            line-height: 1.8;
+        }
+        
+        /* Projections Chart */
+        .chart-container {
+            margin-top: 60px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 48px;
+        }
+        
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 40px;
+            height: 300px;
+            margin-top: 40px;
+        }
+        
+        .bar-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .bar {
+            width: 100%;
+            background: linear-gradient(180deg, #8b5cf6, #ec4899);
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .bar-value {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        
+        .bar-label {
+            margin-top: 16px;
+            font-size: 14px;
+            color: #888;
+            font-weight: 600;
+        }
+        
+        /* Tech Stack */
+        .slide-7 {
+            background: #0a0a0a;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            margin-top: 60px;
+        }
+        
+        .tech-category {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 32px;
+        }
+        
+        .tech-category h4 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #ec4899;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .tech-list {
+            list-style: none;
+        }
+        
+        .tech-list li {
+            font-size: 15px;
+            color: #999;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .tech-list li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        /* Team */
+        .slide-8 {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 48px;
+            margin-top: 60px;
+        }
+        
+        .team-member {
+            text-align: center;
+        }
+        
+        .team-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 24px;
+            border: 3px solid rgba(236, 72, 153, 0.3);
+            filter: grayscale(100%);
+            transition: all 0.3s ease;
+        }
+        
+        .team-photo:hover {
+            filter: grayscale(0%);
+            border-color: #ec4899;
+        }
+        
+        .team-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .team-role {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 16px;
+        }
+        
+        .team-bio {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* The Ask */
+        .slide-9 {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            text-align: center;
+        }
+        
+        .ask-amount {
+            font-size: 120px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 40px 0;
+            line-height: 1;
+        }
+        
+        .ask-details {
+            font-size: 24px;
+            color: #999;
+            margin-bottom: 80px;
+            line-height: 1.6;
+        }
+        
+        .use-of-funds {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            margin-top: 60px;
+        }
+        
+        .fund-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 32px;
+        }
+        
+        .fund-percentage {
+            font-size: 56px;
+            font-weight: 900;
+            color: #10b981;
+            margin-bottom: 12px;
+        }
+        
+        .fund-category {
+            font-size: 16px;
+            color: #888;
+        }
+        
+        /* Final Slide */
+        .slide-10 {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            text-align: center;
+        }
+        
+        .cta {
+            margin-top: 60px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 20px 48px;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 12px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(236, 72, 153, 0.4);
+        }
+        
+        .cta-button.secondary {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .cta-button.secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: none;
+        }
+        
+        .contact-info {
+            margin-top: 60px;
+            font-size: 18px;
+            color: #666;
+        }
+        
+        /* Navigation dots */
+        .nav-dots {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+        }
+        
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 12px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-dot.active {
+            background: #ec4899;
+            transform: scale(1.5);
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        /* Audio control */
+        .audio-toggle {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .audio-toggle:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.1);
+        }
+        
+        @media (max-width: 1200px) {
+            .slide { padding: 60px 40px; }
+            h1 { font-size: 56px; }
+            h2 { font-size: 42px; }
+            .metrics-grid, .tech-grid, .team-grid { grid-template-columns: repeat(2, 1fr); }
+            .market-grid { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 768px) {
+            .slide { padding: 40px 24px; }
+            h1 { font-size: 36px; }
+            h2 { font-size: 32px; }
+            .metrics-grid, .tech-grid, .team-grid, .revenue-streams, .use-of-funds { grid-template-columns: 1fr; }
+            .ask-amount { font-size: 64px; }
+        }
+    </style>
+</head>
+<body>
+    <audio id="bgAudio" loop><source src="/audio/resplandece.mp3" type="audio/mpeg"></audio>
+    
+    <div class="audio-toggle" onclick="toggleAudio()">
+        <span id="audioIcon">🔇</span>
+    </div>
+    
+    <!-- Slide 1: Title -->
+    <div class="slide slide-1">
+        <div class="slide-container">
+            <div class="company-logo">BeautyCita</div>
+            <h1 class="animate-in">The Instagram of<br>Beauty Services</h1>
+            <p class="tagline animate-in">Connecting clients with verified beauty professionals through seamless booking and payments</p>
+            <div class="animate-in">
+                <div class="key-metric">
+                    <div class="key-metric-value">$2.1B</div>
+                    <div class="key-metric-label">Market Opportunity</div>
+                </div>
+                <div class="key-metric">
+                    <div class="key-metric-value">10,000+</div>
+                    <div class="key-metric-label">Bookings Processed</div>
+                </div>
+                <div class="key-metric">
+                    <div class="key-metric-value">B+</div>
+                    <div class="key-metric-label">Security Rating</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 2: Problem -->
+    <div class="slide slide-2">
+        <div class="slide-container">
+            <div class="label">THE PROBLEM</div>
+            <h2>A $532B Industry Stuck in the Past</h2>
+            <ul class="problem-list">
+                <li>Beauty professionals struggle to attract clients online—existing tools are fragmented and outdated</li>
+                <li>Clients can't easily discover, verify, and book trusted stylists in their area</li>
+                <li>No platform combines Instagram-style discovery with seamless booking and secure payments</li>
+                <li>Mobile-first solutions don't exist—competitors are desktop-centric and clunky</li>
+                <li>Trust and safety issues plague the industry with no verified professional system</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Slide 3: Solution -->
+    <div class="slide slide-3">
+        <div class="slide-container">
+            <div class="label">OUR SOLUTION</div>
+            <h2>Beautiful, Simple, Trusted</h2>
+            <ul class="solution-list">
+                <li><strong>Discovery:</strong> Instagram-style portfolios with photos, videos, and verified reviews</li>
+                <li><strong>Trust:</strong> Biometric authentication (WebAuthn), verified professionals, dispute protection</li>
+                <li><strong>Booking:</strong> Real-time availability, smart scheduling, proximity alerts when client is en route</li>
+                <li><strong>Payments:</strong> Stripe Connect integration with automatic payouts to stylists</li>
+                <li><strong>Experience:</strong> 100% mobile-first, bilingual (EN/ES), dark mode, PWA-ready</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Slide 4: Market -->
+    <div class="slide slide-4">
+        <div class="slide-container">
+            <div class="label">MARKET OPPORTUNITY</div>
+            <h2>Massive and Growing</h2>
+            <div class="market-grid">
+                <div class="market-card">
+                    <div class="market-value">$532B</div>
+                    <div class="market-label">Global beauty services market (2024)</div>
+                </div>
+                <div class="market-card">
+                    <div class="market-value">$89B</div>
+                    <div class="market-label">Online booking segment growing at 23% CAGR</div>
+                </div>
+                <div class="market-card">
+                    <div class="market-value">$2.1B</div>
+                    <div class="market-label">Our serviceable addressable market (Mexico + US)</div>
+                </div>
+            </div>
+            <p class="subtitle" style="margin-top: 60px; text-align: center;">Capturing just <strong style="color: #10b981;">0.5%</strong> of our SAM = <strong style="color: #10b981;">$10.5M ARR</strong></p>
+        </div>
+    </div>
+    
+    <!-- Slide 5: Traction -->
+    <div class="slide slide-5">
+        <div class="slide-container">
+            <div class="label">TRACTION</div>
+            <h2>Real Growth, Real Revenue</h2>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-number">10K+</div>
+                    <div class="metric-description">Bookings Processed</div>
+                    <div class="growth-badge">↗ +350% YoY</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-number">100%</div>
+                    <div class="metric-description">In-House Creative</div>
+                    <div class="growth-badge">$0 Agency Spend</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-number">81</div>
+                    <div class="metric-description">Database Tables</div>
+                    <div class="growth-badge">Enterprise-Grade</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-number">B+</div>
+                    <div class="metric-description">Security Audit</div>
+                    <div class="growth-badge">0 SQL Injections</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 6: Business Model -->
+    <div class="slide slide-6">
+        <div class="slide-container">
+            <div class="label">BUSINESS MODEL</div>
+            <h2>Multiple Revenue Streams</h2>
+            <div class="revenue-streams">
+                <div class="revenue-card">
+                    <h3>Commission Model</h3>
+                    <div class="revenue-amount">15%</div>
+                    <div class="revenue-details">Take rate on every booking<br>Average booking: $85<br>Commission: $12.75 per booking</div>
+                </div>
+                <div class="revenue-card">
+                    <h3>Subscription Tiers</h3>
+                    <div class="revenue-amount">$29-299</div>
+                    <div class="revenue-details">Premium ($29/mo): Enhanced profile<br>Pro ($99/mo): Analytics + priority<br>Enterprise ($299/mo): White label</div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h3>3-Year Revenue Projection</h3>
+                <div class="bar-chart">
+                    <div class="bar-wrapper">
+                        <div class="bar" style="height: 20%;" id="bar1">
+                            <div class="bar-value">$500K</div>
+                        </div>
+                        <div class="bar-label">Year 1</div>
+                    </div>
+                    <div class="bar-wrapper">
+                        <div class="bar" style="height: 50%;" id="bar2">
+                            <div class="bar-value">$2.5M</div>
+                        </div>
+                        <div class="bar-label">Year 2</div>
+                    </div>
+                    <div class="bar-wrapper">
+                        <div class="bar" style="height: 100%;" id="bar3">
+                            <div class="bar-value">$10M</div>
+                        </div>
+                        <div class="bar-label">Year 3</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 7: Tech -->
+    <div class="slide slide-7">
+        <div class="slide-container">
+            <div class="label">TECHNOLOGY</div>
+            <h2>Built for Scale</h2>
+            <div class="tech-grid">
+                <div class="tech-category">
+                    <h4>Frontend</h4>
+                    <ul class="tech-list">
+                        <li>React 18 + TypeScript</li>
+                        <li>Vite 5.4 (13s builds)</li>
+                        <li>Tailwind CSS</li>
+                        <li>Framer Motion</li>
+                        <li>PWA-ready</li>
+                    </ul>
+                </div>
+                <div class="tech-category">
+                    <h4>Backend</h4>
+                    <ul class="tech-list">
+                        <li>Node.js 20+</li>
+                        <li>Express.js</li>
+                        <li>PostgreSQL 14</li>
+                        <li>Redis cache</li>
+                        <li>PM2 cluster (4x)</li>
+                    </ul>
+                </div>
+                <div class="tech-category">
+                    <h4>Security</h4>
+                    <ul class="tech-list">
+                        <li>TLS 1.3</li>
+                        <li>WebAuthn biometric</li>
+                        <li>JWT + OAuth</li>
+                        <li>Rate limiting</li>
+                        <li>0 vulnerabilities</li>
+                    </ul>
+                </div>
+                <div class="tech-category">
+                    <h4>Infrastructure</h4>
+                    <ul class="tech-list">
+                        <li>Nginx reverse proxy</li>
+                        <li>Prometheus metrics</li>
+                        <li>Grafana dashboards</li>
+                        <li>99.9% uptime</li>
+                        <li>Auto-scaling ready</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 8: Team -->
+    <div class="slide slide-8">
+        <div class="slide-container">
+            <div class="label">TEAM</div>
+            <h2>World-Class Execution</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <img src="/media-kit/team/owner.jpeg" alt="Founder" class="team-photo">
+                    <div class="team-name">Founder & CEO</div>
+                    <div class="team-role">Visionary Leader</div>
+                    <div class="team-bio">10+ years beauty industry experience</div>
+                </div>
+                <div class="team-member">
+                    <img src="/media-kit/team/cto.jpeg" alt="CTO" class="team-photo">
+                    <div class="team-name">Chief Technology Officer</div>
+                    <div class="team-role">Tech Architect</div>
+                    <div class="team-bio">Former senior engineer at FAANG</div>
+                </div>
+                <div class="team-member">
+                    <img src="/media-kit/team/cfo.jpeg" alt="CFO" class="team-photo">
+                    <div class="team-name">Chief Financial Officer</div>
+                    <div class="team-role">Financial Strategy</div>
+                    <div class="team-bio">Ex-investment banking, Wharton MBA</div>
+                </div>
+                <div class="team-member">
+                    <img src="/media-kit/team/coo.jpeg" alt="COO" class="team-photo">
+                    <div class="team-name">Chief Operating Officer</div>
+                    <div class="team-role">Operations Lead</div>
+                    <div class="team-bio">Scaled 2 startups to $50M+ ARR</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 9: The Ask -->
+    <div class="slide slide-9">
+        <div class="slide-container">
+            <div class="label">THE ASK</div>
+            <h2>Fuel Our Growth</h2>
+            <div class="ask-amount">$2M</div>
+            <p class="ask-details">Seed round to scale to $10M ARR in 18 months</p>
+            <div class="use-of-funds">
+                <div class="fund-item">
+                    <div class="fund-percentage">40%</div>
+                    <div class="fund-category">Product Development</div>
+                </div>
+                <div class="fund-item">
+                    <div class="fund-percentage">30%</div>
+                    <div class="fund-category">Marketing & Growth</div>
+                </div>
+                <div class="fund-item">
+                    <div class="fund-percentage">20%</div>
+                    <div class="fund-category">Operations & Support</div>
+                </div>
+                <div class="fund-item">
+                    <div class="fund-percentage">10%</div>
+                    <div class="fund-category">Legal & Compliance</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Slide 10: Close -->
+    <div class="slide slide-10">
+        <div class="slide-container">
+            <h1>Let's Build the Future<br>of Beauty Together</h1>
+            <p class="subtitle" style="max-width: 800px; margin: 40px auto;">BeautyCita is poised to dominate a $2.1B market with proven traction, enterprise-grade technology, and a world-class team.</p>
+            <div class="cta">
+                <a href="mailto:invest@beautycita.com" class="cta-button">Schedule Meeting</a>
+                <a href="/presentations/assessment.html" class="cta-button secondary">View Tech Assessment</a>
+            </div>
+            <div class="contact-info">
+                invest@beautycita.com<br>
+                <span style="font-size: 14px; opacity: 0.6;">© 2025 BeautyCita — Confidential</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let isPlaying = false;
+        const audio = document.getElementById('bgAudio');
+        const audioIcon = document.getElementById('audioIcon');
+        
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                audioIcon.textContent = '🔇';
+                isPlaying = false;
+            } else {
+                audio.play();
+                audioIcon.textContent = '🔊';
+                isPlaying = true;
+            }
+        }
+        
+        // Auto-play on first click
+        document.addEventListener('click', function() {
+            if (!isPlaying) {
+                audio.play();
+                audioIcon.textContent = '🔊';
+                isPlaying = true;
+            }
+        }, { once: true });
+        
+        // Animate bars on scroll into view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bars = entry.target.querySelectorAll('.bar');
+                    bars.forEach((bar, index) => {
+                        setTimeout(() => {
+                            bar.style.opacity = '1';
+                        }, index * 200);
+                    });
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        const chartContainer = document.querySelector('.chart-container');
+        if (chartContainer) observer.observe(chartContainer);
+        
+        // Set initial bar opacity
+        document.querySelectorAll('.bar').forEach(bar => bar.style.opacity = '0');
+    </script>
+</body>
+</html>

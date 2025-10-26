@@ -9,6 +9,9 @@ import './styles/animations.css'
 import './i18n/config.ts'
 import { registerSW } from 'virtual:pwa-register'
 import './utils/errorTracking' // Initialize frontend error tracking
+import { initSentry } from './utils/sentry'
+
+initSentry()
 
 // Syncfusion removed - saved 6.6 MB!
 // Bootstrap removed - saved 300KB+ and eliminated style conflicts!

@@ -1044,7 +1044,7 @@ function Step5Portfolio({ values, errors, setFieldValue, setCurrentStep, portfol
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
               {portfolioPreviews.map((preview: string, index: number) => (
                 <div key={index} className="relative group">
-                  <img
+                  <img loading="lazy"
                     src={preview}
                     alt={`Portfolio ${index + 1}`}
                     className="w-full h-32 object-cover rounded-2xl"

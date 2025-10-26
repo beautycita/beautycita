@@ -264,7 +264,7 @@ export default function ProfileSettings({ onClose }: ProfileSettingsProps) {
               <div className="flex flex-col items-center">
                 <div className="relative group">
                   {previewUrl ? (
-                    <img
+                    <img loading="lazy"
                       src={previewUrl}
                       alt="Profile"
                       className="w-32 h-32 rounded-full object-cover border-4 border-purple-500 shadow-lg"

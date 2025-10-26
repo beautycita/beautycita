@@ -137,7 +137,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-3">
             {booking.stylistAvatar ? (
-              <img
+              <img loading="lazy"
                 src={booking.stylistAvatar}
                 alt={booking.stylistName}
                 className="h-12 w-12 rounded-full object-cover"

@@ -33,10 +33,10 @@ export default function FavoritesPage() {
   const fetchFavorites = async () => {
     try {
       setError(null)
-      const response = await apiClient.get<FavoriteStylist[]>('/client/favorites')
+      const response = await apiClient.get<{ favorites: FavoriteStylist[] }>('/client/favorites')
 
-      if (response.success && response.data) {
-        setFavorites(response.data)
+      if (response.success && response.data && response.data.favorites) {
+        setFavorites(response.data.favorites)
       } else {
         setFavorites([])
       }
@@ -95,7 +95,7 @@ export default function FavoritesPage() {
 
         {/* Favorites List */}
         {favorites.length === 0 ? (
-          <div className="bg-white rounded-full shadow-sm p-12 text-center">
+          <div className="bg-white rounded-3xl shadow-sm p-12 text-center">
             <HeartIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No favorites yet</h3>
             <p className="text-gray-600 mb-6">
@@ -115,12 +115,12 @@ export default function FavoritesPage() {
                 key={favorite.stylist_id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-full shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                className="bg-white rounded-3xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
               >
                 <Link to={`/stylist/${favorite.stylist_id}`} className="block">
                   <div className="aspect-w-16 aspect-h-9 bg-gradient-to-br from-pink-100 to-purple-100">
                     {favorite.profile_picture ? (
-                      <img
+                      <img loading="lazy"
                         src={favorite.profile_picture}
                         alt={favorite.business_name}
                         className="w-full h-48 object-cover"

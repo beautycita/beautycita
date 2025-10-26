@@ -19,7 +19,7 @@ import { useAuthStore } from '../store/authStore'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import { useTranslation } from 'react-i18next'
-import TimeSlotPicker from '../components/booking/TimeSlotPicker'
+import UltimateBookingCalendar from '../components/booking/UltimateBookingCalendar'
 
 interface BookingFormValues {
   stylistId: string
@@ -197,7 +197,7 @@ export default function BookingPage() {
           >
             <div className="flex items-start gap-4">
               {stylist.profile_picture_url ? (
-                <img
+                <img loading="lazy"
                   src={stylist.profile_picture_url}
                   alt={stylist.business_name}
                   className="w-20 h-20 rounded-full object-cover"
@@ -317,39 +317,21 @@ export default function BookingPage() {
                         {t('booking.labels.selectDateTime')}
                       </h2>
 
-                      <TimeSlotPicker
+                      <UltimateBookingCalendar
                         stylistId={parseInt(stylistId!)}
                         serviceId={parseInt(serviceId!)}
                         serviceDuration={service.duration_minutes}
+                        serviceName={service.name}
+                        basePrice={service.price}
                         onSelectSlot={(date, time) => {
                           setFieldValue('date', date)
                           setFieldValue('time', time)
                         }}
                         selectedDate={values.date}
                         selectedTime={values.time}
+                        stylistName={stylist.business_name}
+                        stylistAvatar={stylist.profile_picture_url}
                       />
-
-                      {values.date && values.time && (
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.95 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          className="p-4 bg-green-50 border-2 border-green-200 rounded-2xl"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-green-500 rounded-full">
-                              <CheckCircleIcon className="h-6 w-6 text-white" />
-                            </div>
-                            <div>
-                              <p className="font-semibold text-green-900">
-                                Time Slot Selected
-                              </p>
-                              <p className="text-sm text-green-700">
-                                {new Date(values.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} at {values.time}
-                              </p>
-                            </div>
-                          </div>
-                        </motion.div>
-                      )}
 
                       <ErrorMessage name="date" component="div" className="text-red-500 text-sm mt-1" />
                       <ErrorMessage name="time" component="div" className="text-red-500 text-sm mt-1" />

@@ -36,7 +36,7 @@ export default function StylistCard({
       } transition-shadow hover:shadow-2xl`}
     >
       <div className="relative">
-        <img
+        <img loading="lazy"
           src={avatar}
           alt={name}
           className="w-full h-64 object-cover"

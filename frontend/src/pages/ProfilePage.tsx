@@ -20,6 +20,7 @@ import {
 import { useAuthStore } from '../store/authStore'
 import toast from 'react-hot-toast'
 import axios from 'axios'
+import { startRegistration } from '@simplewebauthn/browser'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 
@@ -44,6 +45,19 @@ export default function ProfilePage() {
     email: user?.email || '',
     phone: user?.phone || ''
   })
+
+  // Sync formData with user prop when it changes or loads
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        username: user.username || user.email?.split('@')[0] || '',
+        firstName: user.first_name || user.firstName || '',
+        lastName: user.last_name || user.lastName || '',
+        email: user.email || '',
+        phone: user.phone || ''
+      })
+    }
+  }, [user])
 
   // Security state
   const [passkeys, setPasskeys] = useState<any[]>([])
@@ -123,21 +137,28 @@ export default function ProfilePage() {
   }
 
   const handleAddPasskey = async () => {
+    console.log('🔐 handleAddPasskey called, deviceName:', newDeviceName)
+
     if (!newDeviceName.trim()) {
+      console.log('❌ Device name is empty')
       toast.error(t('profile.passkeys.messages.enterDeviceName'))
       return
     }
 
     try {
       setIsAddingPasskey(true)
+      console.log('🔐 Starting passkey registration...')
 
       // Check if WebAuthn is supported
       if (!window.PublicKeyCredential) {
+        console.log('❌ WebAuthn not supported')
         toast.error(t('profile.passkeys.messages.notSupported'))
         return
       }
+      console.log('✅ WebAuthn is supported')
 
       // Get registration options from server
+      console.log('🔐 Requesting registration options from server...')
       const optionsResponse = await axios.post(
         `${API_URL}/api/webauthn/add-passkey/options`,
         {},
@@ -145,81 +166,65 @@ export default function ProfilePage() {
           headers: { Authorization: `Bearer ${token}` }
         }
       )
+      console.log('✅ Got registration options:', optionsResponse.data)
 
       if (!optionsResponse.data.success) {
         throw new Error(optionsResponse.data.message || 'Failed to get registration options')
       }
 
       const options = optionsResponse.data.options
+      console.log('🔐 Starting device registration with options:', options)
 
-      // Convert challenge and user.id from base64url to Uint8Array
-      const challengeBuffer = Uint8Array.from(atob(options.challenge.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0))
-      const userIdBuffer = Uint8Array.from(atob(options.user.id.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0))
-
-      // Convert excludeCredentials
-      const excludeCredentials = options.excludeCredentials?.map((cred: any) => ({
-        ...cred,
-        id: Uint8Array.from(atob(cred.id.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0))
-      })) || []
-
-      // Create credential
-      const credential = await navigator.credentials.create({
-        publicKey: {
-          ...options,
-          challenge: challengeBuffer,
-          user: {
-            ...options.user,
-            id: userIdBuffer
-          },
-          excludeCredentials
-        }
-      }) as PublicKeyCredential
-
-      if (!credential) {
-        throw new Error('Failed to create credential')
-      }
-
-      // Prepare credential for server
-      const response = credential.response as AuthenticatorAttestationResponse
-      const credentialJSON = {
-        id: credential.id,
-        rawId: btoa(String.fromCharCode(...new Uint8Array(credential.rawId))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
-        response: {
-          clientDataJSON: btoa(String.fromCharCode(...new Uint8Array(response.clientDataJSON))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
-          attestationObject: btoa(String.fromCharCode(...new Uint8Array(response.attestationObject))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
-        },
-        type: credential.type,
-        clientExtensionResults: credential.getClientExtensionResults(),
-        authenticatorAttachment: (credential as any).authenticatorAttachment
-      }
+      // ✅ FIX: Use @simplewebauthn/browser instead of manual encoding
+      // This automatically handles all base64url encoding/decoding
+      const credential = await startRegistration(options)
+      console.log('✅ Got credential from device:', credential)
 
       // Send credential to server for verification
+      console.log('🔐 Sending credential to server for verification...')
       const verifyResponse = await axios.post(
         `${API_URL}/api/webauthn/add-passkey/verify`,
         {
-          credential: credentialJSON,
+          credential, // Already properly formatted by startRegistration()
           deviceName: newDeviceName.trim()
         },
         {
           headers: { Authorization: `Bearer ${token}` }
         }
       )
+      console.log('✅ Verification response:', verifyResponse.data)
 
       if (verifyResponse.data.success) {
+        console.log('✅ Passkey added successfully!')
         toast.success(t('profile.passkeys.messages.addedSuccess'))
         setNewDeviceName('')
         fetchPasskeys()
       } else {
-        throw new Error(verifyResponse.data.message || 'Failed to verify passkey')
+        throw new Error(verifyResponse.data.message || 'Verification failed')
       }
     } catch (error: any) {
-      console.error('Add passkey error:', error)
+      console.error('❌ Add passkey error:', error)
+      console.error('Error details:', {
+        name: error.name,
+        message: error.message,
+        response: error.response?.data,
+        stack: error.stack
+      })
+
+      // ✅ FIX: Better error messages
       if (error.name === 'NotAllowedError') {
         toast.error(t('profile.passkeys.messages.cancelled'))
+      } else if (error.name === 'InvalidStateError') {
+        toast.error('This device is already registered. Try a different device or remove the existing one first.')
+      } else if (error.name === 'NotSupportedError') {
+        toast.error('Biometric authentication is not supported on this device')
+      } else if (error.name === 'SecurityError') {
+        toast.error('Security error: Make sure you\'re using HTTPS')
       } else {
-        toast.error(error.response?.data?.message || error.message || 'Failed to add passkey')
+        toast.error(error.response?.data?.message || error.message || 'Failed to add biometric. Please try again.')
       }
     } finally {
+      console.log('🔐 Passkey registration process finished')
       setIsAddingPasskey(false)
     }
   }
@@ -345,7 +350,7 @@ export default function ProfilePage() {
                   <div className="w-40 h-40 rounded-full overflow-hidden bg-gradient-to-br from-pink-500 via-purple-600 to-blue-500 p-1">
                     <div className={`w-full h-full rounded-full overflow-hidden ${isDarkMode ? 'bg-gray-700' : 'bg-white'} flex items-center justify-center`}>
                       {profilePicPreview || user?.profilePicUrl || user?.profile_picture_url ? (
-                        <img
+                        <img loading="lazy"
                           src={profilePicPreview || user?.profilePicUrl || user?.profile_picture_url}
                           alt="Profile picture"
                           className="w-full h-full object-cover"

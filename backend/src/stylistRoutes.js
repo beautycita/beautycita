@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const db = require('./db')
+const cacheService = require("./cacheService");
 
 // Debug middleware to log all requests to this router
 router.use((req, res, next) => {
@@ -401,6 +402,25 @@ router.get('/popular', async (req, res) => {
     })
   }
 })
+// GET /api/stylists/:id/services
+// Get services offered by a specific stylist
+router.get('/:id/services', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await db.query(`
+      SELECT * FROM services
+      WHERE stylist_id = $1 AND is_active = true
+      ORDER BY category, name
+    `, [id]);
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching stylist services:', error);
+    res.status(500).json({ message: 'Failed to fetch services' });
+  }
+});
+
 
 // GET /api/stylists/:id
 // Get detailed stylist profile

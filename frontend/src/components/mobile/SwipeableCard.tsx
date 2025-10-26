@@ -74,7 +74,7 @@ export default function SwipeableCard({
         {/* Image Container */}
         <div className="relative h-64 bg-gradient-sunset">
           {item.image ? (
-            <img
+            <img loading="lazy"
               src={item.image}
               alt={item.name}
               className="w-full h-full object-cover"

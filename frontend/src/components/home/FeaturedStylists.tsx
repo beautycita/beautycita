@@ -213,7 +213,7 @@ export default function FeaturedStylists({ isDarkMode }: FeaturedStylistsProps) 
                     <div className="relative h-96 group">
                       {/* Image Container */}
                       <div className="relative h-64 overflow-hidden">
-                        <img
+                        <img loading="lazy"
                           src={stylist.image}
                           alt={stylist.name}
                           className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
@@ -257,7 +257,7 @@ export default function FeaturedStylists({ isDarkMode }: FeaturedStylistsProps) 
                       <div className="p-6 -mt-8 relative z-10">
                         {/* Profile Circle */}
                         <div className="w-16 h-16 rounded-full border-4 border-white dark:border-gray-900 overflow-hidden mb-4 mx-auto">
-                          <img
+                          <img loading="lazy"
                             src={stylist.image}
                             alt={stylist.name}
                             className="w-full h-full object-cover"

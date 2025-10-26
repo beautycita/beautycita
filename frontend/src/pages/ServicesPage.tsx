@@ -117,18 +117,18 @@ export default function ServicesPage() {
           params.append('radius', '20')
 
           const response = await axios.get(`/api/services?${params.toString()}`)
-          setServices(response.data)
+          setServices(response.data.data || [])
           setShowingLocalOnly(true)
         } else {
           // Fetch all services without location filter
           const response = await axios.get('/api/services')
-          setServices(response.data)
+          setServices(response.data.data || [])
           setShowingLocalOnly(false)
         }
 
         // Always fetch total count for the button
         const allResponse = await axios.get('/api/services')
-        setAllServices(allResponse.data)
+        setAllServices(allResponse.data.data || [])
       } catch (error) {
         console.error('Error fetching services:', error)
         toast.error('Failed to load services')
@@ -152,7 +152,7 @@ export default function ServicesPage() {
     setLoading(true)
     try {
       const response = await axios.get('/api/services')
-      setServices(response.data)
+      setServices(response.data.data || [])
       setShowingLocalOnly(false)
     } catch (error) {
       console.error('Error fetching all services:', error)
@@ -209,7 +209,7 @@ export default function ServicesPage() {
         title={t('services.catalogTitle')}
         subtitle={t('services.catalogSubtitle')}
         gradient="from-pink-500 via-purple-500 to-blue-500"
-        videoSrc="https://pub-56305a12c77043c9bd5de9db79a5e542.r2.dev/beautycita/videos/lavar-optimized.mp4"
+        videoSrc="https://pub-56305a12c77043c9bd5de9db79a5e542.r2.dev/beautycita/videos/banner2.mp4"
         isDarkMode={isDarkMode}
         height="h-96"
       >

@@ -1344,7 +1344,7 @@ export default function QrGeneratorPage() {
                   {qrCodeDataUrl ? (
                     <>
                       <div className="bg-white p-6 rounded-2xl border-4 border-purple-500 mb-6">
-                        <img src={qrCodeDataUrl} alt="QR Code" className="w-64 h-64" />
+                        <img loading="lazy" src={qrCodeDataUrl} alt="QR Code" className="w-64 h-64" />
                       </div>
                       {generated && (
                         <motion.div

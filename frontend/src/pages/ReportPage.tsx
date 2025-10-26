@@ -1,288 +1,362 @@
-import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
-import { ExclamationTriangleIcon, CheckCircleIcon, ArrowUpTrayIcon } from '@heroicons/react/24/outline';
-import { PageHero, GradientCard } from '../components/ui';
+import React, { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { motion } from 'framer-motion'
+import {
+  FlagIcon,
+  ExclamationTriangleIcon,
+  ShieldCheckIcon,
+  UserIcon,
+  ClockIcon,
+  ChatBubbleLeftRightIcon
+} from '@heroicons/react/24/outline'
 
 const ReportPage: React.FC = () => {
-  const { t } = useTranslation();
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const { t } = useTranslation()
+  const [isDarkMode, setIsDarkMode] = useState(false)
   const [formData, setFormData] = useState({
-    category: 'technical',
-    priority: 'medium',
+    reportType: '',
+    reportedUser: '',
+    incidentDate: '',
     description: '',
-    email: '',
-    files: [] as File[]
-  });
+    contactEmail: '',
+    urgent: false
+  })
+  const [submitted, setSubmitted] = useState(false)
 
   useEffect(() => {
-    const darkMode = localStorage.getItem('darkMode') === 'true';
-    setIsDarkMode(darkMode);
-    const handleStorageChange = () => {
-      setIsDarkMode(localStorage.getItem('darkMode') === 'true');
-    };
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
+    const darkMode = localStorage.getItem('darkMode') === 'true'
+    setIsDarkMode(darkMode)
+    const handleStorageChange = () => setIsDarkMode(localStorage.getItem('darkMode') === 'true')
+    window.addEventListener('storage', handleStorageChange)
+    return () => window.removeEventListener('storage', handleStorageChange)
+  }, [])
 
-  const categories = [
-    { value: 'technical', label: 'Technical Issue', gradient: 'from-blue-500 to-indigo-600' },
-    { value: 'safety', label: 'Safety Concern', gradient: 'from-red-500 to-pink-600' },
-    { value: 'payment', label: 'Payment Problem', gradient: 'from-green-500 to-emerald-600' },
-    { value: 'other', label: 'Other', gradient: 'from-purple-500 to-pink-600' }
-  ];
+  const reportTypes = [
+    { value: 'harassment', label: t('report.types.harassment') },
+    { value: 'fraud', label: t('report.types.fraud') },
+    { value: 'inappropriate', label: t('report.types.inappropriate') },
+    { value: 'fake-profile', label: t('report.types.fakeProfile') },
+    { value: 'spam', label: t('report.types.spam') },
+    { value: 'safety', label: t('report.types.safety') },
+    { value: 'payment', label: t('report.types.payment') },
+    { value: 'other', label: t('report.types.other') }
+  ]
 
-  const priorities = [
-    { value: 'low', label: 'Low', color: 'text-blue-600' },
-    { value: 'medium', label: 'Medium', color: 'text-yellow-600' },
-    { value: 'high', label: 'High', color: 'text-orange-600' },
-    { value: 'urgent', label: 'Urgent', color: 'text-red-600' }
-  ];
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    console.log('Report submitted:', formData);
-    setIsSubmitted(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500))
+
+    setSubmitted(true)
 
     // Reset form after 3 seconds
     setTimeout(() => {
-      setIsSubmitted(false);
       setFormData({
-        category: 'technical',
-        priority: 'medium',
+        reportType: '',
+        reportedUser: '',
+        incidentDate: '',
         description: '',
-        email: '',
-        files: []
-      });
-    }, 3000);
-  };
+        contactEmail: '',
+        urgent: false
+      })
+      setSubmitted(false)
+    }, 5000)
+  }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFormData({ ...formData, files: Array.from(e.target.files) });
-    }
-  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+    }))
+  }
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
       {/* Hero Section */}
-      <PageHero
-        title="Report an Issue"
-        subtitle="Help us improve BeautyCita by reporting problems or concerns"
-        gradient="from-pink-500 via-purple-500 to-blue-500"
-        isDarkMode={isDarkMode}
-        height="h-80"
-      />
+      <div className="relative bg-gradient-to-r from-red-500 via-pink-500 to-purple-600 text-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <FlagIcon className="h-20 w-20 mx-auto mb-6" />
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6">
+              {t('report.title')}
+            </h1>
+            <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
+              {t('report.subtitle')}
+            </p>
+          </motion.div>
+        </div>
+      </div>
 
-      {/* Report Form */}
-      <section className="container mx-auto px-4 max-w-3xl py-16">
-        <GradientCard gradient="from-pink-500/10 via-purple-500/10 to-blue-500/10" isDarkMode={isDarkMode}>
-          {isSubmitted ? (
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Safety Promise */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className={`rounded-2xl p-8 mb-12 ${isDarkMode ? 'bg-gray-800' : 'bg-white shadow-lg'}`}
+        >
+          <div className="flex items-start gap-4 mb-6">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+              <ShieldCheckIcon className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h2 className={`text-3xl font-serif font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                {t('report.safetyMatters')}
+              </h2>
+              <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                {t('report.commitment')}
+              </p>
+            </div>
+          </div>
+
+          <div className={`space-y-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+            <div className="flex items-start gap-3">
+              <span className="text-pink-500 mt-1">✓</span>
+              <p>{t('report.reviewTime')}</p>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-pink-500 mt-1">✓</span>
+              <p>{t('report.confidential')}</p>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-pink-500 mt-1">✓</span>
+              <p>{t('report.urgentAction')}</p>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-pink-500 mt-1">✓</span>
+              <p>{t('report.followUp')}</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Report Form */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className={`rounded-2xl p-8 ${isDarkMode ? 'bg-gray-800' : 'bg-white shadow-lg'}`}
+        >
+          {submitted ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
               className="text-center py-12"
             >
-              <CheckCircleIcon className="h-16 w-16 text-green-500 mx-auto mb-6" />
+              <div className="w-20 h-20 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center mx-auto mb-6">
+                <ShieldCheckIcon className="h-10 w-10 text-white" />
+              </div>
               <h3 className={`text-2xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                Report Submitted Successfully
+                {t('report.submitted')}
               </h3>
-              <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>
-                Thank you for your report. Our team will review it and respond within 24-48 hours.
+              <p className={`text-lg mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                {t('report.thankYou')}
+              </p>
+              <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                {t('report.reviewMessage')}
               </p>
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Problem Category */}
-              <div>
-                <label className={`block text-sm font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  Problem Category
-                </label>
-                <div className="grid grid-cols-2 gap-4">
-                  {categories.map((category) => (
-                    <button
-                      key={category.value}
-                      type="button"
-                      onClick={() => setFormData({ ...formData, category: category.value })}
-                      className={`p-4 rounded-3xl border-2 transition-all ${
-                        formData.category === category.value
-                          ? `bg-gradient-to-r ${category.gradient} text-white border-transparent shadow-lg`
-                          : isDarkMode
-                          ? 'bg-gray-800 border-gray-700 text-gray-300 hover:border-gray-600'
-                          : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'
-                      }`}
-                    >
-                      <span className="font-medium">{category.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <h2 className={`text-2xl font-serif font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                {t('report.reportDetails')}
+              </h2>
 
-              {/* Priority Level */}
+              {/* Report Type */}
               <div>
-                <label className={`block text-sm font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  Priority Level
+                <label className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  {t('report.reportType')} *
                 </label>
                 <select
-                  value={formData.priority}
-                  onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                  className={`w-full px-4 py-3 rounded-3xl border transition-all ${
+                  name="reportType"
+                  value={formData.reportType}
+                  onChange={handleChange}
+                  required
+                  className={`w-full px-4 py-3 rounded-xl ${
                     isDarkMode
-                      ? 'bg-gray-800 border-gray-700 text-white focus:ring-purple-500 focus:border-purple-500'
-                      : 'bg-white border-gray-300 text-gray-900 focus:ring-purple-500 focus:border-purple-500'
-                  }`}
+                      ? 'bg-gray-700 text-white border-gray-600'
+                      : 'bg-white text-gray-900 border-gray-300'
+                  } border focus:ring-2 focus:ring-pink-500 focus:border-transparent`}
                 >
-                  {priorities.map((priority) => (
-                    <option key={priority.value} value={priority.value}>
-                      {priority.label}
+                  <option value="">{t('report.selectType')}</option>
+                  {reportTypes.map(type => (
+                    <option key={type.value} value={type.value}>
+                      {type.label}
                     </option>
                   ))}
                 </select>
               </div>
 
-              {/* Description */}
+              {/* Reported User */}
               <div>
-                <label className={`block text-sm font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  Detailed Description
+                <label className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  {t('report.reportedUser')}
                 </label>
-                <textarea
-                  rows={6}
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Please provide as much detail as possible about the issue..."
-                  required
-                  className={`w-full px-4 py-3 rounded-3xl border transition-all ${
-                    isDarkMode
-                      ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 focus:ring-purple-500 focus:border-purple-500'
-                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-purple-500 focus:border-purple-500'
-                  }`}
-                />
+                <div className="relative">
+                  <UserIcon className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                  <input
+                    type="text"
+                    name="reportedUser"
+                    value={formData.reportedUser}
+                    onChange={handleChange}
+                    placeholder={t('report.usernamePlaceholder')}
+                    className={`w-full pl-10 pr-4 py-3 rounded-xl ${
+                      isDarkMode
+                        ? 'bg-gray-700 text-white border-gray-600'
+                        : 'bg-white text-gray-900 border-gray-300'
+                    } border focus:ring-2 focus:ring-pink-500 focus:border-transparent`}
+                  />
+                </div>
               </div>
 
-              {/* Email */}
+              {/* Incident Date */}
               <div>
-                <label className={`block text-sm font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  Your Email (optional)
+                <label className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  {t('report.incidentDate')} *
+                </label>
+                <div className="relative">
+                  <ClockIcon className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                  <input
+                    type="date"
+                    name="incidentDate"
+                    value={formData.incidentDate}
+                    onChange={handleChange}
+                    required
+                    max={new Date().toISOString().split('T')[0]}
+                    className={`w-full pl-10 pr-4 py-3 rounded-xl ${
+                      isDarkMode
+                        ? 'bg-gray-700 text-white border-gray-600'
+                        : 'bg-white text-gray-900 border-gray-300'
+                    } border focus:ring-2 focus:ring-pink-500 focus:border-transparent`}
+                  />
+                </div>
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  {t('report.description')} *
+                </label>
+                <div className="relative">
+                  <ChatBubbleLeftRightIcon className={`absolute left-3 top-3 h-5 w-5 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                  <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    required
+                    rows={6}
+                    placeholder={t('report.descriptionPlaceholder')}
+                    className={`w-full pl-10 pr-4 py-3 rounded-xl ${
+                      isDarkMode
+                        ? 'bg-gray-700 text-white border-gray-600'
+                        : 'bg-white text-gray-900 border-gray-300'
+                    } border focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none`}
+                  />
+                </div>
+              </div>
+
+              {/* Contact Email */}
+              <div>
+                <label className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  {t('report.contactEmail')} *
                 </label>
                 <input
                   type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="your.email@example.com"
-                  className={`w-full px-4 py-3 rounded-3xl border transition-all ${
+                  name="contactEmail"
+                  value={formData.contactEmail}
+                  onChange={handleChange}
+                  required
+                  placeholder={t('report.emailPlaceholder')}
+                  className={`w-full px-4 py-3 rounded-xl ${
                     isDarkMode
-                      ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 focus:ring-purple-500 focus:border-purple-500'
-                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-purple-500 focus:border-purple-500'
-                  }`}
+                      ? 'bg-gray-700 text-white border-gray-600'
+                      : 'bg-white text-gray-900 border-gray-300'
+                  } border focus:ring-2 focus:ring-pink-500 focus:border-transparent`}
                 />
-                <p className={`mt-2 text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                  Provide your email if you'd like us to follow up with you
-                </p>
               </div>
 
-              {/* File Upload */}
-              <div>
-                <label className={`block text-sm font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  Attachments (optional)
+              {/* Urgent Checkbox */}
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  name="urgent"
+                  id="urgent"
+                  checked={formData.urgent}
+                  onChange={handleChange}
+                  className="w-5 h-5 rounded text-pink-600 focus:ring-2 focus:ring-pink-500"
+                />
+                <label htmlFor="urgent" className={`text-sm font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  {t('report.urgent')}
                 </label>
-                <div className={`relative border-2 border-dashed rounded-3xl p-8 text-center transition-all ${
-                  isDarkMode
-                    ? 'border-gray-700 hover:border-gray-600 bg-gray-800/50'
-                    : 'border-gray-300 hover:border-gray-400 bg-gray-50'
-                }`}>
-                  <input
-                    type="file"
-                    multiple
-                    onChange={handleFileChange}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  />
-                  <ArrowUpTrayIcon className={`h-12 w-12 mx-auto mb-3 ${
-                    isDarkMode ? 'text-gray-400' : 'text-gray-400'
-                  }`} />
-                  <p className={`font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Click to upload files
-                  </p>
-                  <p className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                    Screenshots, images, or documents (Max 10MB)
-                  </p>
-                  {formData.files.length > 0 && (
-                    <div className="mt-4">
-                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        {formData.files.length} file(s) selected
-                      </p>
-                    </div>
-                  )}
-                </div>
               </div>
 
               {/* Submit Button */}
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white font-semibold px-8 py-4 rounded-3xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
-              >
-                Submit Report
-              </button>
+              <div className="flex items-center gap-4">
+                <button
+                  type="submit"
+                  className="flex-1 px-8 py-4 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold hover:shadow-lg transition-all hover:scale-105"
+                >
+                  {t('report.submit')}
+                </button>
+              </div>
+
+              <p className={`text-xs text-center ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                {t('report.disclaimer')}
+              </p>
             </form>
           )}
-        </GradientCard>
+        </motion.div>
 
-        {/* Info Section */}
-        {!isSubmitted && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="mt-8"
-          >
-            <GradientCard gradient="from-blue-500/10 to-indigo-500/10" isDarkMode={isDarkMode}>
-              <div className="flex items-start space-x-4">
-                <ExclamationTriangleIcon className="h-8 w-8 text-blue-500 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    Before You Submit
-                  </h3>
-                  <ul className={`space-y-2 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    <li>• Include as much detail as possible to help us understand the issue</li>
-                    <li>• Screenshots or screen recordings are extremely helpful</li>
-                    <li>• Check our Help Center for common solutions</li>
-                    <li>• For urgent safety concerns, please contact us immediately</li>
-                  </ul>
-                </div>
-              </div>
-            </GradientCard>
-          </motion.div>
-        )}
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative py-16 overflow-hidden bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-3xl blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/10 rounded-3xl blur-3xl" />
-        </div>
+        {/* Emergency Contact */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="container mx-auto max-w-4xl text-center text-white relative z-10 px-4"
+          className="mt-12"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Need Immediate Help?
-          </h2>
-          <p className="text-xl mb-8 text-white/90 max-w-2xl mx-auto">
-            For urgent issues, our support team is available 24/7 via live chat.
-          </p>
-          <button className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-8 py-4 rounded-3xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105">
-            Contact Support Now
-          </button>
+          <div className={`rounded-2xl p-8 ${isDarkMode ? 'bg-red-900/20' : 'bg-red-50'} border-2 ${isDarkMode ? 'border-red-500/30' : 'border-red-200'}`}>
+            <div className="flex items-start gap-4">
+              <ExclamationTriangleIcon className="h-8 w-8 text-red-600 flex-shrink-0" />
+              <div>
+                <h3 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-red-900'}`}>
+                  {t('report.emergency')}
+                </h3>
+                <p className={`mb-4 ${isDarkMode ? 'text-gray-300' : 'text-red-800'}`}>
+                  {t('report.emergencyMessage')}
+                </p>
+                <div className="flex gap-4">
+                  <a
+                    href="tel:911"
+                    className="px-6 py-3 rounded-full bg-red-600 text-white font-semibold hover:bg-red-700 transition-all"
+                  >
+                    {t('report.call911')}
+                  </a>
+                  <a
+                    href="mailto:safety@beautycita.com"
+                    className={`px-6 py-3 rounded-full font-semibold transition-all ${
+                      isDarkMode
+                        ? 'bg-gray-700 text-white hover:bg-gray-600'
+                        : 'bg-white text-red-600 hover:bg-red-100'
+                    }`}
+                  >
+                    safety@beautycita.com
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
         </motion.div>
-      </section>
+      </div>
     </div>
-  );
-};
+  )
+}
 
-export default ReportPage;
+export default ReportPage

@@ -322,7 +322,7 @@ const WriteReview: React.FC<WriteReviewProps> = ({
                 <div className="mt-3 grid grid-cols-2 gap-2">
                   {photos.map((photo, index) => (
                     <div key={index} className="relative">
-                      <img
+                      <img loading="lazy"
                         src={URL.createObjectURL(photo)}
                         alt={`Preview ${index + 1}`}
                         className="w-full h-24 object-cover rounded-full"
@@ -436,7 +436,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-3">
             {review.stylistAvatar ? (
-              <img
+              <img loading="lazy"
                 src={review.stylistAvatar}
                 alt={review.stylistName}
                 className="h-10 w-10 rounded-full object-cover"
@@ -532,7 +532,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
         {review.photos.length > 0 && (
           <div className="grid grid-cols-3 gap-2 mb-3">
             {review.photos.slice(0, 3).map((photo, index) => (
-              <img
+              <img loading="lazy"
                 key={index}
                 src={photo}
                 alt={`Review photo ${index + 1}`}
@@ -541,7 +541,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
             ))}
             {review.photos.length > 3 && (
               <div className="relative">
-                <img
+                <img loading="lazy"
                   src={review.photos[3]}
                   alt="More photos"
                   className="w-full h-20 object-cover rounded-full"

@@ -1,0 +1,10 @@
+# Exclude downloads directory (contains old APKs)
+downloads/
+
+# Exclude large media files not needed in app
+media/vid/
+media/audio/
+media-kit/
+
+# Exclude presentation files
+presentations/

@@ -1,13 +1,13 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { 
+import { useTranslation } from 'react-i18next'
+import {
   ShieldCheckIcon,
   DevicePhoneMobileIcon,
   MapPinIcon,
   CameraIcon,
   BellIcon,
   GlobeAltIcon,
-  TrashIcon,
   LockClosedIcon
 } from '@heroicons/react/24/outline'
 
@@ -18,71 +18,116 @@ import {
  */
 
 const PlayStorePrivacyPolicy: React.FC = () => {
+  const { t } = useTranslation()
+  const [isDarkMode, setIsDarkMode] = useState(false)
+
+  useEffect(() => {
+    const darkMode = localStorage.getItem('darkMode') === 'true'
+    setIsDarkMode(darkMode)
+    const handleStorageChange = () => setIsDarkMode(localStorage.getItem('darkMode') === 'true')
+    window.addEventListener('storage', handleStorageChange)
+    return () => window.removeEventListener('storage', handleStorageChange)
+  }, [])
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-16">
+      <div className="relative bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white py-20">
         <div className="max-w-5xl mx-auto px-4">
           <div className="flex items-center justify-center mb-6">
             <ShieldCheckIcon className="h-20 w-20" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-3">
-            BeautyCita Android App
+          <h1 className="text-4xl md:text-5xl font-serif font-bold text-center mb-3">
+            {t('pages.playStorePrivacy.header.title')}
           </h1>
           <h2 className="text-2xl md:text-3xl font-semibold text-center mb-4">
-            Privacy Policy
+            {t('pages.playStorePrivacy.header.subtitle')}
           </h2>
           <p className="text-center text-lg text-white/90">
-            Last Updated: October 13, 2025
+            {t('pages.playStorePrivacy.header.lastUpdated')}
           </p>
           <p className="text-center text-white/80 mt-2">
-            Version 1.0 | For Google Play Store
+            {t('pages.playStorePrivacy.header.version')}
           </p>
         </div>
       </div>
 
       {/* Content */}
       <div className="max-w-5xl mx-auto px-4 py-12">
-        
+
         {/* Table of Contents */}
-        <nav className="mb-12 p-8 bg-purple-50 rounded-2xl border-2 border-purple-200">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Table of Contents</h3>
+        <nav className={`mb-12 p-8 rounded-2xl border-2 ${
+          isDarkMode
+            ? 'bg-gray-800 border-gray-700'
+            : 'bg-purple-50 border-purple-200'
+        }`}>
+          <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            {t('pages.playStorePrivacy.toc.heading')}
+          </h3>
           <div className="grid md:grid-cols-2 gap-3 text-sm">
-            <a href="#introduction" className="text-purple-600 hover:underline">1. Introduction</a>
-            <a href="#information-collected" className="text-purple-600 hover:underline">2. Information We Collect</a>
-            <a href="#android-permissions" className="text-purple-600 hover:underline">3. Android App Permissions</a>
-            <a href="#how-we-use" className="text-purple-600 hover:underline">4. How We Use Your Information</a>
-            <a href="#third-party" className="text-purple-600 hover:underline">5. Third-Party Services & SDKs</a>
-            <a href="#data-sharing" className="text-purple-600 hover:underline">6. How We Share Your Information</a>
-            <a href="#data-retention" className="text-purple-600 hover:underline">7. Data Retention</a>
-            <a href="#account-deletion" className="text-purple-600 hover:underline">8. Account & Data Deletion</a>
-            <a href="#your-rights" className="text-purple-600 hover:underline">9. Your Privacy Rights</a>
-            <a href="#security" className="text-purple-600 hover:underline">10. Data Security</a>
-            <a href="#children" className="text-purple-600 hover:underline">11. Children's Privacy</a>
-            <a href="#contact" className="text-purple-600 hover:underline">12. Contact Us</a>
+            <a href="#introduction" className={`${isDarkMode ? 'text-pink-400 hover:text-pink-300' : 'text-purple-600 hover:underline'}`}>
+              {t('pages.playStorePrivacy.toc.introduction')}
+            </a>
+            <a href="#information-collected" className={`${isDarkMode ? 'text-pink-400 hover:text-pink-300' : 'text-purple-600 hover:underline'}`}>
+              {t('pages.playStorePrivacy.toc.informationCollected')}
+            </a>
+            <a href="#android-permissions" className={`${isDarkMode ? 'text-pink-400 hover:text-pink-300' : 'text-purple-600 hover:underline'}`}>
+              {t('pages.playStorePrivacy.toc.androidPermissions')}
+            </a>
+            <a href="#how-we-use" className={`${isDarkMode ? 'text-pink-400 hover:text-pink-300' : 'text-purple-600 hover:underline'}`}>
+              {t('pages.playStorePrivacy.toc.howWeUse')}
+            </a>
+            <a href="#third-party" className={`${isDarkMode ? 'text-pink-400 hover:text-pink-300' : 'text-purple-600 hover:underline'}`}>
+              {t('pages.playStorePrivacy.toc.thirdParty')}
+            </a>
+            <a href="#data-sharing" className={`${isDarkMode ? 'text-pink-400 hover:text-pink-300' : 'text-purple-600 hover:underline'}`}>
+              {t('pages.playStorePrivacy.toc.dataSharing')}
+            </a>
+            <a href="#data-retention" className={`${isDarkMode ? 'text-pink-400 hover:text-pink-300' : 'text-purple-600 hover:underline'}`}>
+              {t('pages.playStorePrivacy.toc.dataRetention')}
+            </a>
+            <a href="#account-deletion" className={`${isDarkMode ? 'text-pink-400 hover:text-pink-300' : 'text-purple-600 hover:underline'}`}>
+              {t('pages.playStorePrivacy.toc.accountDeletion')}
+            </a>
+            <a href="#your-rights" className={`${isDarkMode ? 'text-pink-400 hover:text-pink-300' : 'text-purple-600 hover:underline'}`}>
+              {t('pages.playStorePrivacy.toc.yourRights')}
+            </a>
+            <a href="#security" className={`${isDarkMode ? 'text-pink-400 hover:text-pink-300' : 'text-purple-600 hover:underline'}`}>
+              {t('pages.playStorePrivacy.toc.security')}
+            </a>
+            <a href="#children" className={`${isDarkMode ? 'text-pink-400 hover:text-pink-300' : 'text-purple-600 hover:underline'}`}>
+              {t('pages.playStorePrivacy.toc.children')}
+            </a>
+            <a href="#contact" className={`${isDarkMode ? 'text-pink-400 hover:text-pink-300' : 'text-purple-600 hover:underline'}`}>
+              {t('pages.playStorePrivacy.toc.contact')}
+            </a>
           </div>
         </nav>
 
         {/* Introduction */}
         <section id="introduction" className="mb-16 scroll-mt-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+          <h2 className={`text-3xl font-serif font-bold mb-6 flex items-center bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent`}>
             <ShieldCheckIcon className="h-8 w-8 mr-3 text-purple-600" />
-            1. Introduction
+            {t('pages.playStorePrivacy.introduction.heading')}
           </h2>
-          <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+          <div className={`prose prose-lg max-w-none leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             <p className="mb-4">
-              BeautyCita (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) operates a beauty services booking platform. This Privacy Policy explains how our Android mobile application (the &quot;App&quot;) collects, uses, protects, and shares your personal information.
+              {t('pages.playStorePrivacy.introduction.paragraph1')}
             </p>
             <p className="mb-4">
-              <strong>By installing and using the BeautyCita Android app, you agree to this Privacy Policy.</strong> If you do not agree with any part of this policy, please uninstall the app immediately.
+              <strong>{t('pages.playStorePrivacy.introduction.paragraph2')}</strong> {t('pages.playStorePrivacy.introduction.paragraph3')}
             </p>
             <p className="mb-4">
-              This policy is specifically designed for our Android app available on Google Play Store. For our complete web privacy policy, visit <Link to="/privacy" className="text-purple-600 hover:underline font-semibold">beautycita.com/privacy</Link>.
+              {t('pages.playStorePrivacy.introduction.paragraph4')} <Link to="/privacy" className={`font-semibold ${isDarkMode ? 'text-pink-400 hover:text-pink-300' : 'text-purple-600 hover:underline'}`}>{t('pages.playStorePrivacy.introduction.linkText')}</Link>.
             </p>
-            <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg mt-6">
-              <p className="font-semibold text-blue-900 mb-2">🔒 Your Privacy Matters</p>
-              <p className="text-blue-800">
-                We are committed to transparency. We never sell your personal information. We only collect data necessary to provide you with excellent beauty booking services.
+            <div className={`border-l-4 border-blue-500 p-6 rounded-xl mt-6 ${
+              isDarkMode ? 'bg-blue-900/20' : 'bg-blue-50'
+            }`}>
+              <p className={`font-semibold mb-2 ${isDarkMode ? 'text-blue-300' : 'text-blue-900'}`}>
+                {t('pages.playStorePrivacy.introduction.infoBox.title')}
+              </p>
+              <p className={isDarkMode ? 'text-blue-200' : 'text-blue-800'}>
+                {t('pages.playStorePrivacy.introduction.infoBox.text')}
               </p>
             </div>
           </div>
@@ -90,96 +135,108 @@ const PlayStorePrivacyPolicy: React.FC = () => {
 
         {/* Information Collected */}
         <section id="information-collected" className="mb-16 scroll-mt-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+          <h2 className={`text-3xl font-serif font-bold mb-6 flex items-center bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent`}>
             <DevicePhoneMobileIcon className="h-8 w-8 mr-3 text-purple-600" />
-            2. Information We Collect
+            {t('pages.playStorePrivacy.informationCollected.heading')}
           </h2>
-          
-          <h3 className="text-2xl font-semibold text-gray-800 mb-4">2.1 Personal Information You Provide</h3>
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-6 mb-6">
-            <ul className="space-y-3 text-gray-700">
+
+          <h3 className={`text-2xl font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+            {t('pages.playStorePrivacy.informationCollected.personalInfo.heading')}
+          </h3>
+          <div className={`rounded-xl p-6 mb-6 ${
+            isDarkMode ? 'bg-gray-800 border-2 border-gray-700' : 'bg-white border-2 border-gray-200'
+          }`}>
+            <ul className={`space-y-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
               <li className="flex items-start">
                 <span className="mr-3 text-purple-600">•</span>
                 <div>
-                  <strong>Account Information:</strong> Name, email address, phone number, date of birth, username, password (encrypted), profile photo
+                  <strong>{t('pages.playStorePrivacy.informationCollected.personalInfo.accountInfo.title')}</strong> {t('pages.playStorePrivacy.informationCollected.personalInfo.accountInfo.text')}
                 </div>
               </li>
               <li className="flex items-start">
                 <span className="mr-3 text-purple-600">•</span>
                 <div>
-                  <strong>Payment Information:</strong> Credit/debit card details (securely processed by Stripe - we don't store full card numbers), Bitcoin wallet addresses for crypto payments
+                  <strong>{t('pages.playStorePrivacy.informationCollected.personalInfo.paymentInfo.title')}</strong> {t('pages.playStorePrivacy.informationCollected.personalInfo.paymentInfo.text')}
                 </div>
               </li>
               <li className="flex items-start">
                 <span className="mr-3 text-purple-600">•</span>
                 <div>
-                  <strong>Booking Information:</strong> Service preferences, appointment bookings, booking history, reviews, ratings, favorite stylists
+                  <strong>{t('pages.playStorePrivacy.informationCollected.personalInfo.bookingInfo.title')}</strong> {t('pages.playStorePrivacy.informationCollected.personalInfo.bookingInfo.text')}
                 </div>
               </li>
               <li className="flex items-start">
                 <span className="mr-3 text-purple-600">•</span>
                 <div>
-                  <strong>Messages & Communications:</strong> Chat messages with beauty professionals, customer support conversations
+                  <strong>{t('pages.playStorePrivacy.informationCollected.personalInfo.messagesInfo.title')}</strong> {t('pages.playStorePrivacy.informationCollected.personalInfo.messagesInfo.text')}
                 </div>
               </li>
               <li className="flex items-start">
                 <span className="mr-3 text-purple-600">•</span>
                 <div>
-                  <strong>Stylist Professional Data:</strong> Business name, certifications, specialties, years of experience, portfolio images, service descriptions, pricing
+                  <strong>{t('pages.playStorePrivacy.informationCollected.personalInfo.stylistInfo.title')}</strong> {t('pages.playStorePrivacy.informationCollected.personalInfo.stylistInfo.text')}
                 </div>
               </li>
             </ul>
           </div>
 
-          <h3 className="text-2xl font-semibold text-gray-800 mb-4">2.2 Information Collected Automatically</h3>
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-6 mb-6">
-            <ul className="space-y-3 text-gray-700">
+          <h3 className={`text-2xl font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+            {t('pages.playStorePrivacy.informationCollected.automaticInfo.heading')}
+          </h3>
+          <div className={`rounded-xl p-6 mb-6 ${
+            isDarkMode ? 'bg-gray-800 border-2 border-gray-700' : 'bg-white border-2 border-gray-200'
+          }`}>
+            <ul className={`space-y-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
               <li className="flex items-start">
                 <span className="mr-3 text-purple-600">•</span>
                 <div>
-                  <strong>Device Information:</strong> Device model, manufacturer, operating system version, unique device identifiers (Android ID), mobile network information, screen resolution
+                  <strong>{t('pages.playStorePrivacy.informationCollected.automaticInfo.deviceInfo.title')}</strong> {t('pages.playStorePrivacy.informationCollected.automaticInfo.deviceInfo.text')}
                 </div>
               </li>
               <li className="flex items-start">
                 <span className="mr-3 text-purple-600">•</span>
                 <div>
-                  <strong>Usage Data:</strong> App features accessed, screens viewed, time spent in app, search queries, click patterns, session duration
+                  <strong>{t('pages.playStorePrivacy.informationCollected.automaticInfo.usageData.title')}</strong> {t('pages.playStorePrivacy.informationCollected.automaticInfo.usageData.text')}
                 </div>
               </li>
               <li className="flex items-start">
                 <span className="mr-3 text-purple-600">•</span>
                 <div>
-                  <strong>Location Data:</strong> Precise GPS location (only with your explicit permission) to show nearby stylists and track appointments. IP address for general location and fraud prevention.
+                  <strong>{t('pages.playStorePrivacy.informationCollected.automaticInfo.locationData.title')}</strong> {t('pages.playStorePrivacy.informationCollected.automaticInfo.locationData.text')}
                 </div>
               </li>
               <li className="flex items-start">
                 <span className="mr-3 text-purple-600">•</span>
                 <div>
-                  <strong>Camera & Photos:</strong> Access to device camera and photo gallery (only when you choose to take or upload photos)
+                  <strong>{t('pages.playStorePrivacy.informationCollected.automaticInfo.cameraPhotos.title')}</strong> {t('pages.playStorePrivacy.informationCollected.automaticInfo.cameraPhotos.text')}
                 </div>
               </li>
               <li className="flex items-start">
                 <span className="mr-3 text-purple-600">•</span>
                 <div>
-                  <strong>Performance & Error Data:</strong> Crash logs, error reports, app performance metrics, loading times
+                  <strong>{t('pages.playStorePrivacy.informationCollected.automaticInfo.performanceData.title')}</strong> {t('pages.playStorePrivacy.informationCollected.automaticInfo.performanceData.text')}
                 </div>
               </li>
             </ul>
           </div>
 
-          <h3 className="text-2xl font-semibold text-gray-800 mb-4">2.3 Information from Third-Party Sources</h3>
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-6">
-            <ul className="space-y-3 text-gray-700">
+          <h3 className={`text-2xl font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+            {t('pages.playStorePrivacy.informationCollected.thirdPartyInfo.heading')}
+          </h3>
+          <div className={`rounded-xl p-6 ${
+            isDarkMode ? 'bg-gray-800 border-2 border-gray-700' : 'bg-white border-2 border-gray-200'
+          }`}>
+            <ul className={`space-y-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
               <li className="flex items-start">
                 <span className="mr-3 text-purple-600">•</span>
                 <div>
-                  <strong>Google Sign-In:</strong> If you use Google to sign in, we receive your Google name, email address, and profile picture
+                  <strong>{t('pages.playStorePrivacy.informationCollected.thirdPartyInfo.googleSignIn.title')}</strong> {t('pages.playStorePrivacy.informationCollected.thirdPartyInfo.googleSignIn.text')}
                 </div>
               </li>
               <li className="flex items-start">
                 <span className="mr-3 text-purple-600">•</span>
                 <div>
-                  <strong>Payment Processors:</strong> Transaction confirmation data from Stripe (card payments) and BTCPay Server (Bitcoin payments)
+                  <strong>{t('pages.playStorePrivacy.informationCollected.thirdPartyInfo.paymentProcessors.title')}</strong> {t('pages.playStorePrivacy.informationCollected.thirdPartyInfo.paymentProcessors.text')}
                 </div>
               </li>
             </ul>
@@ -188,189 +245,207 @@ const PlayStorePrivacyPolicy: React.FC = () => {
 
         {/* Android Permissions */}
         <section id="android-permissions" className="mb-16 scroll-mt-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+          <h2 className={`text-3xl font-serif font-bold mb-6 flex items-center bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent`}>
             <DevicePhoneMobileIcon className="h-8 w-8 mr-3 text-purple-600" />
-            3. Android App Permissions
+            {t('pages.playStorePrivacy.androidPermissions.heading')}
           </h2>
-          <p className="text-gray-700 mb-6 text-lg">
-            The BeautyCita Android app requests the following Android permissions. All permissions are requested only when needed and you can deny any optional permission.
+          <p className={`mb-6 text-lg ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+            {t('pages.playStorePrivacy.androidPermissions.intro')}
           </p>
 
           <div className="space-y-6">
             {/* Location Permission */}
-            <div className="bg-green-50 border-2 border-green-300 rounded-xl p-6">
+            <div className={`rounded-xl p-6 ${
+              isDarkMode ? 'bg-green-900/20 border-2 border-green-800' : 'bg-green-50 border-2 border-green-300'
+            }`}>
               <div className="flex items-start mb-3">
                 <MapPinIcon className="h-8 w-8 text-green-600 mr-3 flex-shrink-0" />
                 <div>
-                  <h4 className="text-xl font-bold text-gray-900 mb-2">
-                    📍 Location (ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
+                  <h4 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    {t('pages.playStorePrivacy.androidPermissions.location.title')}
                   </h4>
-                  <p className="text-gray-700 mb-2">
-                    <strong className="text-green-800">Why we need it:</strong> To show beauty professionals near you, provide turn-by-turn directions, enable real-time appointment tracking (starts 3 hours before your appointment), and calculate ETAs.
+                  <p className={`mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <strong className="text-green-600">{t('pages.playStorePrivacy.androidPermissions.location.whyWeNeed')}</strong> {t('pages.playStorePrivacy.androidPermissions.location.whyText')}
                   </p>
-                  <p className="text-gray-700 mb-2">
-                    <strong className="text-green-800">When we access it:</strong> Only when you open the stylist search map or when you have an upcoming appointment with tracking enabled.
+                  <p className={`mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <strong className="text-green-600">{t('pages.playStorePrivacy.androidPermissions.location.whenWeAccess')}</strong> {t('pages.playStorePrivacy.androidPermissions.location.whenText')}
                   </p>
-                  <p className="text-gray-700">
-                    <strong className="text-green-800">Can you deny it?</strong> Yes ✓ The app works without location access, but you won't see distance-based search results or real-time appointment tracking features.
+                  <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                    <strong className="text-green-600">{t('pages.playStorePrivacy.androidPermissions.location.canDeny')}</strong> {t('pages.playStorePrivacy.androidPermissions.location.canDenyText')}
                   </p>
                 </div>
               </div>
             </div>
 
             {/* Camera Permission */}
-            <div className="bg-blue-50 border-2 border-blue-300 rounded-xl p-6">
+            <div className={`rounded-xl p-6 ${
+              isDarkMode ? 'bg-blue-900/20 border-2 border-blue-800' : 'bg-blue-50 border-2 border-blue-300'
+            }`}>
               <div className="flex items-start mb-3">
                 <CameraIcon className="h-8 w-8 text-blue-600 mr-3 flex-shrink-0" />
                 <div>
-                  <h4 className="text-xl font-bold text-gray-900 mb-2">
-                    📷 Camera (CAMERA)
+                  <h4 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    {t('pages.playStorePrivacy.androidPermissions.camera.title')}
                   </h4>
-                  <p className="text-gray-700 mb-2">
-                    <strong className="text-blue-800">Why we need it:</strong> To take profile pictures or portfolio photos directly within the app.
+                  <p className={`mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <strong className="text-blue-600">{t('pages.playStorePrivacy.androidPermissions.camera.whyWeNeed')}</strong> {t('pages.playStorePrivacy.androidPermissions.camera.whyText')}
                   </p>
-                  <p className="text-gray-700 mb-2">
-                    <strong className="text-blue-800">When we access it:</strong> Only when you tap the camera button to take a new photo.
+                  <p className={`mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <strong className="text-blue-600">{t('pages.playStorePrivacy.androidPermissions.camera.whenWeAccess')}</strong> {t('pages.playStorePrivacy.androidPermissions.camera.whenText')}
                   </p>
-                  <p className="text-gray-700">
-                    <strong className="text-blue-800">Can you deny it?</strong> Yes ✓ You can still upload photos from your gallery.
+                  <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                    <strong className="text-blue-600">{t('pages.playStorePrivacy.androidPermissions.camera.canDeny')}</strong> {t('pages.playStorePrivacy.androidPermissions.camera.canDenyText')}
                   </p>
                 </div>
               </div>
             </div>
 
             {/* Photos/Media Permission */}
-            <div className="bg-purple-50 border-2 border-purple-300 rounded-xl p-6">
+            <div className={`rounded-xl p-6 ${
+              isDarkMode ? 'bg-purple-900/20 border-2 border-purple-800' : 'bg-purple-50 border-2 border-purple-300'
+            }`}>
               <div className="flex items-start mb-3">
                 <div className="h-8 w-8 text-purple-600 mr-3 flex-shrink-0 text-2xl">🖼️</div>
                 <div>
-                  <h4 className="text-xl font-bold text-gray-900 mb-2">
-                    Photos/Media/Files (READ_MEDIA_IMAGES, READ_EXTERNAL_STORAGE)
+                  <h4 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    {t('pages.playStorePrivacy.androidPermissions.photos.title')}
                   </h4>
-                  <p className="text-gray-700 mb-2">
-                    <strong className="text-purple-800">Why we need it:</strong> To let you choose photos from your device gallery for your profile picture or stylist portfolio.
+                  <p className={`mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <strong className="text-purple-600">{t('pages.playStorePrivacy.androidPermissions.photos.whyWeNeed')}</strong> {t('pages.playStorePrivacy.androidPermissions.photos.whyText')}
                   </p>
-                  <p className="text-gray-700 mb-2">
-                    <strong className="text-purple-800">When we access it:</strong> Only when you tap to upload a photo from your gallery.
+                  <p className={`mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <strong className="text-purple-600">{t('pages.playStorePrivacy.androidPermissions.photos.whenWeAccess')}</strong> {t('pages.playStorePrivacy.androidPermissions.photos.whenText')}
                   </p>
-                  <p className="text-gray-700">
-                    <strong className="text-purple-800">Can you deny it?</strong> Yes ✓ You won't be able to upload existing photos, but can still use the camera.
+                  <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                    <strong className="text-purple-600">{t('pages.playStorePrivacy.androidPermissions.photos.canDeny')}</strong> {t('pages.playStorePrivacy.androidPermissions.photos.canDenyText')}
                   </p>
                 </div>
               </div>
             </div>
 
             {/* Notifications Permission */}
-            <div className="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-6">
+            <div className={`rounded-xl p-6 ${
+              isDarkMode ? 'bg-yellow-900/20 border-2 border-yellow-800' : 'bg-yellow-50 border-2 border-yellow-300'
+            }`}>
               <div className="flex items-start mb-3">
                 <BellIcon className="h-8 w-8 text-yellow-600 mr-3 flex-shrink-0" />
                 <div>
-                  <h4 className="text-xl font-bold text-gray-900 mb-2">
-                    🔔 Notifications (POST_NOTIFICATIONS - Android 13+)
+                  <h4 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    {t('pages.playStorePrivacy.androidPermissions.notifications.title')}
                   </h4>
-                  <p className="text-gray-700 mb-2">
-                    <strong className="text-yellow-800">Why we need it:</strong> To send you appointment reminders, booking confirmations, payment receipts, and messages from stylists.
+                  <p className={`mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <strong className="text-yellow-600">{t('pages.playStorePrivacy.androidPermissions.notifications.whyWeNeed')}</strong> {t('pages.playStorePrivacy.androidPermissions.notifications.whyText')}
                   </p>
-                  <p className="text-gray-700 mb-2">
-                    <strong className="text-yellow-800">When we access it:</strong> When you have upcoming appointments or receive important updates.
+                  <p className={`mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <strong className="text-yellow-600">{t('pages.playStorePrivacy.androidPermissions.notifications.whenWeAccess')}</strong> {t('pages.playStorePrivacy.androidPermissions.notifications.whenText')}
                   </p>
-                  <p className="text-gray-700">
-                    <strong className="text-yellow-800">Can you deny it?</strong> Yes ✓ But you'll miss important appointment reminders and booking confirmations.
+                  <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                    <strong className="text-yellow-600">{t('pages.playStorePrivacy.androidPermissions.notifications.canDeny')}</strong> {t('pages.playStorePrivacy.androidPermissions.notifications.canDenyText')}
                   </p>
                 </div>
               </div>
             </div>
 
             {/* Internet Permission */}
-            <div className="bg-gray-50 border-2 border-gray-300 rounded-xl p-6">
+            <div className={`rounded-xl p-6 ${
+              isDarkMode ? 'bg-gray-800 border-2 border-gray-700' : 'bg-gray-50 border-2 border-gray-300'
+            }`}>
               <div className="flex items-start mb-3">
                 <GlobeAltIcon className="h-8 w-8 text-gray-600 mr-3 flex-shrink-0" />
                 <div>
-                  <h4 className="text-xl font-bold text-gray-900 mb-2">
-                    🌐 Internet (INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE)
+                  <h4 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    {t('pages.playStorePrivacy.androidPermissions.internet.title')}
                   </h4>
-                  <p className="text-gray-700 mb-2">
-                    <strong className="text-gray-800">Why we need it:</strong> Required for all app functionality including browsing stylists, making bookings, processing payments, and messaging.
+                  <p className={`mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <strong className="text-gray-600">{t('pages.playStorePrivacy.androidPermissions.internet.whyWeNeed')}</strong> {t('pages.playStorePrivacy.androidPermissions.internet.whyText')}
                   </p>
-                  <p className="text-gray-700 mb-2">
-                    <strong className="text-gray-800">When we access it:</strong> Continuously while the app is open.
+                  <p className={`mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <strong className="text-gray-600">{t('pages.playStorePrivacy.androidPermissions.internet.whenWeAccess')}</strong> {t('pages.playStorePrivacy.androidPermissions.internet.whenText')}
                   </p>
-                  <p className="text-gray-700">
-                    <strong className="text-gray-800">Can you deny it?</strong> No ✗ The app cannot function without internet connectivity.
+                  <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                    <strong className="text-gray-600">{t('pages.playStorePrivacy.androidPermissions.internet.canDeny')}</strong> {t('pages.playStorePrivacy.androidPermissions.internet.canDenyText')}
                   </p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-orange-50 border-l-4 border-orange-500 p-6 rounded-lg mt-8">
-            <p className="font-semibold text-orange-900 mb-2">⚙️ Managing Permissions</p>
-            <p className="text-orange-800">
-              You can manage all app permissions anytime by going to: <strong>Android Settings → Apps → BeautyCita → Permissions</strong>
+          <div className={`border-l-4 border-orange-500 p-6 rounded-xl mt-8 ${
+            isDarkMode ? 'bg-orange-900/20' : 'bg-orange-50'
+          }`}>
+            <p className={`font-semibold mb-2 ${isDarkMode ? 'text-orange-300' : 'text-orange-900'}`}>
+              {t('pages.playStorePrivacy.androidPermissions.managingPermissions.title')}
+            </p>
+            <p className={isDarkMode ? 'text-orange-200' : 'text-orange-800'}>
+              {t('pages.playStorePrivacy.androidPermissions.managingPermissions.text')} <strong>{t('pages.playStorePrivacy.androidPermissions.managingPermissions.path')}</strong>
             </p>
           </div>
         </section>
 
-        {/* Rest of sections with similar comprehensive treatment */}
-        <div className="text-center my-16 p-8 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl">
-          <p className="text-lg text-gray-700 mb-4">
-            This privacy policy continues with full details on data usage, third-party services, security measures, and your rights.
+        {/* View Complete Policy CTA */}
+        <div className={`text-center my-16 p-8 rounded-2xl ${
+          isDarkMode
+            ? 'bg-gradient-to-r from-gray-800 to-gray-700'
+            : 'bg-gradient-to-r from-purple-50 to-pink-50'
+        }`}>
+          <p className={`text-lg mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+            {t('pages.playStorePrivacy.viewComplete.text')}
           </p>
-          <Link 
-            to="/privacy" 
-            className="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold px-8 py-4 rounded-full hover:shadow-lg transition-shadow text-lg"
+          <Link
+            to="/privacy"
+            className="inline-block bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold px-8 py-4 rounded-full hover:shadow-lg transition-all hover:scale-105 text-lg"
           >
-            View Complete Privacy Policy
+            {t('pages.playStorePrivacy.viewComplete.button')}
           </Link>
         </div>
 
         {/* Quick Contact */}
-        <section id="contact" className="mb-12 bg-purple-600 text-white p-8 rounded-2xl scroll-mt-8">
-          <h2 className="text-3xl font-bold mb-6 flex items-center">
+        <section id="contact" className="mb-12 bg-gradient-to-r from-pink-500 to-purple-600 text-white p-8 rounded-2xl scroll-mt-8">
+          <h2 className="text-3xl font-serif font-bold mb-6 flex items-center">
             <LockClosedIcon className="h-8 w-8 mr-3" />
-            12. Contact Us
+            {t('pages.playStorePrivacy.contact.heading')}
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <h3 className="text-xl font-semibold mb-3">Privacy Questions</h3>
-              <p className="mb-2"><strong>Email:</strong> privacy@beautycita.com</p>
-              <p className="mb-2"><strong>Response Time:</strong> Within 1 business day</p>
+              <h3 className="text-xl font-semibold mb-3">{t('pages.playStorePrivacy.contact.privacyQuestions.title')}</h3>
+              <p className="mb-2"><strong>{t('pages.playStorePrivacy.contact.privacyQuestions.email')}</strong> {t('pages.playStorePrivacy.contact.privacyQuestions.emailAddress')}</p>
+              <p className="mb-2"><strong>{t('pages.playStorePrivacy.contact.privacyQuestions.responseTime')}</strong> {t('pages.playStorePrivacy.contact.privacyQuestions.responseText')}</p>
             </div>
             <div>
-              <h3 className="text-xl font-semibold mb-3">Data Deletion Requests</h3>
-              <p className="mb-2">Email privacy@beautycita.com with subject:</p>
-              <p className="bg-white/20 px-4 py-2 rounded-lg font-mono text-sm">&quot;Delete My Account&quot;</p>
+              <h3 className="text-xl font-semibold mb-3">{t('pages.playStorePrivacy.contact.dataDeletion.title')}</h3>
+              <p className="mb-2">{t('pages.playStorePrivacy.contact.dataDeletion.text')}</p>
+              <p className="bg-white/20 px-4 py-2 rounded-full font-mono text-sm">{t('pages.playStorePrivacy.contact.dataDeletion.subject')}</p>
             </div>
           </div>
         </section>
 
         {/* Footer */}
-        <section className="border-t-2 border-gray-200 pt-8 mt-16">
+        <section className={`border-t-2 pt-8 mt-16 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
           <div className="text-center space-y-6">
-            <p className="text-gray-600 text-sm">
-              © 2025 BeautyCita. All rights reserved.
+            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              {t('pages.playStorePrivacy.footer.copyright')}
             </p>
             <div className="flex flex-wrap justify-center gap-6 text-sm">
-              <Link to="/privacy" className="text-purple-600 hover:underline font-semibold">
-                Full Privacy Policy
+              <Link to="/privacy" className={`font-semibold ${isDarkMode ? 'text-pink-400 hover:text-pink-300' : 'text-purple-600 hover:underline'}`}>
+                {t('pages.playStorePrivacy.footer.fullPrivacy')}
               </Link>
-              <Link to="/terms/client" className="text-purple-600 hover:underline">
-                Terms of Service
+              <Link to="/terms/client" className={isDarkMode ? 'text-pink-400 hover:text-pink-300' : 'text-purple-600 hover:underline'}>
+                {t('pages.playStorePrivacy.footer.terms')}
               </Link>
-              <Link to="/contact" className="text-purple-600 hover:underline">
-                Contact Support
+              <Link to="/contact" className={isDarkMode ? 'text-pink-400 hover:text-pink-300' : 'text-purple-600 hover:underline'}>
+                {t('pages.playStorePrivacy.footer.contactSupport')}
               </Link>
-              <Link to="/download-app" className="text-purple-600 hover:underline">
-                Download App
+              <Link to="/download-app" className={isDarkMode ? 'text-pink-400 hover:text-pink-300' : 'text-purple-600 hover:underline'}>
+                {t('pages.playStorePrivacy.footer.downloadApp')}
               </Link>
             </div>
-            <div className="bg-gray-50 p-6 rounded-xl inline-block">
-              <p className="text-gray-700 text-sm max-w-2xl">
-                <strong>Compliance:</strong> This privacy policy complies with Google Play Store Data Safety requirements, GDPR, CCPA/CPRA, Mexican LFPDPPP, and PCI-DSS standards.
+            <div className={`p-6 rounded-xl inline-block ${isDarkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
+              <p className={`text-sm max-w-2xl ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <strong>{t('pages.playStorePrivacy.footer.complianceTitle')}</strong> {t('pages.playStorePrivacy.footer.complianceText')}
               </p>
             </div>
-            <p className="text-gray-500 text-xs max-w-2xl mx-auto">
-              This privacy policy is specifically designed for the BeautyCita Android app available on Google Play Store. For complete details on data practices across all platforms, please visit our full privacy policy.
+            <p className={`text-xs max-w-2xl mx-auto ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+              {t('pages.playStorePrivacy.footer.disclaimer')}
             </p>
           </div>
         </section>

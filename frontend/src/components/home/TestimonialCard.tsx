@@ -34,7 +34,7 @@ export default function TestimonialCard({
       }`}
     >
       <div className="flex items-center mb-4">
-        <img
+        <img loading="lazy"
           src={avatar}
           alt={name}
           className="w-16 h-16 rounded-full border-4 border-pink-500 mr-4"

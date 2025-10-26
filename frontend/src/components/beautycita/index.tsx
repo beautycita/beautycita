@@ -273,7 +273,7 @@ export const BCAvatarGrid = ({ avatars, selected, onSelect }: BCAvatarGridProps)
               : 'border-gray-200 hover:border-primary-300 shadow-sm'
           }`}
         >
-          <img src={avatar} alt={`Avatar ${idx + 1}`} className="w-full h-full object-cover" />
+          <img loading="lazy" src={avatar} alt={`Avatar ${idx + 1}`} className="w-full h-full object-cover" />
         </motion.button>
       ))}
     </div>

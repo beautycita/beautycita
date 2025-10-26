@@ -878,7 +878,7 @@ export default function StylistApplicationPage() {
                     <div className="grid grid-cols-3 gap-4">
                       {portfolio.imagePreviews.map((preview, index) => (
                         <div key={index} className="relative group">
-                          <img src={preview} alt={`Portfolio ${index + 1}`} className="w-full h-32 object-cover rounded-xl" />
+                          <img loading="lazy" src={preview} alt={`Portfolio ${index + 1}`} className="w-full h-32 object-cover rounded-xl" />
                           <button
                             onClick={() => handleRemoveImage(index)}
                             className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"

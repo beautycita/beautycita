@@ -227,7 +227,7 @@ export default function ReviewForm({
 
               {photoPreviewUrls.map((url, index) => (
                 <div key={index} className="relative w-32 h-32">
-                  <img
+                  <img loading="lazy"
                     src={url}
                     alt={`Preview ${index + 1}`}
                     className="w-full h-full object-cover rounded-full"

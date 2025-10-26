@@ -388,7 +388,7 @@ export default function StylistPortfolioSlideshow() {
 
             {/* Bottom Section - Image (65% of screen) */}
             <div className="h-[65vh] relative overflow-hidden">
-              <img
+              <img loading="lazy"
                 src={currentSlideData.image}
                 alt={currentSlideData.category}
                 className="w-full h-full object-cover"
@@ -655,7 +655,7 @@ export default function StylistPortfolioSlideshow() {
             >
               <div className="flex justify-between items-start mb-6">
                 <div className="flex items-center gap-4">
-                  <img
+                  <img loading="lazy"
                     src={stylist.profilePicture || '/default-avatar.jpg'}
                     alt={stylist.firstName}
                     className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover"

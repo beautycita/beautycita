@@ -250,7 +250,7 @@ const NearbyStylists: React.FC<NearbyStylistsProps> = ({
                         }}
                       >
                         <div className="w-full h-full bg-white rounded-3xl p-0.5">
-                          <img
+                          <img loading="lazy"
                             src={stylist.profile_picture}
                             alt={stylist.name}
                             className="w-full h-full rounded-full object-cover"

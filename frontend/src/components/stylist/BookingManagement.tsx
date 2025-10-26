@@ -920,7 +920,7 @@ export default function BookingManagement() {
                     {/* Client Avatar */}
                     <div className="flex-shrink-0">
                       {booking.client.avatar ? (
-                        <img
+                        <img loading="lazy"
                           src={booking.client.avatar}
                           alt={`${booking.client.firstName} ${booking.client.lastName}`}
                           className="h-12 w-12 rounded-full object-cover"

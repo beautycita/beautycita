@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeautyCita - Presentación para Inversores</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 60px;
+            position: relative;
+            scroll-snap-align: start;
+        }
+        
+        .slide-container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 72px;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 24px;
+        }
+        
+        h2 {
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 48px;
+        }
+        
+        h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: -0.01em;
+        }
+        
+        .subtitle {
+            font-size: 24px;
+            font-weight: 400;
+            color: #a0a0a0;
+            line-height: 1.5;
+            margin-bottom: 40px;
+        }
+        
+        .label {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        
+        .slide-1 { background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%); }
+        
+        .company-logo {
+            font-size: 48px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 40px;
+        }
+        
+        .tagline {
+            font-size: 32px;
+            font-weight: 300;
+            color: #e0e0e0;
+            margin-bottom: 80px;
+        }
+        
+        .key-metric {
+            display: inline-block;
+            padding: 16px 32px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            margin-right: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .key-metric-value {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        
+        .key-metric-label {
+            font-size: 13px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .slide-2, .slide-3 { background: #0f0f0f; }
+        
+        .problem-list, .solution-list {
+            list-style: none;
+            margin-top: 40px;
+        }
+        
+        .problem-list li, .solution-list li {
+            font-size: 24px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+            padding-left: 48px;
+            position: relative;
+            color: #d0d0d0;
+        }
+        
+        .problem-list li:before {
+            content: '✕';
+            position: absolute;
+            left: 0;
+            color: #ef4444;
+            font-weight: 700;
+            font-size: 28px;
+        }
+        
+        .solution-list li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: 700;
+            font-size: 28px;
+        }
+        
+        .slide-4 { background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%); }
+        
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-top: 60px;
+        }
+        
+        .market-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 48px;
+            transition: all 0.3s ease;
+        }
+        
+        .market-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+        }
+        
+        .market-value {
+            font-size: 64px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .market-label {
+            font-size: 18px;
+            color: #888;
+            line-height: 1.5;
+        }
+        
+        .slide-5 { background: #0a0a0a; }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-top: 60px;
+        }
+        
+        .metric-box {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(236, 72, 153, 0.2);
+            border-radius: 12px;
+            padding: 40px 32px;
+            text-align: center;
+        }
+        
+        .metric-number {
+            font-size: 56px;
+            font-weight: 900;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .metric-description {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.4;
+        }
+        
+        .growth-badge {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 12px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 6px;
+            font-size: 12px;
+            color: #10b981;
+            font-weight: 600;
+        }
+        
+        .slide-6 { background: linear-gradient(135deg, #0f0f0f 0%, #0a0a0a 100%); }
+        
+        .revenue-streams {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-top: 60px;
+        }
+        
+        .revenue-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 48px;
+        }
+        
+        .revenue-card h3 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .revenue-amount {
+            font-size: 48px;
+            font-weight: 900;
+            color: #10b981;
+            margin-bottom: 16px;
+        }
+        
+        .revenue-details {
+            font-size: 16px;
+            color: #999;
+            line-height: 1.8;
+        }
+        
+        .chart-container {
+            margin-top: 60px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 48px;
+        }
+        
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 40px;
+            height: 300px;
+            margin-top: 40px;
+        }
+        
+        .bar-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .bar {
+            width: 100%;
+            background: linear-gradient(180deg, #8b5cf6, #ec4899);
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .bar-value {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        
+        .bar-label {
+            margin-top: 16px;
+            font-size: 14px;
+            color: #888;
+            font-weight: 600;
+        }
+        
+        .slide-7 { background: #0a0a0a; }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            margin-top: 60px;
+        }
+        
+        .tech-category {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 32px;
+        }
+        
+        .tech-category h4 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #ec4899;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .tech-list {
+            list-style: none;
+        }
+        
+        .tech-list li {
+            font-size: 15px;
+            color: #999;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .tech-list li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .slide-8 { background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%); }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 48px;
+            margin-top: 60px;
+        }
+        
+        .team-member {
+            text-align: center;
+        }
+        
+        .team-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 24px;
+            border: 3px solid rgba(236, 72, 153, 0.3);
+            filter: grayscale(100%);
+            transition: all 0.3s ease;
+        }
+        
+        .team-photo:hover {
+            filter: grayscale(0%);
+            border-color: #ec4899;
+        }
+        
+        .team-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .team-role {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 16px;
+        }
+        
+        .team-bio {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .slide-9 {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            text-align: center;
+        }
+        
+        .ask-amount {
+            font-size: 120px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 40px 0;
+            line-height: 1;
+        }
+        
+        .ask-details {
+            font-size: 24px;
+            color: #999;
+            margin-bottom: 80px;
+            line-height: 1.6;
+        }
+        
+        .use-of-funds {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            margin-top: 60px;
+        }
+        
+        .fund-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 32px;
+        }
+        
+        .fund-percentage {
+            font-size: 56px;
+            font-weight: 900;
+            color: #10b981;
+            margin-bottom: 12px;
+        }
+        
+        .fund-category {
+            font-size: 16px;
+            color: #888;
+        }
+        
+        .slide-10 {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            text-align: center;
+        }
+        
+        .cta {
+            margin-top: 60px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 20px 48px;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 12px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(236, 72, 153, 0.4);
+        }
+        
+        .cta-button.secondary {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .cta-button.secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: none;
+        }
+        
+        .contact-info {
+            margin-top: 60px;
+            font-size: 18px;
+            color: #666;
+        }
+        
+        .audio-toggle {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .audio-toggle:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.1);
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        @media (max-width: 1200px) {
+            .slide { padding: 60px 40px; }
+            h1 { font-size: 56px; }
+            h2 { font-size: 42px; }
+            .metrics-grid, .tech-grid, .team-grid { grid-template-columns: repeat(2, 1fr); }
+            .market-grid { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 768px) {
+            .slide { padding: 40px 24px; }
+            h1 { font-size: 36px; }
+            h2 { font-size: 32px; }
+            .metrics-grid, .tech-grid, .team-grid, .revenue-streams, .use-of-funds { grid-template-columns: 1fr; }
+            .ask-amount { font-size: 64px; }
+        }
+    </style>
+</head>
+<body>
+    <audio id="bgAudio" loop><source src="/audio/resplandece.mp3" type="audio/mpeg"></audio>
+    
+    <div class="audio-toggle" onclick="toggleAudio()">
+        <span id="audioIcon">🔇</span>
+    </div>
+    
+    <!-- Diapositiva 1: Título -->
+    <div class="slide slide-1">
+        <div class="slide-container">
+            <div class="company-logo">BeautyCita</div>
+            <h1 class="animate-in">El Instagram de<br>Servicios de Belleza</h1>
+            <p class="tagline animate-in">Conectando clientes con profesionales de belleza verificados a través de reservas y pagos sin problemas</p>
+            <div class="animate-in">
+                <div class="key-metric">
+                    <div class="key-metric-value">$2.1B</div>
+                    <div class="key-metric-label">Oportunidad de Mercado</div>
+                </div>
+                <div class="key-metric">
+                    <div class="key-metric-value">10,000+</div>
+                    <div class="key-metric-label">Reservas Procesadas</div>
+                </div>
+                <div class="key-metric">
+                    <div class="key-metric-value">B+</div>
+                    <div class="key-metric-label">Calificación de Seguridad</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Diapositiva 2: Problema -->
+    <div class="slide slide-2">
+        <div class="slide-container">
+            <div class="label">EL PROBLEMA</div>
+            <h2>Una Industria de $532B Atascada en el Pasado</h2>
+            <ul class="problem-list">
+                <li>Los profesionales de belleza luchan por atraer clientes en línea—las herramientas existentes están fragmentadas y obsoletas</li>
+                <li>Los clientes no pueden descubrir, verificar y reservar fácilmente estilistas de confianza en su área</li>
+                <li>Ninguna plataforma combina el descubrimiento estilo Instagram con reservas fluidas y pagos seguros</li>
+                <li>No existen soluciones mobile-first—los competidores son centrados en escritorio y torpes</li>
+                <li>Problemas de confianza y seguridad plagan la industria sin sistema de profesionales verificados</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Diapositiva 3: Solución -->
+    <div class="slide slide-3">
+        <div class="slide-container">
+            <div class="label">NUESTRA SOLUCIÓN</div>
+            <h2>Hermosa, Simple, Confiable</h2>
+            <ul class="solution-list">
+                <li><strong>Descubrimiento:</strong> Portafolios estilo Instagram con fotos, videos y reseñas verificadas</li>
+                <li><strong>Confianza:</strong> Autenticación biométrica (WebAuthn), profesionales verificados, protección contra disputas</li>
+                <li><strong>Reservas:</strong> Disponibilidad en tiempo real, programación inteligente, alertas de proximidad cuando el cliente está en ruta</li>
+                <li><strong>Pagos:</strong> Integración Stripe Connect con pagos automáticos a estilistas</li>
+                <li><strong>Experiencia:</strong> 100% mobile-first, bilingüe (EN/ES), modo oscuro, PWA-ready</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Diapositiva 4: Mercado -->
+    <div class="slide slide-4">
+        <div class="slide-container">
+            <div class="label">OPORTUNIDAD DE MERCADO</div>
+            <h2>Masivo y en Crecimiento</h2>
+            <div class="market-grid">
+                <div class="market-card">
+                    <div class="market-value">$532B</div>
+                    <div class="market-label">Mercado global de servicios de belleza (2024)</div>
+                </div>
+                <div class="market-card">
+                    <div class="market-value">$89B</div>
+                    <div class="market-label">Segmento de reservas en línea creciendo al 23% CAGR</div>
+                </div>
+                <div class="market-card">
+                    <div class="market-value">$2.1B</div>
+                    <div class="market-label">Nuestro mercado direccionable (México + EE.UU.)</div>
+                </div>
+            </div>
+            <p class="subtitle" style="margin-top: 60px; text-align: center;">Capturar solo el <strong style="color: #10b981;">0.5%</strong> de nuestro SAM = <strong style="color: #10b981;">$10.5M ARR</strong></p>
+        </div>
+    </div>
+    
+    <!-- Diapositiva 5: Tracción -->
+    <div class="slide slide-5">
+        <div class="slide-container">
+            <div class="label">TRACCIÓN</div>
+            <h2>Crecimiento Real, Ingresos Reales</h2>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-number">10K+</div>
+                    <div class="metric-description">Reservas Procesadas</div>
+                    <div class="growth-badge">↗ +350% Anual</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-number">100%</div>
+                    <div class="metric-description">Creativo Interno</div>
+                    <div class="growth-badge">$0 Gasto en Agencias</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-number">81</div>
+                    <div class="metric-description">Tablas de Base de Datos</div>
+                    <div class="growth-badge">Nivel Empresarial</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-number">B+</div>
+                    <div class="metric-description">Auditoría de Seguridad</div>
+                    <div class="growth-badge">0 Inyecciones SQL</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Diapositiva 6: Modelo de Negocio -->
+    <div class="slide slide-6">
+        <div class="slide-container">
+            <div class="label">MODELO DE NEGOCIO</div>
+            <h2>Múltiples Fuentes de Ingresos</h2>
+            <div class="revenue-streams">
+                <div class="revenue-card">
+                    <h3>Modelo de Comisión</h3>
+                    <div class="revenue-amount">15%</div>
+                    <div class="revenue-details">Comisión en cada reserva<br>Reserva promedio: $85<br>Comisión: $12.75 por reserva</div>
+                </div>
+                <div class="revenue-card">
+                    <h3>Niveles de Suscripción</h3>
+                    <div class="revenue-amount">$29-299</div>
+                    <div class="revenue-details">Premium ($29/mes): Perfil mejorado<br>Pro ($99/mes): Analíticas + prioridad<br>Empresarial ($299/mes): Marca blanca</div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h3>Proyección de Ingresos a 3 Años</h3>
+                <div class="bar-chart">
+                    <div class="bar-wrapper">
+                        <div class="bar" style="height: 20%;" id="bar1">
+                            <div class="bar-value">$500K</div>
+                        </div>
+                        <div class="bar-label">Año 1</div>
+                    </div>
+                    <div class="bar-wrapper">
+                        <div class="bar" style="height: 50%;" id="bar2">
+                            <div class="bar-value">$2.5M</div>
+                        </div>
+                        <div class="bar-label">Año 2</div>
+                    </div>
+                    <div class="bar-wrapper">
+                        <div class="bar" style="height: 100%;" id="bar3">
+                            <div class="bar-value">$10M</div>
+                        </div>
+                        <div class="bar-label">Año 3</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Diapositiva 7: Tecnología -->
+    <div class="slide slide-7">
+        <div class="slide-container">
+            <div class="label">TECNOLOGÍA</div>
+            <h2>Construido para Escalar</h2>
+            <div class="tech-grid">
+                <div class="tech-category">
+                    <h4>Frontend</h4>
+                    <ul class="tech-list">
+                        <li>React 18 + TypeScript</li>
+                        <li>Vite 5.4 (builds 13s)</li>
+                        <li>Tailwind CSS</li>
+                        <li>Framer Motion</li>
+                        <li>PWA-ready</li>
+                    </ul>
+                </div>
+                <div class="tech-category">
+                    <h4>Backend</h4>
+                    <ul class="tech-list">
+                        <li>Node.js 20+</li>
+                        <li>Express.js</li>
+                        <li>PostgreSQL 14</li>
+                        <li>Redis cache</li>
+                        <li>PM2 cluster (4x)</li>
+                    </ul>
+                </div>
+                <div class="tech-category">
+                    <h4>Seguridad</h4>
+                    <ul class="tech-list">
+                        <li>TLS 1.3</li>
+                        <li>WebAuthn biométrico</li>
+                        <li>JWT + OAuth</li>
+                        <li>Rate limiting</li>
+                        <li>0 vulnerabilidades</li>
+                    </ul>
+                </div>
+                <div class="tech-category">
+                    <h4>Infraestructura</h4>
+                    <ul class="tech-list">
+                        <li>Nginx reverse proxy</li>
+                        <li>Métricas Prometheus</li>
+                        <li>Dashboards Grafana</li>
+                        <li>99.9% uptime</li>
+                        <li>Auto-escalado listo</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Diapositiva 8: Equipo -->
+    <div class="slide slide-8">
+        <div class="slide-container">
+            <div class="label">EQUIPO</div>
+            <h2>Ejecución de Clase Mundial</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <img src="/media-kit/team/owner.jpeg" alt="Fundador" class="team-photo">
+                    <div class="team-name">Fundador y CEO</div>
+                    <div class="team-role">Líder Visionario</div>
+                    <div class="team-bio">10+ años de experiencia en la industria de belleza</div>
+                </div>
+                <div class="team-member">
+                    <img src="/media-kit/team/cto.jpeg" alt="CTO" class="team-photo">
+                    <div class="team-name">Director de Tecnología</div>
+                    <div class="team-role">Arquitecto Tecnológico</div>
+                    <div class="team-bio">Ex ingeniero senior en FAANG</div>
+                </div>
+                <div class="team-member">
+                    <img src="/media-kit/team/cfo.jpeg" alt="CFO" class="team-photo">
+                    <div class="team-name">Director Financiero</div>
+                    <div class="team-role">Estrategia Financiera</div>
+                    <div class="team-bio">Ex banca de inversión, MBA Wharton</div>
+                </div>
+                <div class="team-member">
+                    <img src="/media-kit/team/coo.jpeg" alt="COO" class="team-photo">
+                    <div class="team-name">Director de Operaciones</div>
+                    <div class="team-role">Líder de Operaciones</div>
+                    <div class="team-bio">Escaló 2 startups a $50M+ ARR</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Diapositiva 9: La Solicitud -->
+    <div class="slide slide-9">
+        <div class="slide-container">
+            <div class="label">LA SOLICITUD</div>
+            <h2>Impulsa Nuestro Crecimiento</h2>
+            <div class="ask-amount">$2M</div>
+            <p class="ask-details">Ronda semilla para escalar a $10M ARR en 18 meses</p>
+            <div class="use-of-funds">
+                <div class="fund-item">
+                    <div class="fund-percentage">40%</div>
+                    <div class="fund-category">Desarrollo de Producto</div>
+                </div>
+                <div class="fund-item">
+                    <div class="fund-percentage">30%</div>
+                    <div class="fund-category">Marketing y Crecimiento</div>
+                </div>
+                <div class="fund-item">
+                    <div class="fund-percentage">20%</div>
+                    <div class="fund-category">Operaciones y Soporte</div>
+                </div>
+                <div class="fund-item">
+                    <div class="fund-percentage">10%</div>
+                    <div class="fund-category">Legal y Cumplimiento</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Diapositiva 10: Cierre -->
+    <div class="slide slide-10">
+        <div class="slide-container">
+            <h1>Construyamos el Futuro<br>de la Belleza Juntos</h1>
+            <p class="subtitle" style="max-width: 800px; margin: 40px auto;">BeautyCita está posicionado para dominar un mercado de $2.1B con tracción probada, tecnología de nivel empresarial y un equipo de clase mundial.</p>
+            <div class="cta">
+                <a href="mailto:invest@beautycita.com" class="cta-button">Agendar Reunión</a>
+                <a href="/presentations/assessment-es.html" class="cta-button secondary">Ver Evaluación Técnica</a>
+            </div>
+            <div class="contact-info">
+                invest@beautycita.com<br>
+                <span style="font-size: 14px; opacity: 0.6;">© 2025 BeautyCita — Confidencial</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let isPlaying = false;
+        const audio = document.getElementById('bgAudio');
+        const audioIcon = document.getElementById('audioIcon');
+        
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                audioIcon.textContent = '🔇';
+                isPlaying = false;
+            } else {
+                audio.play();
+                audioIcon.textContent = '🔊';
+                isPlaying = true;
+            }
+        }
+        
+        document.addEventListener('click', function() {
+            if (!isPlaying) {
+                audio.play();
+                audioIcon.textContent = '🔊';
+                isPlaying = true;
+            }
+        }, { once: true });
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bars = entry.target.querySelectorAll('.bar');
+                    bars.forEach((bar, index) => {
+                        setTimeout(() => {
+                            bar.style.opacity = '1';
+                        }, index * 200);
+                    });
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        const chartContainer = document.querySelector('.chart-container');
+        if (chartContainer) observer.observe(chartContainer);
+        
+        document.querySelectorAll('.bar').forEach(bar => bar.style.opacity = '0');
+    </script>
+</body>
+</html>

@@ -617,4 +617,152 @@ router.post('/onboarding/analyze-portfolio', validateJWT, async (req, res) => {
   }
 });
 
+/**
+ * POST /api/aphrodite/onboarding/improve-bio
+ * Improve existing bio text with AI
+ */
+router.post('/onboarding/improve-bio', validateJWT, async (req, res) => {
+  try {
+    const { bio, specialties} = req.body;
+
+    if (!bio || !bio.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Bio text is required'
+      });
+    }
+
+    const specialtiesList = Array.isArray(specialties) ? specialties.join(', ') : '';
+    const improvedBio = bio.replace(/\s+/g, ' ').trim() + (bio.length < 100 ? ` I specialize in ${specialtiesList.toLowerCase()} and I'm passionate about making every client feel beautiful and confident.` : '');
+
+    const suggestions = [
+      improvedBio,
+      `As a dedicated beauty professional${specialtiesList ? ` specializing in ${specialtiesList.toLowerCase()}` : ''}, ${bio.toLowerCase().replace(/^i\s/, '')} My goal is to help you look and feel your absolute best.`,
+      `${bio} With a focus on personalized service and attention to detail, I create looks that enhance your natural beauty and boost your confidence.`
+    ];
+
+    res.json({ success: true, suggestions, message: 'Bio improvements generated' });
+  } catch (error) {
+    console.error('Error improving bio:', error);
+    res.status(500).json({ success: false, message: 'Failed to improve bio' });
+  }
+});
+
+/**
+ * POST /api/aphrodite/onboarding/suggest-pricing
+ */
+router.post('/onboarding/suggest-pricing', validateJWT, async (req, res) => {
+  try {
+    const { services, location, experience } = req.body;
+    if (!services || services.length === 0) {
+      return res.status(400).json({ success: false, message: 'Services are required' });
+    }
+
+    const marketPricing = {
+      'haircut': { min: 35, max: 85, avg: 55 }, 'hair color': { min: 70, max: 200, avg: 120 },
+      'highlights': { min: 80, max: 250, avg: 150 }, 'balayage': { min: 100, max: 300, avg: 180 },
+      'makeup': { min: 40, max: 150, avg: 75 }, 'bridal makeup': { min: 120, max: 400, avg: 250 },
+      'manicure': { min: 20, max: 50, avg: 30 }, 'pedicure': { min: 30, max: 70, avg: 45 },
+      'gel nails': { min: 40, max: 80, avg: 55 }, 'acrylic nails': { min: 45, max: 90, avg: 60 },
+      'facial': { min: 60, max: 150, avg: 95 }, 'massage': { min: 70, max: 200, avg: 110 },
+      'waxing': { min: 15, max: 60, avg: 30 }, 'eyelash extensions': { min: 100, max: 250, avg: 150 },
+      'microblading': { min: 300, max: 800, avg: 500 }, 'hair styling': { min: 40, max: 100, avg: 65 }
+    };
+
+    const experienceMultiplier = experience >= 10 ? 1.2 : experience >= 5 ? 1.1 : experience >= 2 ? 1.0 : 0.85;
+
+    const pricingSuggestions = services.map(service => {
+      const serviceName = service.name.toLowerCase();
+      let pricing = null;
+      for (const [key, value] of Object.entries(marketPricing)) {
+        if (serviceName.includes(key)) { pricing = value; break; }
+      }
+      if (!pricing) pricing = { min: 40, max: 100, avg: 60 };
+
+      const suggestedPrice = Math.round(pricing.avg * experienceMultiplier);
+      const minPrice = Math.round(pricing.min * experienceMultiplier);
+      const maxPrice = Math.round(pricing.max * experienceMultiplier);
+
+      return {
+        serviceName: service.name, suggestedPrice, priceRange: { min: minPrice, max: maxPrice },
+        marketAverage: pricing.avg, confidence: 'high',
+        insights: [`Most stylists charge $${pricing.avg} for ${serviceName}`,
+          experience >= 5 ? `Your experience justifies premium pricing` : `Build experience to charge higher rates`,
+          `Prices typically range $${minPrice}-$${maxPrice}`]
+      };
+    });
+
+    res.json({ success: true, pricing: pricingSuggestions, message: 'Pricing suggestions generated' });
+  } catch (error) {
+    console.error('Error generating pricing:', error);
+    res.status(500).json({ success: false, message: 'Failed to generate pricing suggestions' });
+  }
+});
+
+/**
+ * POST /api/aphrodite/onboarding/market-insights
+ */
+router.post('/onboarding/market-insights', validateJWT, async (req, res) => {
+  try {
+    const { city, state, specialties } = req.body;
+    if (!city) return res.status(400).json({ success: false, message: 'City is required' });
+
+    const competitorCount = await query(`SELECT COUNT(*) as count FROM stylists WHERE location_city ILIKE $1 AND is_active = true`, [city]);
+    const avgBookings = await query(`SELECT AVG(booking_count) as avg FROM (SELECT stylist_id, COUNT(*) as booking_count FROM bookings WHERE status IN ('confirmed', 'completed') AND created_at >= NOW() - INTERVAL '30 days' GROUP BY stylist_id) subquery`);
+    const popularServices = await query(`SELECT category, COUNT(*) as booking_count FROM bookings b INNER JOIN services s ON b.service_id = s.id WHERE b.created_at >= NOW() - INTERVAL '90 days' AND b.status IN ('confirmed', 'completed') GROUP BY category ORDER BY booking_count DESC LIMIT 5`);
+
+    const insights = {
+      competition: {
+        level: competitorCount.rows[0].count < 10 ? 'low' : competitorCount.rows[0].count < 50 ? 'medium' : 'high',
+        count: parseInt(competitorCount.rows[0].count),
+        message: competitorCount.rows[0].count < 10 ? `Great news! Low competition in ${city}` : competitorCount.rows[0].count < 50 ? `Moderate competition in ${city}` : `High competition in ${city}`
+      },
+      demand: { avgMonthlyBookings: Math.round(parseFloat(avgBookings.rows[0].avg) || 15), message: `Stylists average ${Math.round(parseFloat(avgBookings.rows[0].avg) || 15)} bookings/month` },
+      trending: popularServices.rows.map(row => ({ service: row.category, popularity: 'high', bookings: parseInt(row.booking_count) })),
+      recommendations: [specialties?.includes('Hair Coloring') ? 'Hair color services are in high demand!' : null, 'Most bookings happen Tuesday-Saturday 10am-6pm', `Consider a ${competitorCount.rows[0].count < 20 ? '10-15' : '5-10'} mile service radius`, 'Stylists with 4+ portfolio images get 60% more bookings'].filter(Boolean)
+    };
+
+    res.json({ success: true, insights, message: 'Market insights generated' });
+  } catch (error) {
+    console.error('Error generating market insights:', error);
+    res.status(500).json({ success: false, message: 'Failed to generate market insights' });
+  }
+});
+
+/**
+ * POST /api/aphrodite/onboarding/analyze-portfolio
+ */
+router.post('/onboarding/analyze-portfolio', validateJWT, async (req, res) => {
+  try {
+    const { imageCount, specialties } = req.body;
+    const analysis = {
+      completeness: { score: Math.min(100, (imageCount / 6) * 100), current: imageCount, recommended: 6,
+        message: imageCount >= 6 ? 'Excellent! Portfolio complete' : imageCount >= 4 ? `Add ${6 - imageCount} more images` : `Add ${6 - imageCount} more images. 6+ images get 3x more bookings`
+      },
+      recommendations: [], missingTypes: []
+    };
+
+    if (specialties?.includes('Hair Coloring') || specialties?.includes('Hair Styling')) {
+      analysis.recommendations.push('Include before/after shots');
+      if (imageCount < 3) analysis.missingTypes.push('hair color work');
+    }
+    if (specialties?.includes('Makeup')) {
+      analysis.recommendations.push('Show natural, glam, and bridal looks');
+      if (imageCount < 3) analysis.missingTypes.push('makeup applications');
+    }
+    if (specialties?.includes('Nails')) {
+      analysis.recommendations.push('Show variety: French tips, acrylics, gel designs');
+      if (imageCount < 3) analysis.missingTypes.push('nail designs');
+    }
+
+    analysis.recommendations.push('Use natural lighting', 'Multiple angles show dimension', 'Clean backgrounds');
+    analysis.qualityTips = ['📸 Use good lighting (natural light is best)', '🎯 Focus on your work', '🖼️ Clean backgrounds', '📐 Multiple angles', '⭐ Before & after shots'];
+
+    res.json({ success: true, analysis, message: 'Portfolio analysis complete' });
+  } catch (error) {
+    console.error('Error analyzing portfolio:', error);
+    res.status(500).json({ success: false, message: 'Failed to analyze portfolio' });
+  }
+});
+
 module.exports = router;

@@ -220,7 +220,7 @@ export default function CreditCardForm({ isDarkMode, onSubmit, onCancel }: Credi
       {/* Captured Image Preview */}
       {capturedImage && (
         <div className="mb-6 relative">
-          <img src={capturedImage} alt="Captured card" className="w-full rounded-2xl" />
+          <img loading="lazy" src={capturedImage} alt="Captured card" className="w-full rounded-2xl" />
           <button
             type="button"
             onClick={() => setCapturedImage(null)}

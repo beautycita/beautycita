@@ -116,7 +116,7 @@ export default function BiometricRegistrationModal({
 
       const fullPhone = `${countryCode}${phoneNumber}`
 
-      const response = await axios.post(`${API_URL}/verify/send-code`, {
+      const response = await axios.post(`${API_URL}/api/verify/send-code`, {
         phoneNumber: fullPhone
       })
 
@@ -147,7 +147,7 @@ export default function BiometricRegistrationModal({
       const fullPhone = `${countryCode}${phoneNumber}`
 
       // Step 1: Verify SMS code
-      const verifyResponse = await axios.post(`${API_URL}/verify/check-code`, {
+      const verifyResponse = await axios.post(`${API_URL}/api/verify/check-code`, {
         phoneNumber: fullPhone,
         code: verificationCode
       })
@@ -161,7 +161,7 @@ export default function BiometricRegistrationModal({
       toast.success('Phone verified! Setting up biometric authentication...')
 
       // Step 2: Get WebAuthn registration options
-      const optionsResponse = await axios.post(`${API_URL}/webauthn/register/options`, {
+      const optionsResponse = await axios.post(`${API_URL}/api/webauthn/register/options`, {
         phone: fullPhone,
         role
       })
@@ -178,7 +178,7 @@ export default function BiometricRegistrationModal({
       }
 
       // Step 4: Complete minimal registration (phone + biometric only)
-      const registerResponse = await axios.post(`${API_URL}/webauthn/register/verify-minimal`, {
+      const registerResponse = await axios.post(`${API_URL}/api/webauthn/register/verify-minimal`, {
         phone: fullPhone,
         credential: registerResult.credential,
         role,

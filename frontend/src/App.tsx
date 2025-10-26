@@ -12,6 +12,7 @@ import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import ScrollToTop from './components/layout/ScrollToTop'
 
+import CookieConsentBanner from "./components/CookieConsentBanner"
 // PWA components
 import InstallPrompt from './components/pwa/InstallPrompt'
 
@@ -46,6 +47,7 @@ const BookingPage = lazy(() => import('./pages/BookingPage'))
 const ProfilePage = lazy(() => import('./pages/ProfilePage'))
 const ProfileEditPage = lazy(() => import('./pages/profile/ProfileEditPage'))
 const ProfileOnboardingPage = lazy(() => import('./pages/profile/FormikOnboardingPage'))
+const ClientOnboardingPage = lazy(() => import("./pages/ClientOnboardingPage"))
 const BecomeStylistPage = lazy(() => import('./pages/profile/BecomeStylistPage'))
 const SettingsPage = lazy(() => import('./pages/SettingsPage'))
 const NotificationsPage = lazy(() => import('./pages/NotificationsPage'))
@@ -97,9 +99,13 @@ const QrGeneratorPage = lazy(() => import('./pages/QrGeneratorPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
 const CareersPage = lazy(() => import('./pages/CareersPage'))
 const PressPage = lazy(() => import('./pages/PressPage'))
+const DownloadsPage = lazy(() => import('./pages/DownloadsPage'))
+const TestimonialsPage = lazy(() => import('./pages/TestimonialsPage'))
+const PlatformPage = lazy(() => import('./pages/PlatformPage'))
 const BlogPage = lazy(() => import('./pages/BlogPage'))
 const BlogPostPage = lazy(() => import('./pages/BlogPostPage'))
 const HelpPage = lazy(() => import('./pages/HelpPage'))
+const StylistGuidePage = lazy(() => import('./pages/StylistGuidePage'))
 const ContactPage = lazy(() => import('./pages/ContactPage'))
 const StatusPage = lazy(() => import('./pages/StatusPage'))
 const ReportPage = lazy(() => import('./pages/ReportPage'))
@@ -201,9 +207,13 @@ function AppLayout() {
                   <Route path="/about" element={<AboutPage />} />
                   <Route path="/careers" element={<CareersPage />} />
                   <Route path="/press" element={<PressPage />} />
+                  <Route path="/downloads" element={<DownloadsPage />} />
+                  <Route path="/testimonials" element={<TestimonialsPage />} />
+                  <Route path="/platform" element={<PlatformPage />} />
                   <Route path="/blog" element={<BlogPage />} />
                   <Route path="/blog/:slug" element={<BlogPostPage />} />
                   <Route path="/help" element={<HelpPage />} />
+                  <Route path="/stylist-guide" element={<StylistGuidePage />} />
                   <Route path="/contact" element={<ContactPage />} />
                   <Route path="/status" element={<StatusPage />} />
                   <Route path="/report" element={<ReportPage />} />
@@ -245,6 +255,14 @@ function AppLayout() {
                     element={
                       <ProtectedRoute>
                         <ProfileOnboardingPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/client/onboarding"
+                    element={
+                      <ProtectedRoute>
+                        <ClientOnboardingPage />
                       </ProtectedRoute>
                     }
                   />
@@ -557,6 +575,7 @@ function AppLayout() {
       )}
       {/* PWA Install Prompt - shows automatically */}
       <InstallPrompt />
+      <CookieConsentBanner />
     </>
   )
 }

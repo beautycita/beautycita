@@ -155,7 +155,7 @@ export default function TestimonialsSection({ isDarkMode }: TestimonialsSectionP
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center">
                       <div className="relative">
-                        <img
+                        <img loading="lazy"
                           src={testimonial.avatar}
                           alt={testimonial.name}
                           className="w-14 h-14 rounded-full object-cover border-3 border-white dark:border-gray-800 shadow-lg"

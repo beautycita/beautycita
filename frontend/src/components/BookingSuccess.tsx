@@ -211,7 +211,7 @@ const BookingSuccess: React.FC<BookingSuccessProps> = ({ paymentResult, onNewBoo
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-gray-200 rounded-3xl flex items-center justify-center">
                 {booking.service.stylist.user.profile_picture_url ? (
-                  <img
+                  <img loading="lazy"
                     src={booking.service.stylist.user.profile_picture_url}
                     alt="Stylist"
                     className="w-12 h-12 rounded-full object-cover"

@@ -718,11 +718,11 @@
       "remove": "Remove",
       "removeConfirm": "Are you sure you want to remove {{deviceName}}?",
       "addDevice": {
-        "title": "Add New Device",
-        "description": "Register a new biometric device to access your account (e.g., iPhone, MacBook, Windows PC)",
-        "placeholder": "Device name (e.g., iPhone 15)",
-        "button": "Add Passkey",
-        "buttonAdding": "Adding..."
+        "title": "Add Biometric to This Device",
+        "description": "Register your fingerprint or face ID to quickly login on this device",
+        "placeholder": "Device name (e.g., My Laptop)",
+        "button": "Register Biometric",
+        "buttonAdding": "Registering..."
       },
       "messages": {
         "enterDeviceName": "Please enter a device name",
@@ -892,7 +892,8 @@
         "verifiedProfessionals": "Verified Professionals",
         "bookingsMade": "Bookings Made",
         "averageRating": "Average Rating",
-        "satisfaction": "Client Satisfaction"
+        "satisfaction": "Client Satisfaction",
+        "verifiedStylists": "Verified Professionals"
       },
       "services": {
         "title": "Featured Services",
@@ -911,7 +912,22 @@
       },
       "testimonials": {
         "title": "What Clients Say",
-        "subtitle": "Real reviews from satisfied clients"
+        "subtitle": "Real reviews from satisfied clients",
+        "testimonial1": {
+          "name": "Jessica Parker",
+          "role": "Fashion Blogger",
+          "text": "BeautyCita changed my life! Found my perfect stylist in minutes."
+        },
+        "testimonial2": {
+          "name": "Amanda Lee",
+          "role": "Influencer",
+          "text": "The AI recommendations are spot on. Best beauty booking app ever!"
+        },
+        "testimonial3": {
+          "name": "Sarah Wilson",
+          "role": "Entrepreneur",
+          "text": "Professional, secure, and so easy to use. Highly recommend!"
+        }
       },
       "videoSection": {
         "title": "Transform Your Look",
@@ -936,6 +952,35 @@
         "subtitle": "Join thousands of satisfied clients discovering their perfect beauty match",
         "cta1": "Get Started",
         "cta2": "Browse Services"
+      },
+      "topStylists": {
+        "title": "Top Professionals",
+        "subtitle": "Meet our verified beauty professionals",
+        "stylist1": {
+          "name": "Sofia Martinez",
+          "specialty": "Hair Color Expert",
+          "price": "$120/hr"
+        },
+        "stylist2": {
+          "name": "Isabella Chen",
+          "specialty": "Bridal Makeup",
+          "price": "$150/hr"
+        },
+        "stylist3": {
+          "name": "Emma Rodriguez",
+          "specialty": "Nail Artist",
+          "price": "$85/hr"
+        },
+        "stylist4": {
+          "name": "Mia Johnson",
+          "specialty": "Skincare Pro",
+          "price": "$110/hr"
+        }
+      },
+      "happyClientsVideo": {
+        "title": "Real Results, Real Transformations",
+        "subtitle": "See how BeautyCita brings confidence and beauty to life",
+        "cta": "Find Your Perfect Match"
       }
     },
     "about": {
@@ -954,30 +999,185 @@
       "accessibilityText": "Making premium beauty services available to everyone"
     },
     "careers": {
-      "title": "Join Our Team",
-      "subtitle": "Help us revolutionize the beauty industry",
-      "intro": "We're looking for passionate individuals who want to make a difference in how people experience beauty services.",
-      "openPositions": "Open Positions",
-      "benefits": "Why Work With Us",
-      "benefit1": "Competitive salary and equity",
-      "benefit2": "Comprehensive health benefits",
-      "benefit3": "Flexible remote work options",
-      "benefit4": "Professional development budget",
-      "benefit5": "Beauty service stipend",
-      "noOpenings": "No current openings, but we're always looking for exceptional talent. Send us your resume!",
-      "applyNow": "Aplicar Ahora",
-      "culture": "Nuestra Cultura"
+      "hero": {
+        "title": "Join the BeautyCita Team",
+        "subtitle": "Help us grow from Puerto Vallarta to the world - building trust one stylist, one client, one booking at a time",
+        "stats": "Born in Puerto Vallarta 2023 • 10K Bookings & Counting • Aiming for 50K Clients"
+      },
+      "story": {
+        "heading": "From Puerto Vallarta to the World: Our Story",
+        "paragraph1": "BeautyCita was born in 2023 in Puerto Vallarta - not Silicon Valley, not a tech hub, but a beautiful coastal city where real people face real problems booking beauty services. We started with a laptop, hustle, and a simple belief: beauty professionals deserve better tools, and clients deserve easier booking.",
+        "paragraph2": "We didn't raise venture capital or launch with millions in funding. We couldn't afford fancy offices or big marketing budgets. Instead, we walked door-to-door talking to salon owners, sat with stylists to understand their pain points, and listened to clients who were frustrated with flaky booking systems. Every line of code, every design, every video - we created it ourselves. We even wrote our own theme song because we believe in authentic creativity over corporate branding.",
+        "paragraph3": "Today, we're approaching 10,000 bookings processed, and we're aiming for 50,000 clients. Not because of aggressive ads or paid influencers, but because stylists tell other stylists, and happy clients tell their friends. That's grassroots growth - slow, authentic, sustainable.",
+        "paragraph4": "Our business model is built on partnership: We take a small commission (typically 3%) from each booking. That's it. No hidden fees, no subscription traps. This lets us provide the platform, handle payments securely, offer customer support, and market the service - all while letting stylists keep 97% of what they earn. When they succeed, we succeed. It's honest, transparent, and built to last.",
+        "paragraph5": "We're looking for people who believe in this approach - folks who understand that building something meaningful takes time, that community trust beats viral growth, and that everyone should earn together. If you're tired of corporate buzzwords and want to build something real with a scrappy, creative team, you're in the right place."
+      },
+      "values": {
+        "heading": "What We Value",
+        "value1": {
+          "title": "Grassroots Growth",
+          "description": "We started small in Mexico City and grew organically. Every team member contributes to our community-first expansion from local to global."
+        },
+        "value2": {
+          "title": "Authenticity",
+          "description": "Real connections, honest feedback, and genuine care for our beauty professional community. No corporate BS, just real people building real relationships."
+        },
+        "value3": {
+          "title": "Community First",
+          "description": "We grow neighborhood by neighborhood, city by city, building trust locally before expanding globally. Bottom-up, not top-down."
+        },
+        "value4": {
+          "title": "Earn Together",
+          "description": "Our commission-based model means we all succeed together. When stylists thrive, BeautyCita thrives. Everyone shares in our growth."
+        }
+      },
+      "positions": {
+        "heading": "Open Positions",
+        "subheading": "Multiple ways to earn: full-time, part-time, commission-only, contractor. We believe in flexible work arrangements.",
+        "position1": {
+          "title": "Growth Marketer (Regional)",
+          "type": "Commission-based / Part-time → Full-time",
+          "compensation": "High commission on bookings in your region + base after hitting milestones",
+          "description": "Launch BeautyCita in new cities. Recruit stylists, drive client bookings, build local community. This is entrepreneurial - you own your market.",
+          "req1": "Marketing or sales experience",
+          "req2": "Strong local connections",
+          "req3": "Social media and community building skills",
+          "req4": "Fluent in Spanish and English"
+        },
+        "position2": {
+          "title": "Customer Success Lead",
+          "type": "Full-time / Remote",
+          "compensation": "Base salary + performance bonuses",
+          "description": "Help stylists succeed on our platform. Provide training, support, and retention strategies. Be the voice of our beauty professionals.",
+          "req1": "Customer service experience (2+ years)",
+          "req2": "Beauty industry knowledge preferred",
+          "req3": "Empathy, patience, and problem-solving skills",
+          "req4": "Data-driven approach to success metrics"
+        },
+        "position3": {
+          "title": "Operations Coordinator",
+          "type": "Full-time / Part-time / Mexico City",
+          "compensation": "Salary or hourly + growth incentives",
+          "description": "Keep everything running smoothly. Verify stylists, manage payments, handle escalations. Be the operational backbone of BeautyCita.",
+          "req1": "Detail-oriented and organized",
+          "req2": "Multi-tasking and prioritization skills",
+          "req3": "Tech-savvy and quick learner",
+          "req4": "Problem solver with calm demeanor"
+        },
+        "position4": {
+          "title": "Beauty Specialist (Advisor)",
+          "type": "Part-time / Contract / Remote",
+          "compensation": "Hourly + commission on training programs",
+          "description": "Licensed beauty professional to advise on industry standards, train stylists, and ensure quality. Help us understand the real needs of beauty pros.",
+          "req1": "Active beauty license",
+          "req2": "5+ years industry experience",
+          "req3": "Teaching or training experience",
+          "req4": "Passion for elevating the profession"
+        },
+        "whatWeLookFor": "What We're Looking For:",
+        "compensation": "Compensation:",
+        "applyNow": "Apply Now"
+      },
+      "benefits": {
+        "heading": "Why Work With Us",
+        "benefit1": {
+          "title": "Remote-First",
+          "description": "Work from anywhere. Most roles are fully remote with flexible hours and async communication."
+        },
+        "benefit2": {
+          "title": "Commission Opportunities",
+          "description": "Many roles include commission based on platform success. Grow your income as BeautyCita grows."
+        },
+        "benefit3": {
+          "title": "Equity for Early Team",
+          "description": "Early employees receive meaningful equity. Be an owner, not just an employee."
+        },
+        "benefit4": {
+          "title": "Growth Pathways",
+          "description": "Start part-time or contract, grow into full-time leadership as we expand to new markets."
+        }
+      }
     },
     "press": {
-      "title": "Press & Media",
-      "subtitle": "Latest news and coverage about BeautyCita",
-      "latestNews": "Latest News",
-      "mediaKit": "Media Kit",
-      "pressContact": "Press Contact",
-      "pressEmail": "press@beautycita.com",
-      "newsItem1": "BeautyCita Secures $5M Series A to Expand AI-Powered Beauty Platform",
-      "newsItem2": "Revolutionary Beauty App Launches with Aphrodite AI Technology",
-      "newsItem3": "BeautyCita Partners with Top Beauty Schools Across Mexico"
+      "hero": {
+        "title": "Press & Media",
+        "subtitle": "Latest news, media resources, and press releases from BeautyCita"
+      },
+      "news": {
+        "heading": "Latest News & Coverage",
+        "news1": {
+          "date": "October 12, 2025",
+          "title": "BeautyCita Nears 10,000 Bookings Processed",
+          "excerpt": "Puerto Vallarta-based beauty booking platform celebrates organic growth milestone, processing nearly 10,000 successful bookings across Mexico and expanding to the US.",
+          "source": "BeautyCita Press Release"
+        },
+        "news2": {
+          "date": "September 5, 2025",
+          "title": "BeautyCita Launches Original Theme Song",
+          "excerpt": "The grassroots platform unveils its brand anthem - an original composition created in-house that celebrates beauty professionals and client connections.",
+          "source": "BeautyCita Press Release"
+        },
+        "news3": {
+          "date": "August 18, 2025",
+          "title": "All Video & Artwork Created In-House",
+          "excerpt": "BeautyCita announces that 100% of their platform videos, graphics, and creative assets are produced by their own team, showcasing authentic storytelling.",
+          "source": "BeautyCita Press Release"
+        },
+        "readMore": "Read More"
+      },
+      "milestones": {
+        "heading": "Company Milestones",
+        "m1": {
+          "year": "2023",
+          "event": "BeautyCita founded in Puerto Vallarta, Mexico with grassroots, community-first approach"
+        },
+        "m2": {
+          "year": "2024 Q1",
+          "event": "Launched MVP and onboarded first 50 verified beauty professionals locally"
+        },
+        "m3": {
+          "year": "2024 Q3",
+          "event": "Expanded beyond Puerto Vallarta to serve clients across Mexico"
+        },
+        "m4": {
+          "year": "2025 Q2",
+          "event": "Created original BeautyCita theme song and produced all video/artwork in-house"
+        },
+        "m5": {
+          "year": "2025 Q4",
+          "event": "Approaching 10,000 bookings processed with ambitious goal of 50,000 clients"
+        }
+      },
+      "mediaKit": {
+        "heading": "Media Kit",
+        "subtitle": "Download high-resolution assets for press and media coverage",
+        "asset1": {
+          "name": "Brand Logo Package",
+          "description": "High-resolution BeautyCita logos in PNG, SVG, and vector formats",
+          "size": "2.3 MB"
+        },
+        "asset2": {
+          "name": "Company Photos",
+          "description": "Team photos, office images, and company culture shots",
+          "size": "15.7 MB"
+        },
+        "asset3": {
+          "name": "Product Screenshots",
+          "description": "High-quality app screenshots, interface demos, and feature highlights",
+          "size": "8.4 MB"
+        },
+        "asset4": {
+          "name": "Founder & Team Photos",
+          "description": "Professional headshots and team photos",
+          "size": "4.2 MB"
+        },
+        "download": "Download"
+      },
+      "contact": {
+        "heading": "Press Contact",
+        "email": "press@beautycita.com",
+        "response": "Response time: Within 24 hours"
+      }
     },
     "blog": {
       "title": "Beauty Blog",
@@ -1008,17 +1208,92 @@
       "createdForBeautyCita": "Created especially for BeautyCita ✨"
     },
     "help": {
-      "title": "Help Center",
-      "subtitle": "Find answers to your questions",
+      "title": "Help & Support",
+      "subtitle": "Find answers, get help, and learn how to use BeautyCita",
       "searchPlaceholder": "Search for help...",
-      "popularTopics": "Popular Topics",
-      "booking": "Booking Services",
+      "booking": "Bookings & Appointments",
       "payments": "Payments & Billing",
-      "account": "Account Management",
-      "technical": "Technical Support",
+      "account": "Account & Settings",
+      "popularTopics": "Popular Topics",
       "faq": "Frequently Asked Questions",
+      "stillNeedHelp": "Still Need Help?",
       "contactSupport": "Contact Support",
-      "stillNeedHelp": "Still need help? We're here for you."
+      "categories": {
+        "gettingStarted": {
+          "title": "Getting Started",
+          "description": "Learn the basics of using BeautyCita"
+        },
+        "booking": {
+          "title": "Bookings & Appointments",
+          "description": "Learn how to book services, manage appointments, and reschedule"
+        },
+        "payments": {
+          "title": "Payments & Billing",
+          "description": "Payment methods, billing, refunds, and subscription management"
+        },
+        "account": {
+          "title": "Account & Settings",
+          "description": "Profile settings, preferences, and account security"
+        },
+        "safety": {
+          "title": "Safety & Trust",
+          "description": "Security features and trust protocols"
+        },
+        "articlesCount": "articles"
+      },
+      "helpText": {
+        "browseByTopic": "Browse help by topic",
+        "quickAnswers": "Quick answers to common questions",
+        "supportAvailable": "Our support team is available 24/7 to help you with any questions or issues.",
+        "popularArticlesHeading": "Popular Articles",
+        "popularArticlesSubtitle": "Most helpful guides and resources",
+        "views": "views",
+        "readMore": "Read more →"
+      },
+      "faqs": [
+        {
+          "question": "How do I book an appointment through BeautyCita?",
+          "answer": "To book an appointment, browse our services or stylists, select your preferred time slot, and complete the booking form. You'll receive a confirmation email and SMS with all the details."
+        },
+        {
+          "question": "Can I cancel or reschedule my appointment?",
+          "answer": "Yes, you can cancel or reschedule up to 24 hours before your appointment without any fees. Simply go to \"My Bookings\" in your profile or contact the stylist directly."
+        },
+        {
+          "question": "What payment methods do you accept?",
+          "answer": "We accept all major credit cards, debit cards, and digital payment methods including PayPal and Apple Pay. Payment is processed securely through our platform."
+        },
+        {
+          "question": "How does the Aphrodite AI recommendation system work?",
+          "answer": "Aphrodite AI analyzes your preferences, beauty history, and current trends to suggest personalized services and stylists that match your style and needs."
+        },
+        {
+          "question": "What if I'm not satisfied with my service?",
+          "answer": "We have a 100% satisfaction guarantee. If you're not happy with your service, contact us within 24 hours and we'll work to resolve the issue or provide a full refund."
+        },
+        {
+          "question": "How do I become a verified stylist on BeautyCita?",
+          "answer": "Apply through our stylist registration page, submit your credentials and portfolio, and complete our verification process. Once approved, you can start accepting bookings."
+        }
+      ],
+      "popularArticles": [
+        {
+          "title": "Getting Started with BeautyCita",
+          "description": "Complete guide for new users"
+        },
+        {
+          "title": "Understanding Your Beauty Profile",
+          "description": "How to set up preferences for better recommendations"
+        },
+        {
+          "title": "Booking Your First Appointment",
+          "description": "Step-by-step booking process"
+        },
+        {
+          "title": "Stylist Selection Tips",
+          "description": "How to choose the perfect stylist for you"
+        }
+      ]
     },
     "contact": {
       "title": "Contact Us",
@@ -1275,6 +1550,298 @@
       "feeInfo": "Payment processing fees are deducted from gross earnings",
       "bonuses": "Performance Bonuses",
       "bonusInfo": "Additional earnings available for top-performing stylists"
+    },
+    "playStorePrivacy": {
+      "header": {
+        "title": "BeautyCita Android App",
+        "subtitle": "Privacy Policy",
+        "lastUpdated": "Last Updated: October 13, 2025",
+        "version": "Version 1.0 | For Google Play Store"
+      },
+      "toc": {
+        "heading": "Table of Contents",
+        "introduction": "1. Introduction",
+        "informationCollected": "2. Information We Collect",
+        "androidPermissions": "3. Android App Permissions",
+        "howWeUse": "4. How We Use Your Information",
+        "thirdParty": "5. Third-Party Services & SDKs",
+        "dataSharing": "6. How We Share Your Information",
+        "dataRetention": "7. Data Retention",
+        "accountDeletion": "8. Account & Data Deletion",
+        "yourRights": "9. Your Privacy Rights",
+        "security": "10. Data Security",
+        "children": "11. Children's Privacy",
+        "contact": "12. Contact Us"
+      },
+      "introduction": {
+        "heading": "1. Introduction",
+        "paragraph1": "BeautyCita (\"we,\" \"our,\" or \"us\") operates a beauty services booking platform. This Privacy Policy explains how our Android mobile application (the \"App\") collects, uses, protects, and shares your personal information.",
+        "paragraph2": "By installing and using the BeautyCita Android app, you agree to this Privacy Policy.",
+        "paragraph3": "If you do not agree with any part of this policy, please uninstall the app immediately.",
+        "paragraph4": "This policy is specifically designed for our Android app available on Google Play Store. For our complete web privacy policy, visit",
+        "linkText": "beautycita.com/privacy",
+        "infoBox": {
+          "title": "🔒 Your Privacy Matters",
+          "text": "We are committed to transparency. We never sell your personal information. We only collect data necessary to provide you with excellent beauty booking services."
+        }
+      },
+      "informationCollected": {
+        "heading": "2. Information We Collect",
+        "personalInfo": {
+          "heading": "2.1 Personal Information You Provide",
+          "accountInfo": {
+            "title": "Account Information:",
+            "text": "Name, email address, phone number, date of birth, username, password (encrypted), profile photo"
+          },
+          "paymentInfo": {
+            "title": "Payment Information:",
+            "text": "Credit/debit card details (securely processed by Stripe - we don't store full card numbers), Bitcoin wallet addresses for crypto payments"
+          },
+          "bookingInfo": {
+            "title": "Booking Information:",
+            "text": "Service preferences, appointment bookings, booking history, reviews, ratings, favorite stylists"
+          },
+          "messagesInfo": {
+            "title": "Messages & Communications:",
+            "text": "Chat messages with beauty professionals, customer support conversations"
+          },
+          "stylistInfo": {
+            "title": "Stylist Professional Data:",
+            "text": "Business name, certifications, specialties, years of experience, portfolio images, service descriptions, pricing"
+          }
+        },
+        "automaticInfo": {
+          "heading": "2.2 Information Collected Automatically",
+          "deviceInfo": {
+            "title": "Device Information:",
+            "text": "Device model, manufacturer, operating system version, unique device identifiers (Android ID), mobile network information, screen resolution"
+          },
+          "usageData": {
+            "title": "Usage Data:",
+            "text": "App features accessed, screens viewed, time spent in app, search queries, click patterns, session duration"
+          },
+          "locationData": {
+            "title": "Location Data:",
+            "text": "Precise GPS location (only with your explicit permission) to show nearby stylists and track appointments. IP address for general location and fraud prevention."
+          },
+          "cameraPhotos": {
+            "title": "Camera & Photos:",
+            "text": "Access to device camera and photo gallery (only when you choose to take or upload photos)"
+          },
+          "performanceData": {
+            "title": "Performance & Error Data:",
+            "text": "Crash logs, error reports, app performance metrics, loading times"
+          }
+        },
+        "thirdPartyInfo": {
+          "heading": "2.3 Information from Third-Party Sources",
+          "googleSignIn": {
+            "title": "Google Sign-In:",
+            "text": "If you use Google to sign in, we receive your Google name, email address, and profile picture"
+          },
+          "paymentProcessors": {
+            "title": "Payment Processors:",
+            "text": "Transaction confirmation data from Stripe (card payments) and BTCPay Server (Bitcoin payments)"
+          }
+        }
+      },
+      "androidPermissions": {
+        "heading": "3. Android App Permissions",
+        "intro": "The BeautyCita Android app requests the following Android permissions. All permissions are requested only when needed and you can deny any optional permission.",
+        "location": {
+          "title": "📍 Location (ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)",
+          "whyWeNeed": "Why we need it:",
+          "whyText": "To show beauty professionals near you, provide turn-by-turn directions, enable real-time appointment tracking (starts 3 hours before your appointment), and calculate ETAs.",
+          "whenWeAccess": "When we access it:",
+          "whenText": "Only when you open the stylist search map or when you have an upcoming appointment with tracking enabled.",
+          "canDeny": "Can you deny it?",
+          "canDenyText": "Yes ✓ The app works without location access, but you won't see distance-based search results or real-time appointment tracking features."
+        },
+        "camera": {
+          "title": "📷 Camera (CAMERA)",
+          "whyWeNeed": "Why we need it:",
+          "whyText": "To take profile pictures or portfolio photos directly within the app.",
+          "whenWeAccess": "When we access it:",
+          "whenText": "Only when you tap the camera button to take a new photo.",
+          "canDeny": "Can you deny it?",
+          "canDenyText": "Yes ✓ You can still upload photos from your gallery."
+        },
+        "photos": {
+          "title": "Photos/Media/Files (READ_MEDIA_IMAGES, READ_EXTERNAL_STORAGE)",
+          "whyWeNeed": "Why we need it:",
+          "whyText": "To let you choose photos from your device gallery for your profile picture or stylist portfolio.",
+          "whenWeAccess": "When we access it:",
+          "whenText": "Only when you tap to upload a photo from your gallery.",
+          "canDeny": "Can you deny it?",
+          "canDenyText": "Yes ✓ You won't be able to upload existing photos, but can still use the camera."
+        },
+        "notifications": {
+          "title": "🔔 Notifications (POST_NOTIFICATIONS - Android 13+)",
+          "whyWeNeed": "Why we need it:",
+          "whyText": "To send you appointment reminders, booking confirmations, payment receipts, and messages from stylists.",
+          "whenWeAccess": "When we access it:",
+          "whenText": "When you have upcoming appointments or receive important updates.",
+          "canDeny": "Can you deny it?",
+          "canDenyText": "Yes ✓ But you'll miss important appointment reminders and booking confirmations."
+        },
+        "internet": {
+          "title": "🌐 Internet (INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE)",
+          "whyWeNeed": "Why we need it:",
+          "whyText": "Required for all app functionality including browsing stylists, making bookings, processing payments, and messaging.",
+          "whenWeAccess": "When we access it:",
+          "whenText": "Continuously while the app is open.",
+          "canDeny": "Can you deny it?",
+          "canDenyText": "No ✗ The app cannot function without internet connectivity."
+        },
+        "managingPermissions": {
+          "title": "⚙️ Managing Permissions",
+          "text": "You can manage all app permissions anytime by going to:",
+          "path": "Android Settings → Apps → BeautyCita → Permissions"
+        }
+      },
+      "viewComplete": {
+        "text": "This privacy policy continues with full details on data usage, third-party services, security measures, and your rights.",
+        "button": "View Complete Privacy Policy"
+      },
+      "contact": {
+        "heading": "12. Contact Us",
+        "privacyQuestions": {
+          "title": "Privacy Questions",
+          "email": "Email:",
+          "emailAddress": "privacy@beautycita.com",
+          "responseTime": "Response Time:",
+          "responseText": "Within 1 business day"
+        },
+        "dataDeletion": {
+          "title": "Data Deletion Requests",
+          "text": "Email privacy@beautycita.com with subject:",
+          "subject": "\"Delete My Account\""
+        }
+      },
+      "footer": {
+        "copyright": "© 2025 BeautyCita. All rights reserved.",
+        "fullPrivacy": "Full Privacy Policy",
+        "terms": "Terms of Service",
+        "contactSupport": "Contact Support",
+        "downloadApp": "Download App",
+        "complianceTitle": "Compliance:",
+        "complianceText": "This privacy policy complies with Google Play Store Data Safety requirements, GDPR, CCPA/CPRA, Mexican LFPDPPP, and PCI-DSS standards.",
+        "disclaimer": "This privacy policy is specifically designed for the BeautyCita Android app available on Google Play Store. For complete details on data practices across all platforms, please visit our full privacy policy."
+      }
+    },
+    "testimonials": {
+      "hero": {
+        "title": "What Our Clients Say",
+        "subtitle": "Read real reviews from thousands of satisfied clients who found their perfect stylist on BeautyCita"
+      },
+      "stats": {
+        "clients": "Happy Clients",
+        "rating": "Average Rating",
+        "satisfaction": "Satisfaction Rate",
+        "bookings": "Completed Bookings"
+      },
+      "section": {
+        "title": "Real Stories from Real People",
+        "subtitle": "See why our clients love BeautyCita"
+      },
+      "testimonial1": {
+        "role": "Regular Client",
+        "quote": "BeautyCita made finding a great stylist so easy! The booking process was seamless and my stylist was amazing."
+      },
+      "testimonial2": {
+        "role": "Professional Stylist",
+        "quote": "As a stylist, BeautyCita has transformed my business. I've connected with so many wonderful clients!"
+      },
+      "testimonial3": {
+        "role": "Business Owner",
+        "quote": "The platform is intuitive and professional. Perfect for managing my salon's bookings."
+      },
+      "testimonial4": {
+        "role": "Satisfied Client",
+        "quote": "I love how easy it is to browse stylists, see their work, and book appointments. Highly recommend!"
+      },
+      "testimonial5": {
+        "role": "Regular Customer",
+        "quote": "The quality of service is outstanding. I found my go-to stylist through BeautyCita."
+      },
+      "testimonial6": {
+        "role": "Nail Artist",
+        "quote": "BeautyCita helped me grow my client base significantly. The payment system is secure and reliable."
+      },
+      "cta": {
+        "title": "Ready to Experience BeautyCita?",
+        "subtitle": "Join thousands of happy clients and find your perfect stylist today",
+        "button": "Find Your Stylist"
+      }
+    },
+    "platform": {
+      "hero": {
+        "title": "Powered by Innovation",
+        "subtitle": "Experience the most advanced beauty booking platform with cutting-edge technology",
+        "cta1": "Get Started",
+        "cta2": "Join as Professional"
+      },
+      "features": {
+        "title": "Platform Features",
+        "subtitle": "Everything you need for seamless beauty bookings",
+        "feature1": {
+          "title": "Mobile-First Design",
+          "description": "Beautiful, responsive interface that works perfectly on any device"
+        },
+        "feature2": {
+          "title": "Smart Booking",
+          "description": "Intelligent calendar with real-time availability and instant confirmations"
+        },
+        "feature3": {
+          "title": "Secure Payments",
+          "description": "Multiple payment options with bank-level security and instant processing"
+        },
+        "feature4": {
+          "title": "Real-Time Chat",
+          "description": "Communicate directly with your stylist before and after appointments"
+        },
+        "feature5": {
+          "title": "Analytics Dashboard",
+          "description": "Comprehensive insights for stylists to grow their business"
+        },
+        "feature6": {
+          "title": "AI Assistant",
+          "description": "Meet Aphrodite, your personal beauty booking assistant powered by AI"
+        }
+      },
+      "tech": {
+        "title": "Built with Modern Technology",
+        "subtitle": "Enterprise-grade infrastructure you can trust",
+        "tech1": {
+          "title": "Lightning Fast",
+          "description": "Optimized performance with sub-second page loads"
+        },
+        "tech2": {
+          "title": "Cloud Native",
+          "description": "Scalable architecture that grows with your needs"
+        },
+        "tech3": {
+          "title": "Secure by Design",
+          "description": "End-to-end encryption and compliance with industry standards"
+        },
+        "tech4": {
+          "title": "Privacy First",
+          "description": "Your data is protected with the highest security standards"
+        }
+      },
+      "platforms": {
+        "title": "Available Everywhere",
+        "subtitle": "Access BeautyCita from any device, anywhere",
+        "mobile": "Native iOS and Android apps for the best mobile experience",
+        "web": "Full-featured web application accessible from any browser",
+        "pwa": "Install as a web app for offline access and push notifications"
+      },
+      "cta": {
+        "title": "Experience the Future of Beauty Booking",
+        "subtitle": "Join the revolution and see why thousands choose BeautyCita",
+        "button1": "Start Booking",
+        "button2": "Learn More"
+      }
     }
   },
   "homepage": {
@@ -2013,5 +2580,191 @@
     },
     "openTool": "Open Tool",
     "copiedToClipboard": "Copied to clipboard!"
+  },
+  "report": {
+    "title": "Report an Issue",
+    "subtitle": "Your safety is our priority. Report any concerns.",
+    "safetyMatters": "Your Safety Matters",
+    "commitment": "BeautyCita is committed to maintaining a safe and respectful community",
+    "reviewTime": "All reports are reviewed within 24 hours",
+    "confidential": "Your identity remains confidential",
+    "urgentAction": "Immediate action on urgent safety matters",
+    "followUp": "Follow-up support and status updates",
+    "reportDetails": "Report Details",
+    "reportType": "Report Type",
+    "selectType": "Select type...",
+    "reportedUser": "Reported User (optional)",
+    "usernamePlaceholder": "Username or ID",
+    "incidentDate": "Incident Date",
+    "description": "Description of Issue",
+    "descriptionPlaceholder": "Please provide as much detail as possible...",
+    "contactEmail": "Contact Email",
+    "emailPlaceholder": "your@email.com",
+    "urgent": "This is urgent and requires immediate attention",
+    "submit": "Submit Report",
+    "disclaimer": "By submitting this report, you confirm that the information provided is truthful and accurate.",
+    "submitted": "Report Submitted!",
+    "thankYou": "Thank you for helping us keep BeautyCita safe.",
+    "reviewMessage": "Our safety team will review your report within 24 hours.",
+    "emergency": "Immediate Emergency?",
+    "emergencyMessage": "If you are in immediate danger, please contact local authorities first.",
+    "call911": "Call 911",
+    "types": {
+      "harassment": "Harassment or Bullying",
+      "fraud": "Fraud or Scam",
+      "inappropriate": "Inappropriate Behavior",
+      "fakeProfile": "Fake Profile",
+      "spam": "Spam or Misleading Content",
+      "safety": "Safety Concern",
+      "payment": "Payment Issue",
+      "other": "Other Violation"
+    }
+  },
+  "panel": {
+    "welcomeBack": "Welcome back, {{name}}!",
+    "superAdminPanel": "Super Admin Control Panel",
+    "adminPanel": "Admin Control Panel",
+    "stylistDashboard": "Stylist Dashboard",
+    "clientDashboard": "Your BeautyCita Dashboard",
+    "systemMetrics": "System Metrics",
+    "cpuUsage": "CPU Usage",
+    "memory": "Memory",
+    "networkBandwidth": "Network Bandwidth",
+    "quickAccess": "📍 Quick Access",
+    "myBookings": "My Bookings",
+    "quickActions": "Quick Actions",
+    "platformHealth": "Platform Health",
+    "userSatisfaction": "User Satisfaction",
+    "activeBookings": "Active Bookings",
+    "pendingReviews": "Pending Reviews",
+    "readyToLookBest": "Ready to look your best?",
+    "bookAppointmentsMessage": "Book appointments with top stylists in your area and manage everything from your dashboard.",
+    "findStylists": "Find Stylists",
+    "browseServices": "Browse Services",
+    "becomeAStylist": "Become a Stylist",
+    "actions": {
+      "userManagement": {
+        "title": "User Management",
+        "description": "Manage all users and accounts"
+      },
+      "stylistApplications": {
+        "title": "Stylist Applications",
+        "pendingReview": "{{count}} pending review",
+        "noPending": "No pending applications"
+      },
+      "allBookings": {
+        "title": "All Bookings",
+        "activeBookings": "{{count}} active bookings",
+        "noActive": "No active bookings"
+      },
+      "servicesManagement": {
+        "title": "Services Management",
+        "description": "Manage all platform services"
+      },
+      "disputes": {
+        "title": "Disputes",
+        "activeDisputes": "{{count}} active disputes",
+        "noActive": "No active disputes"
+      },
+      "messages": {
+        "title": "Messages",
+        "unreadMessages": "{{count}} unread messages",
+        "noUnread": "No unread messages"
+      },
+      "issueTracker": {
+        "title": "Issue Tracker",
+        "openIssues": "{{count}} open issues",
+        "noOpen": "No open issues"
+      },
+      "marketingQr": {
+        "title": "Marketing & QR",
+        "description": "AI content generator & QR codes"
+      },
+      "finance": {
+        "title": "Finance",
+        "description": "Revenue and payouts"
+      },
+      "analytics": {
+        "title": "Analytics",
+        "description": "Platform analytics"
+      },
+      "systemMonitor": {
+        "title": "System Monitor",
+        "description": "Service health & logs"
+      },
+      "nativeApps": {
+        "title": "Native Applications",
+        "description": "Android, iOS & Windows apps"
+      },
+      "settings": {
+        "title": "Settings",
+        "description": "Platform configuration"
+      },
+      "businessDashboard": {
+        "title": "Business Dashboard",
+        "description": "Manage your business"
+      },
+      "bookings": {
+        "title": "Bookings",
+        "description": "View your appointments"
+      },
+      "stylistMessages": {
+        "title": "Messages",
+        "description": "Client messages"
+      },
+      "profile": {
+        "title": "Profile",
+        "yourProfile": "Your profile",
+        "manageProfile": "Manage your profile"
+      },
+      "businessLocations": {
+        "title": "Business Locations",
+        "description": "Manage your locations"
+      },
+      "clientBookings": {
+        "title": "My Bookings",
+        "description": "Your appointments"
+      },
+      "favorites": {
+        "title": "Favorites",
+        "description": "Saved stylists"
+      },
+      "clientMessages": {
+        "title": "Messages",
+        "description": "Your messages"
+      }
+    },
+    "stylistProfile": {
+      "back": "Back",
+      "verified": "Verified",
+      "yearsExperience": "years of experience",
+      "reviews": "reviews",
+      "completedAppointments": "completed appointments",
+      "bookAppointment": "Book Appointment",
+      "book": "Book",
+      "aboutMe": "About Me",
+      "certifications": "Certifications",
+      "socialMedia": "Follow on Social Media",
+      "availableServices": "Available Services",
+      "noServicesYet": "This stylist hasn't published their services yet",
+      "contactForInfo": "Contact for more information",
+      "tabs": {
+        "about": "About",
+        "services": "Services",
+        "portfolio": "Portfolio",
+        "reviews": "Reviews"
+      },
+      "notFound": {
+        "title": "Stylist Not Found",
+        "description": "The profile you're looking for doesn't exist or has been removed.",
+        "backButton": "View All Stylists"
+      },
+      "errors": {
+        "loadFailed": "Failed to load stylist profile",
+        "loadError": "Error loading profile",
+        "signInRequired": "Please sign in to book an appointment",
+        "noServices": "This stylist has no available services"
+      }
+    }
   }
 }

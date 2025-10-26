@@ -111,8 +111,8 @@ const ContactPage: React.FC = () => {
   ]
 
   const officeInfo = {
-    address: 'Av. Insurgentes Sur 1234, Colonia del Valle, 03100 Ciudad de México, México',
-    phone: '+52 55 1234 5678',
+    address: 'Plaza Caracol local 27 Puerto Vallarta Jalisco Mexico',
+    phone: '+527206777800',
     email: 'hello@beautycita.com',
     hours: {
       weekdays: '9:00 AM - 6:00 PM',
@@ -299,7 +299,7 @@ const ContactPage: React.FC = () => {
                       value={formData.message}
                       onChange={handleInputChange}
                       required
-                      className={`w-full px-4 py-3 rounded-full border transition-all focus:ring-4 focus:ring-pink-500/50 resize-none ${
+                      className={`w-full px-4 py-3 rounded-2xl border transition-all focus:ring-4 focus:ring-pink-500/50 resize-none ${
                         isDarkMode
                           ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
                           : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
@@ -409,23 +409,18 @@ const ContactPage: React.FC = () => {
                 </div>
               </GradientCard>
 
-              {/* Map Placeholder */}
-              <div className={`aspect-[4/3] rounded-2xl overflow-hidden ${
-                isDarkMode
-                  ? 'bg-gradient-to-br from-purple-900/50 to-blue-900/50'
-                  : 'bg-gradient-to-br from-pink-100 to-purple-100'
-              } flex items-center justify-center`}>
-                <div className="text-center">
-                  <MapPinIcon className={`h-12 w-12 mx-auto mb-2 ${
-                    isDarkMode ? 'text-purple-400' : 'text-purple-600'
-                  }`} />
-                  <p className={`font-medium ${isDarkMode ? 'text-purple-300' : 'text-purple-700'}`}>
-                    Interactive Map
-                  </p>
-                  <p className={`text-sm ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}>
-                    Coming Soon
-                  </p>
-                </div>
+              {/* Interactive Map */}
+              <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-lg">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3734.0!2d-105.2275!3d20.6098!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x84214563c7eb7e6b%3A0x3e1b9b0c8e6b0c8e!2sPlaza%20Caracol!5e0!3m2!1sen!2smx!4v1699999999999!5m2!1sen!2smx"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="BeautyCita Office Location - Plaza Caracol, Puerto Vallarta"
+                />
               </div>
             </motion.div>
           </div>

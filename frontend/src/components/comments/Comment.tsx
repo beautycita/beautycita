@@ -135,7 +135,7 @@ export default function Comment({ comment, onReplyAdded, depth = 0 }: CommentPro
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center text-white font-semibold">
               {comment.avatar_url ? (
-                <img src={comment.avatar_url} alt={comment.username} className="w-10 h-10 rounded-full" />
+                <img loading="lazy" src={comment.avatar_url} alt={comment.username} className="w-10 h-10 rounded-full" />
               ) : (
                 comment.username.charAt(0).toUpperCase()
               )}

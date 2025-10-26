@@ -1,0 +1,96 @@
+# BeautyCita Robots.txt
+# Optimized for SEO and crawler access
+
+# Default rules for all bots
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /booking/checkout
+Disallow: /payment/
+Disallow: /user/settings
+Disallow: /stylist/settings
+Disallow: /auth/
+Disallow: /*.json$
+Disallow: /*/private/
+Disallow: /search?*
+Allow: /search$
+
+# Allow crawling of important pages
+Allow: /
+Allow: /stylists
+Allow: /stylist/*
+Allow: /services
+Allow: /blog
+Allow: /about
+Allow: /contact
+Allow: /how-it-works
+
+# Google-specific
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /booking/checkout
+Crawl-delay: 0
+
+# Allow Googlebot to crawl images
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /uploads/
+Allow: /media/
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Crawl-delay: 1
+
+# Social Media Bots (for link previews)
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: Pinterest
+Allow: /
+
+User-agent: Slackbot
+Allow: /
+
+# Block bad bots and scrapers
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: DotBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: PetalBot
+Crawl-delay: 10
+
+# Sitemaps
+Sitemap: https://beautycita.com/sitemap.xml
+Sitemap: https://beautycita.com/sitemap-stylists.xml
+Sitemap: https://beautycita.com/sitemap-blog.xml
+Sitemap: https://beautycita.com/sitemap-services.xml
+Sitemap: https://beautycita.com/sitemap-portfolio.xml
+Sitemap: https://beautycita.com/sitemap-locations.xml
+
+# Host (for Google)
+Host: https://beautycita.com

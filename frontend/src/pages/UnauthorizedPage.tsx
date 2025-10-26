@@ -76,7 +76,7 @@ export default function UnauthorizedPage() {
               transition={{ delay: 0.1, duration: 0.5 }}
               className="flex justify-center mb-8"
             >
-              <img
+              <img loading="lazy"
                 src="/media/brand/official-logo.svg"
                 alt="BeautyCita"
                 className="h-20 w-auto"

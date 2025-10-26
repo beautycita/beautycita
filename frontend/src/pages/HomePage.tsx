@@ -153,16 +153,16 @@ export default function HomePage() {
   ]
 
   const topStylists = [
-    { name: 'Sofia Martinez', avatar: avatars[0], rating: 4.9, reviews: 234, specialty: 'Hair Color Expert', price: '$120/hr', verified: true },
-    { name: 'Isabella Chen', avatar: avatars[1], rating: 5.0, reviews: 189, specialty: 'Bridal Makeup', price: '$150/hr', verified: true },
-    { name: 'Emma Rodriguez', avatar: avatars[2], rating: 4.8, reviews: 312, specialty: 'Nail Artist', price: '$85/hr', verified: true },
-    { name: 'Mia Johnson', avatar: avatars[4], rating: 4.9, reviews: 267, specialty: 'Skincare Pro', price: '$110/hr', verified: true }
+    { name: t('pages.home.topStylists.stylist1.name'), avatar: avatars[0], rating: 4.9, reviews: 234, specialty: t('pages.home.topStylists.stylist1.specialty'), price: t('pages.home.topStylists.stylist1.price'), verified: true },
+    { name: t('pages.home.topStylists.stylist2.name'), avatar: avatars[1], rating: 5.0, reviews: 189, specialty: t('pages.home.topStylists.stylist2.specialty'), price: t('pages.home.topStylists.stylist2.price'), verified: true },
+    { name: t('pages.home.topStylists.stylist3.name'), avatar: avatars[2], rating: 4.8, reviews: 312, specialty: t('pages.home.topStylists.stylist3.specialty'), price: t('pages.home.topStylists.stylist3.price'), verified: true },
+    { name: t('pages.home.topStylists.stylist4.name'), avatar: avatars[4], rating: 4.9, reviews: 267, specialty: t('pages.home.topStylists.stylist4.specialty'), price: t('pages.home.topStylists.stylist4.price'), verified: true }
   ]
 
   const testimonials = [
-    { name: 'Jessica Parker', avatar: avatars[6], rating: 5, text: 'BeautyCita changed my life! Found my perfect stylist in minutes.', role: 'Fashion Blogger' },
-    { name: 'Amanda Lee', avatar: avatars[7], rating: 5, text: 'The AI recommendations are spot on. Best beauty booking app ever!', role: 'Influencer' },
-    { name: 'Sarah Wilson', avatar: avatars[8], rating: 5, text: 'Professional, secure, and so easy to use. Highly recommend!', role: 'Entrepreneur' }
+    { name: t('pages.home.testimonials.testimonial1.name'), avatar: avatars[6], rating: 5, text: t('pages.home.testimonials.testimonial1.text'), role: t('pages.home.testimonials.testimonial1.role') },
+    { name: t('pages.home.testimonials.testimonial2.name'), avatar: avatars[7], rating: 5, text: t('pages.home.testimonials.testimonial2.text'), role: t('pages.home.testimonials.testimonial2.role') },
+    { name: t('pages.home.testimonials.testimonial3.name'), avatar: avatars[8], rating: 5, text: t('pages.home.testimonials.testimonial3.text'), role: t('pages.home.testimonials.testimonial3.role') }
   ]
 
   // Helper function to render animated text
@@ -346,7 +346,7 @@ export default function HomePage() {
             </p>
             <Link
               to="/services"
-              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-3xl font-bold text-lg hover:shadow-2xl transition-all transform hover:scale-105"
+              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full font-bold text-lg hover:shadow-2xl transition-all transform hover:scale-105"
             >
               <SparklesIcon className="mr-2 h-6 w-6" />
               {t('pages.home.happyClientsVideo.cta')}

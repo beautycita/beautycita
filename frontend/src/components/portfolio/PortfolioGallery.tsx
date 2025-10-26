@@ -151,7 +151,7 @@ export default function PortfolioGallery({ stylistId }: PortfolioGalleryProps) {
               {/* Before/After Split */}
               <div className="grid grid-cols-2 h-full">
                 <div className="relative">
-                  <img
+                  <img loading="lazy"
                     src={item.before_photo_url}
                     alt="Antes"
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
@@ -161,7 +161,7 @@ export default function PortfolioGallery({ stylistId }: PortfolioGalleryProps) {
                   </div>
                 </div>
                 <div className="relative">
-                  <img
+                  <img loading="lazy"
                     src={item.after_photo_url}
                     alt="Después"
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
@@ -300,7 +300,7 @@ function LightboxModal({
         <div className="grid md:grid-cols-2 gap-4 mb-4">
           <div>
             <div className="text-white text-sm mb-2 text-center">Antes</div>
-            <img
+            <img loading="lazy"
               src={item.before_photo_url}
               alt="Antes"
               className="w-full rounded-full"
@@ -308,7 +308,7 @@ function LightboxModal({
           </div>
           <div>
             <div className="text-white text-sm mb-2 text-center">Después</div>
-            <img
+            <img loading="lazy"
               src={item.after_photo_url}
               alt="Después"
               className="w-full rounded-full"

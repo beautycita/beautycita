@@ -229,7 +229,7 @@ export default function ReviewList({ stylistId }: ReviewListProps) {
                 {/* Review Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-start space-x-4">
-                    <img
+                    <img loading="lazy"
                       src={review.client_photo || '/default-avatar.png'}
                       alt={review.client_name}
                       className="w-12 h-12 rounded-full object-cover"
@@ -263,7 +263,7 @@ export default function ReviewList({ stylistId }: ReviewListProps) {
                 {review.photos && review.photos.length > 0 && (
                   <div className="flex space-x-2 mb-4 overflow-x-auto">
                     {review.photos.map((photo) => (
-                      <img
+                      <img loading="lazy"
                         key={photo.id}
                         src={photo.photo_url}
                         alt="Review photo"

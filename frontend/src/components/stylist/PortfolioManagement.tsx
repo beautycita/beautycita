@@ -646,7 +646,7 @@ export default function PortfolioManagement() {
                       {item.type === 'before-after' && item.images.before && item.images.after ? (
                         <div className="grid grid-cols-2 h-full">
                           <div className="relative">
-                            <img
+                            <img loading="lazy"
                               src={item.images.before}
                               alt="Antes"
                               className="w-full h-full object-cover"
@@ -656,7 +656,7 @@ export default function PortfolioManagement() {
                             </span>
                           </div>
                           <div className="relative">
-                            <img
+                            <img loading="lazy"
                               src={item.images.after}
                               alt="Después"
                               className="w-full h-full object-cover"
@@ -667,7 +667,7 @@ export default function PortfolioManagement() {
                           </div>
                         </div>
                       ) : item.images.main ? (
-                        <img
+                        <img loading="lazy"
                           src={item.images.main}
                           alt={item.title}
                           className="w-full h-full object-cover"

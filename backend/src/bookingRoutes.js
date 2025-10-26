@@ -3,6 +3,7 @@ const { query } = require('./db');
 const SMSService = require('./smsService');
 const emailService = require('./emailService');
 const { distributeBookingPayment } = require('./creditRoutes');
+const EmailNotifications = require("./emailNotifications");
 const { requirePhoneVerification } = require('./middleware/phoneVerification');
 
 const router = express.Router();
@@ -125,6 +126,11 @@ router.post('/create', requirePhoneVerification, async (req, res) => {
 
     // Log booking creation
     console.log(`Booking created: ID ${booking.id}, expires at ${requestExpiresAt}`);
+
+    // Send email confirmation to client and stylist
+    EmailNotifications.sendBookingConfirmation(booking.id).catch(err => {
+      console.error('Failed to send booking confirmation emails:', err);
+    });
 
     res.status(201).json({
       success: true,
@@ -543,6 +549,11 @@ router.post('/:bookingId/cancel', async (req, res) => {
 
     console.log(`Booking cancelled: ID ${bookingId} by user ${userId}`);
 
+    // Send cancellation email to client and stylist
+    EmailNotifications.sendCancellationNotice(bookingId, userId).catch(err => {
+      console.error('Failed to send cancellation emails:', err);
+    });
+
     res.json({
       success: true,
       message: 'Booking cancelled successfully',
@@ -680,6 +691,258 @@ router.get('/stylists/:stylistId/availability', async (req, res) => {
       date: date,
       stylistId: stylistId,
       totalSlots: finalSlots.length
+    });
+
+  } catch (error) {
+    console.error('Get available slots error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get available slots',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+    });
+  }
+});
+// Monthly availability heatmap for calendar
+router.get('/stylists/:stylistId/availability/month', async (req, res) => {
+  try {
+    const { stylistId } = req.params;
+    const { startDate, endDate, serviceId } = req.query;
+
+    if (!startDate || !endDate) {
+      return res.status(400).json({
+        success: false,
+        message: 'startDate and endDate parameters are required'
+      });
+    }
+
+    // Verify stylist exists and is active
+    const stylistCheck = await query(`
+      SELECT u.id, s.id as stylist_id
+      FROM users u
+      JOIN stylists s ON u.id = s.user_id
+      WHERE s.id = $1 AND u.role = 'STYLIST' AND u.is_active = true
+    `, [stylistId]);
+
+    if (stylistCheck.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Stylist not found or inactive'
+      });
+    }
+
+    // Get all bookings for this stylist in the date range
+    const bookings = await query(`
+      SELECT booking_date, booking_time, duration_minutes
+      FROM bookings
+      WHERE stylist_id = $1
+        AND booking_date BETWEEN $2 AND $3
+        AND status IN ('PENDING', 'VERIFY_ACCEPTANCE', 'CONFIRMED')
+      ORDER BY booking_date, booking_time
+    `, [stylistId, startDate, endDate]);
+
+    // Generate all dates in the range
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const dateAvailabilityMap = {};
+
+    // Initialize all dates with empty bookings
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      const dateStr = d.toISOString().split('T')[0];
+      dateAvailabilityMap[dateStr] = {
+        date: dateStr,
+        availableSlots: 0,
+        bookedSlots: 0,
+        avgPrice: null
+      };
+    }
+
+    // Count booked slots per day
+    bookings.rows.forEach(booking => {
+      const dateStr = booking.booking_date;
+      const duration = booking.duration_minutes || 60;
+      const slotsOccupied = Math.ceil(duration / 30);
+
+      if (dateAvailabilityMap[dateStr]) {
+        dateAvailabilityMap[dateStr].bookedSlots += slotsOccupied;
+      }
+    });
+
+    // Calculate available slots (18 30-min slots per day: 9 AM to 6 PM)
+    const totalSlotsPerDay = 18; // 9 hours * 2 slots per hour
+
+    Object.keys(dateAvailabilityMap).forEach(dateStr => {
+      const dayData = dateAvailabilityMap[dateStr];
+      dayData.availableSlots = Math.max(0, totalSlotsPerDay - dayData.bookedSlots);
+    });
+
+    // Get service price if provided
+    if (serviceId) {
+      const serviceResult = await query('SELECT price FROM services WHERE id = $1', [serviceId]);
+      if (serviceResult.rows.length > 0) {
+        const price = parseFloat(serviceResult.rows[0].price);
+        Object.keys(dateAvailabilityMap).forEach(dateStr => {
+          dateAvailabilityMap[dateStr].avgPrice = price;
+        });
+      }
+    }
+
+    const availabilityArray = Object.values(dateAvailabilityMap);
+
+    res.json({
+      success: true,
+      data: availabilityArray
+    });
+
+  } catch (error) {
+    console.error('Get monthly availability error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get monthly availability',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+    });
+  }
+});
+
+// Time slots for specific date with enhanced metadata
+router.get('/stylists/:stylistId/availability/slots', async (req, res) => {
+  try {
+    const { stylistId } = req.params;
+    const { date, serviceId, duration } = req.query;
+
+    if (!date) {
+      return res.status(400).json({
+        success: false,
+        message: 'Date parameter is required'
+      });
+    }
+
+    // Verify stylist exists and is active
+    const stylistCheck = await query(`
+      SELECT u.id, s.id as stylist_id
+      FROM users u
+      JOIN stylists s ON u.id = s.user_id
+      WHERE s.id = $1 AND u.role = 'STYLIST' AND u.is_active = true
+    `, [stylistId]);
+
+    if (stylistCheck.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Stylist not found or inactive'
+      });
+    }
+
+    // Get existing bookings for this stylist on this date
+    const existingBookings = await query(`
+      SELECT booking_time, duration_minutes
+      FROM bookings
+      WHERE stylist_id = $1
+        AND booking_date = $2
+        AND status IN ('PENDING', 'VERIFY_ACCEPTANCE', 'CONFIRMED')
+      ORDER BY booking_time
+    `, [stylistId, date]);
+
+    // Get all bookings for this stylist to calculate popular times
+    const allBookingsForStylist = await query(`
+      SELECT booking_time, COUNT(*) as booking_count
+      FROM bookings
+      WHERE stylist_id = $1
+        AND status IN ('COMPLETED', 'CONFIRMED')
+        AND booking_date >= CURRENT_DATE - INTERVAL '90 days'
+      GROUP BY booking_time
+      ORDER BY booking_count DESC
+    `, [stylistId]);
+
+    // Identify popular time slots (top 20% most booked)
+    const popularTimes = new Set();
+    if (allBookingsForStylist.rows.length > 0) {
+      const topCount = Math.ceil(allBookingsForStylist.rows.length * 0.2);
+      allBookingsForStylist.rows.slice(0, topCount).forEach(row => {
+        popularTimes.add(row.booking_time);
+      });
+    }
+
+    // Generate all possible time slots (9:00 AM to 6:00 PM in 30-minute intervals)
+    const allSlots = [];
+    const startHour = 9; // 9 AM
+    const endHour = 18; // 6 PM
+
+    for (let hour = startHour; hour < endHour; hour++) {
+      for (let minutes = 0; minutes < 60; minutes += 30) {
+        const timeStr = `${hour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        allSlots.push(timeStr);
+      }
+    }
+
+    // Filter out booked slots
+    const bookedSlots = new Set();
+
+    existingBookings.rows.forEach(booking => {
+      const bookingTime = booking.booking_time;
+      const bookingDuration = booking.duration_minutes || 60;
+      const slotsNeeded = Math.ceil(bookingDuration / 30);
+      const bookingIndex = allSlots.indexOf(bookingTime);
+
+      if (bookingIndex !== -1) {
+        for (let i = 0; i < slotsNeeded && (bookingIndex + i) < allSlots.length; i++) {
+          bookedSlots.add(allSlots[bookingIndex + i]);
+        }
+      }
+    });
+
+    // If the requested date is today, filter out past time slots
+    const requestedDate = new Date(date);
+    const today = new Date();
+    const isToday = requestedDate.toDateString() === today.toDateString();
+
+    // Get service price
+    let servicePrice = null;
+    if (serviceId) {
+      const serviceResult = await query('SELECT price FROM services WHERE id = $1', [serviceId]);
+      if (serviceResult.rows.length > 0) {
+        servicePrice = parseFloat(serviceResult.rows[0].price);
+      }
+    }
+
+    // Build time slot objects with metadata
+    const formattedSlots = allSlots.map((time, index) => {
+      const [slotHour, slotMinutes] = time.split(':').map(Number);
+      const slotTotalMinutes = slotHour * 60 + slotMinutes;
+
+      let available = !bookedSlots.has(time);
+
+      // If today, exclude past slots
+      if (isToday && available) {
+        const currentHour = today.getHours();
+        const currentMinutes = today.getMinutes();
+        const currentTotalMinutes = currentHour * 60 + currentMinutes;
+
+        // Must be at least 1 hour in the future
+        if (slotTotalMinutes <= currentTotalMinutes + 60) {
+          available = false;
+        }
+      }
+
+      // Determine if slot is popular (historically high demand)
+      const isPopular = popularTimes.has(time) && available;
+
+      // Determine if slot is recommended (mid-day slots often preferred)
+      const isRecommended = available && slotHour >= 11 && slotHour <= 14;
+
+      return {
+        time,
+        available,
+        price: servicePrice,
+        popular: isPopular,
+        recommended: isRecommended && !isPopular // Only mark as recommended if not already popular
+      };
+    });
+
+    // Filter to only return available slots
+    const availableSlots = formattedSlots.filter(slot => slot.available);
+
+    res.json({
+      success: true,
+      data: availableSlots
     });
 
   } catch (error) {

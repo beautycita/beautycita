@@ -335,7 +335,7 @@ export default function StylistsPage() {
                 <div className="relative mb-4">
                   {stylist.profile_picture_url ? (
                     <div className="aspect-square rounded-full overflow-hidden">
-                      <img
+                      <img loading="lazy"
                         src={stylist.profile_picture_url}
                         alt={t('stylists.page.profileImageAlt', { name: stylist.business_name })}
                         className="w-full h-full object-cover"

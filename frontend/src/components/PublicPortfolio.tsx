@@ -160,7 +160,7 @@ const PublicPortfolio: React.FC = () => {
         textAlign: 'center',
         boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
       }}>
-        <img
+        <img loading="lazy"
           src={portfolio.profile_picture_url || '/default-avatar.png'}
           alt={portfolio.name}
           style={{

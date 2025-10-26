@@ -44,6 +44,7 @@
     "discover": "Descubrir",
     "messages": "Mensajes",
     "favorites": "Favoritos",
+    "favoriteProfessionals": "Estilistas favoritos",
     "payments": "Pagos",
     "login": "Iniciar Sesión",
     "register": "Registrarse",
@@ -718,11 +719,11 @@
       "remove": "Eliminar",
       "removeConfirm": "¿Estás seguro que deseas eliminar {{deviceName}}?",
       "addDevice": {
-        "title": "Agregar nuevo dispositivo",
-        "description": "Registra un nuevo dispositivo biométrico para acceder a tu cuenta (ej. iPhone, MacBook, PC Windows)",
-        "placeholder": "Nombre del dispositivo (ej. iPhone 15)",
-        "button": "Agregar llave",
-        "buttonAdding": "Agregando..."
+        "title": "Agregar Biométrico a Este Dispositivo",
+        "description": "Registra tu huella digital o Face ID para iniciar sesión rápidamente en este dispositivo",
+        "placeholder": "Nombre del dispositivo (ej. Mi Laptop)",
+        "button": "Registrar Biométrico",
+        "buttonAdding": "Registrando..."
       },
       "messages": {
         "enterDeviceName": "Por favor ingresa un nombre de dispositivo",
@@ -957,7 +958,7 @@
         "fiveStarRated": "Calificación 5 Estrellas"
       },
       "stats": {
-        "verifiedStylists": "Estilistas Verificados",
+        "verifiedStylists": "Profesionales Verificados",
         "bookingsMade": "Reservas Realizadas",
         "averageRating": "Calificación Promedio",
         "satisfaction": "Satisfacción del Cliente"
@@ -974,12 +975,47 @@
         "fromPrice": "Desde"
       },
       "topStylists": {
-        "title": "Mejores Estilistas",
-        "subtitle": "Conoce a nuestros profesionales de belleza verificados"
+        "title": "Profesionales Destacados",
+        "subtitle": "Conoce a nuestros profesionales de belleza verificados",
+        "stylist1": {
+          "name": "Sofia Martinez",
+          "specialty": "Experta en Color de Cabello",
+          "price": "$120/hr"
+        },
+        "stylist2": {
+          "name": "Isabella Chen",
+          "specialty": "Maquillaje Nupcial",
+          "price": "$150/hr"
+        },
+        "stylist3": {
+          "name": "Emma Rodriguez",
+          "specialty": "Artista de Uñas",
+          "price": "$85/hr"
+        },
+        "stylist4": {
+          "name": "Mia Johnson",
+          "specialty": "Experta en Cuidado de la Piel",
+          "price": "$110/hr"
+        }
       },
       "testimonials": {
         "title": "Lo Que Dicen Los Clientes",
-        "subtitle": "Reseñas reales de clientes satisfechos"
+        "subtitle": "Reseñas reales de clientes satisfechos",
+        "testimonial1": {
+          "name": "Jessica Parker",
+          "role": "Bloguera de Moda",
+          "text": "¡BeautyCita cambió mi vida! Encontré mi estilista perfecta en minutos."
+        },
+        "testimonial2": {
+          "name": "Amanda Lee",
+          "role": "Influencer",
+          "text": "Las recomendaciones de IA son increíbles. ¡La mejor app de reservas de belleza!"
+        },
+        "testimonial3": {
+          "name": "Sarah Wilson",
+          "role": "Empresaria",
+          "text": "Profesional, seguro y muy fácil de usar. ¡Muy recomendado!"
+        }
       },
       "videoSection": {
         "title": "Transforma Tu Look",
@@ -1004,22 +1040,112 @@
         "subtitle": "Únete a miles de clientes satisfechos descubriendo su combinación perfecta de belleza",
         "cta1": "Comenzar",
         "cta2": "Explorar Servicios"
+      },
+      "happyClientsVideo": {
+        "title": "Resultados Reales, Transformaciones Reales",
+        "subtitle": "Mira cómo BeautyCita trae confianza y belleza a la vida",
+        "cta": "Encuentra Tu Pareja Perfecta"
       }
     },
     "careers": {
-      "title": "Carreras en BeautyCita",
-      "subtitle": "Únete a nuestro equipo y ayuda a transformar la industria de la belleza",
-      "intro": "Buscamos personas apasionadas que quieran hacer la diferencia en cómo las personas experimentan los servicios de belleza.",
-      "openPositions": "Posiciones Abiertas",
-      "applyNow": "Aplicar Ahora",
-      "benefits": "Por qué Trabajar con Nosotros",
-      "benefit1": "Salario competitivo y participación accionaria",
-      "benefit2": "Beneficios de salud integrales",
-      "benefit3": "Opciones de trabajo remoto flexible",
-      "benefit4": "Presupuesto para desarrollo profesional",
-      "benefit5": "Subsidio para servicios de belleza",
-      "culture": "Nuestra Cultura",
-      "noOpenings": "Sin vacantes actualmente, pero siempre estamos buscando talento excepcional. ¡Envíanos tu currículum!"
+      "hero": {
+        "title": "Únete al Equipo de BeautyCita",
+        "subtitle": "Ayúdanos a crecer desde Puerto Vallarta hasta el mundo - construyendo confianza un estilista, un cliente, una reserva a la vez",
+        "stats": "Nacido en Puerto Vallarta 2023 • 10K Reservas y Contando • Apuntando a 50K Clientes"
+      },
+      "story": {
+        "heading": "De Puerto Vallarta al Mundo: Nuestra Historia",
+        "paragraph1": "BeautyCita nació en 2023 en Puerto Vallarta - no en Silicon Valley, no en un centro tecnológico, sino en una hermosa ciudad costera donde la gente real enfrenta problemas reales al reservar servicios de belleza. Comenzamos con una laptop, esfuerzo y una creencia simple: los profesionales de belleza merecen mejores herramientas, y los clientes merecen reservas más fáciles.",
+        "paragraph2": "No levantamos capital de riesgo ni lanzamos con millones en financiación. No podíamos pagar oficinas elegantes ni grandes presupuestos de marketing. En cambio, fuimos puerta por puerta hablando con dueños de salones, nos sentamos con estilistas para entender sus puntos de dolor, y escuchamos a clientes que estaban frustrados con sistemas de reserva poco confiables. Cada línea de código, cada diseño, cada video - lo creamos nosotros mismos. Incluso escribimos nuestra propia canción temática porque creemos en la creatividad auténtica sobre la marca corporativa.",
+        "paragraph3": "Hoy, nos acercamos a 10,000 reservas procesadas, y apuntamos a 50,000 clientes. No por anuncios agresivos o influencers pagados, sino porque los estilistas les cuentan a otros estilistas, y los clientes felices les cuentan a sus amigos. Eso es crecimiento de base - lento, auténtico, sostenible.",
+        "paragraph4": "Nuestro modelo de negocio se construye en asociación: Tomamos una pequeña comisión (típicamente 3%) de cada reserva. Eso es todo. Sin tarifas ocultas, sin trampas de suscripción. Esto nos permite proveer la plataforma, manejar pagos de forma segura, ofrecer soporte al cliente y comercializar el servicio - todo mientras dejamos que los estilistas se queden con el 97% de lo que ganan. Cuando ellos tienen éxito, nosotros tenemos éxito. Es honesto, transparente y construido para durar.",
+        "paragraph5": "Buscamos personas que crean en este enfoque - gente que entienda que construir algo significativo toma tiempo, que la confianza comunitaria supera el crecimiento viral, y que todos deben ganar juntos. Si estás cansado de jerga corporativa y quieres construir algo real con un equipo luchador y creativo, estás en el lugar correcto."
+      },
+      "values": {
+        "heading": "Lo Que Valoramos",
+        "value1": {
+          "title": "Crecimiento de Base",
+          "description": "Comenzamos pequeños en Ciudad de México y crecimos orgánicamente. Cada miembro del equipo contribuye a nuestra expansión comunitaria de local a global."
+        },
+        "value2": {
+          "title": "Autenticidad",
+          "description": "Conexiones reales, retroalimentación honesta y cuidado genuino por nuestra comunidad de profesionales de belleza. Sin tonterías corporativas, solo gente real construyendo relaciones reales."
+        },
+        "value3": {
+          "title": "Comunidad Primero",
+          "description": "Crecemos vecindario por vecindario, ciudad por ciudad, construyendo confianza localmente antes de expandirnos globalmente. De abajo hacia arriba, no de arriba hacia abajo."
+        },
+        "value4": {
+          "title": "Ganar Juntos",
+          "description": "Nuestro modelo basado en comisiones significa que todos tenemos éxito juntos. Cuando los estilistas prosperan, BeautyCita prospera. Todos compartimos nuestro crecimiento."
+        }
+      },
+      "positions": {
+        "heading": "Posiciones Abiertas",
+        "subheading": "Múltiples formas de ganar: tiempo completo, medio tiempo, solo comisión, contratista. Creemos en arreglos de trabajo flexibles.",
+        "position1": {
+          "title": "Marketer de Crecimiento (Regional)",
+          "type": "Basado en comisión / Medio tiempo → Tiempo completo",
+          "compensation": "Alta comisión en reservas en tu región + base después de alcanzar hitos",
+          "description": "Lanza BeautyCita en nuevas ciudades. Recluta estilistas, impulsa reservas de clientes, construye comunidad local. Esto es empresarial - tú eres dueño de tu mercado.",
+          "req1": "Experiencia en marketing o ventas",
+          "req2": "Fuertes conexiones locales",
+          "req3": "Habilidades en redes sociales y construcción comunitaria",
+          "req4": "Fluido en español e inglés"
+        },
+        "position2": {
+          "title": "Líder de Éxito del Cliente",
+          "type": "Tiempo completo / Remoto",
+          "compensation": "Salario base + bonos de rendimiento",
+          "description": "Ayuda a los estilistas a tener éxito en nuestra plataforma. Proporciona capacitación, soporte y estrategias de retención. Sé la voz de nuestros profesionales de belleza.",
+          "req1": "Experiencia en servicio al cliente (2+ años)",
+          "req2": "Conocimiento de la industria de belleza preferido",
+          "req3": "Empatía, paciencia y habilidades para resolver problemas",
+          "req4": "Enfoque basado en datos para métricas de éxito"
+        },
+        "position3": {
+          "title": "Coordinador de Operaciones",
+          "type": "Tiempo completo / Medio tiempo / Ciudad de México",
+          "compensation": "Salario o por hora + incentivos de crecimiento",
+          "description": "Mantén todo funcionando sin problemas. Verifica estilistas, gestiona pagos, maneja escalaciones. Sé la columna vertebral operacional de BeautyCita.",
+          "req1": "Orientado a los detalles y organizado",
+          "req2": "Habilidades para multitarea y priorización",
+          "req3": "Conocedor de tecnología y aprendizaje rápido",
+          "req4": "Solucionador de problemas con actitud calmada"
+        },
+        "position4": {
+          "title": "Especialista de Belleza (Asesor)",
+          "type": "Medio tiempo / Contrato / Remoto",
+          "compensation": "Por hora + comisión en programas de capacitación",
+          "description": "Profesional de belleza con licencia para asesorar sobre estándares de la industria, capacitar estilistas y asegurar calidad. Ayúdanos a entender las necesidades reales de los profesionales de belleza.",
+          "req1": "Licencia de belleza activa",
+          "req2": "5+ años de experiencia en la industria",
+          "req3": "Experiencia en enseñanza o capacitación",
+          "req4": "Pasión por elevar la profesión"
+        },
+        "whatWeLookFor": "Lo Que Buscamos:",
+        "compensation": "Compensación:",
+        "applyNow": "Aplicar Ahora"
+      },
+      "benefits": {
+        "heading": "Por Qué Trabajar Con Nosotros",
+        "benefit1": {
+          "title": "Primero Remoto",
+          "description": "Trabaja desde cualquier lugar. La mayoría de los roles son completamente remotos con horarios flexibles y comunicación asíncrona."
+        },
+        "benefit2": {
+          "title": "Oportunidades de Comisión",
+          "description": "Muchos roles incluyen comisión basada en el éxito de la plataforma. Aumenta tus ingresos mientras BeautyCita crece."
+        },
+        "benefit3": {
+          "title": "Equidad para el Equipo Temprano",
+          "description": "Los empleados tempranos reciben equidad significativa. Sé dueño, no solo empleado."
+        },
+        "benefit4": {
+          "title": "Caminos de Crecimiento",
+          "description": "Comienza medio tiempo o como contratista, crece a liderazgo de tiempo completo mientras nos expandimos a nuevos mercados."
+        }
+      }
     },
     "contact": {
       "title": "Contáctanos",
@@ -1053,17 +1179,92 @@
       "thirdParty": "Cookies de Terceros"
     },
     "help": {
-      "title": "Centro de Ayuda",
-      "subtitle": "Encuentra respuestas a tus preguntas",
+      "title": "Ayuda y Soporte",
+      "subtitle": "Encuentra respuestas, obtén ayuda y aprende cómo usar BeautyCita",
       "searchPlaceholder": "Buscar ayuda...",
-      "popularTopics": "Temas Populares",
-      "booking": "Reservar Servicios",
+      "booking": "Reservas y Citas",
       "payments": "Pagos y Facturación",
-      "account": "Gestión de Cuenta",
-      "technical": "Soporte Técnico",
+      "account": "Cuenta y Configuración",
+      "popularTopics": "Temas Populares",
       "faq": "Preguntas Frecuentes",
+      "stillNeedHelp": "¿Aún Necesitas Ayuda?",
       "contactSupport": "Contactar Soporte",
-      "stillNeedHelp": "¿Aún necesitas ayuda? Estamos aquí para ti."
+      "categories": {
+        "gettingStarted": {
+          "title": "Empezando",
+          "description": "Aprende los conceptos básicos de usar BeautyCita"
+        },
+        "booking": {
+          "title": "Reservas y Citas",
+          "description": "Aprende cómo reservar servicios, gestionar citas y reprogramar"
+        },
+        "payments": {
+          "title": "Pagos y Facturación",
+          "description": "Métodos de pago, facturación, reembolsos y gestión de suscripciones"
+        },
+        "account": {
+          "title": "Cuenta y Configuración",
+          "description": "Configuración de perfil, preferencias y seguridad de cuenta"
+        },
+        "safety": {
+          "title": "Seguridad y Confianza",
+          "description": "Características de seguridad y protocolos de confianza"
+        },
+        "articlesCount": "artículos"
+      },
+      "helpText": {
+        "browseByTopic": "Explorar ayuda por tema",
+        "quickAnswers": "Respuestas rápidas a preguntas comunes",
+        "supportAvailable": "Nuestro equipo de soporte está disponible 24/7 para ayudarte con cualquier pregunta o problema.",
+        "popularArticlesHeading": "Artículos Populares",
+        "popularArticlesSubtitle": "Guías y recursos más útiles",
+        "views": "vistas",
+        "readMore": "Leer más →"
+      },
+      "faqs": [
+        {
+          "question": "¿Cómo reservo una cita a través de BeautyCita?",
+          "answer": "Para reservar una cita, explora nuestros servicios o estilistas, selecciona tu horario preferido y completa el formulario de reserva. Recibirás un correo de confirmación y SMS con todos los detalles."
+        },
+        {
+          "question": "¿Puedo cancelar o reprogramar mi cita?",
+          "answer": "Sí, puedes cancelar o reprogramar hasta 24 horas antes de tu cita sin cargos. Simplemente ve a \"Mis Reservas\" en tu perfil o contacta directamente al estilista."
+        },
+        {
+          "question": "¿Qué métodos de pago aceptan?",
+          "answer": "Aceptamos todas las tarjetas de crédito principales, tarjetas de débito y métodos de pago digital incluyendo PayPal y Apple Pay. El pago se procesa de forma segura a través de nuestra plataforma."
+        },
+        {
+          "question": "¿Cómo funciona el sistema de recomendación Aphrodite AI?",
+          "answer": "Aphrodite AI analiza tus preferencias, historial de belleza y tendencias actuales para sugerir servicios y estilistas personalizados que coinciden con tu estilo y necesidades."
+        },
+        {
+          "question": "¿Qué pasa si no estoy satisfecho con mi servicio?",
+          "answer": "Tenemos una garantía de satisfacción del 100%. Si no estás contento con tu servicio, contáctanos dentro de 24 horas y trabajaremos para resolver el problema o proporcionar un reembolso completo."
+        },
+        {
+          "question": "¿Cómo me convierto en un estilista verificado en BeautyCita?",
+          "answer": "Aplica a través de nuestra página de registro de estilistas, envía tus credenciales y portafolio, y completa nuestro proceso de verificación. Una vez aprobado, puedes comenzar a aceptar reservas."
+        }
+      ],
+      "popularArticles": [
+        {
+          "title": "Empezando con BeautyCita",
+          "description": "Guía completa para nuevos usuarios"
+        },
+        {
+          "title": "Entendiendo Tu Perfil de Belleza",
+          "description": "Cómo configurar preferencias para mejores recomendaciones"
+        },
+        {
+          "title": "Reservando Tu Primera Cita",
+          "description": "Proceso de reserva paso a paso"
+        },
+        {
+          "title": "Consejos para Selección de Estilista",
+          "description": "Cómo elegir el estilista perfecto para ti"
+        }
+      ]
     },
     "paymentMethods": {
       "title": "Métodos de Pago",
@@ -1088,15 +1289,85 @@
       "compliance": "Requisitos de Cumplimiento"
     },
     "press": {
-      "title": "Prensa",
-      "subtitle": "Noticias y comunicados de prensa de BeautyCita",
-      "latestNews": "Últimas Noticias",
-      "mediaKit": "Kit de Medios",
-      "pressContact": "Contacto de Prensa",
-      "pressEmail": "prensa@beautycita.com",
-      "newsItem1": "BeautyCita Obtiene $5M en Serie A para Expandir Plataforma de Belleza Impulsada por IA",
-      "newsItem2": "Revolucionaria App de Belleza se Lanza con Tecnología Aphrodite AI",
-      "newsItem3": "BeautyCita se Asocia con las Principales Escuelas de Belleza de México"
+      "hero": {
+        "title": "Prensa y Medios",
+        "subtitle": "Últimas noticias, recursos mediáticos y comunicados de prensa de BeautyCita"
+      },
+      "news": {
+        "heading": "Últimas Noticias y Cobertura",
+        "news1": {
+          "date": "12 de octubre de 2025",
+          "title": "BeautyCita Se Acerca a 10,000 Reservas Procesadas",
+          "excerpt": "La plataforma de reservas de belleza con sede en Puerto Vallarta celebra un hito de crecimiento orgánico, procesando casi 10,000 reservas exitosas en México y expandiéndose a EE.UU.",
+          "source": "Comunicado de Prensa de BeautyCita"
+        },
+        "news2": {
+          "date": "5 de septiembre de 2025",
+          "title": "BeautyCita Lanza Canción Temática Original",
+          "excerpt": "La plataforma de base revela su himno de marca - una composición original creada internamente que celebra a los profesionales de belleza y las conexiones con los clientes.",
+          "source": "Comunicado de Prensa de BeautyCita"
+        },
+        "news3": {
+          "date": "18 de agosto de 2025",
+          "title": "Todo el Video y Arte Creado Internamente",
+          "excerpt": "BeautyCita anuncia que el 100% de sus videos de plataforma, gráficos y activos creativos son producidos por su propio equipo, mostrando narración auténtica.",
+          "source": "Comunicado de Prensa de BeautyCita"
+        },
+        "readMore": "Leer Más"
+      },
+      "milestones": {
+        "heading": "Hitos de la Compañía",
+        "m1": {
+          "year": "2023",
+          "event": "BeautyCita fundada en Puerto Vallarta, México con enfoque de base y comunitario"
+        },
+        "m2": {
+          "year": "2024 Q1",
+          "event": "Lanzamiento del MVP y incorporación de los primeros 50 profesionales de belleza verificados localmente"
+        },
+        "m3": {
+          "year": "2024 Q3",
+          "event": "Expansión más allá de Puerto Vallarta para servir a clientes en todo México"
+        },
+        "m4": {
+          "year": "2025 Q2",
+          "event": "Creación de la canción temática original de BeautyCita y producción de todo el video/arte internamente"
+        },
+        "m5": {
+          "year": "2025 Q4",
+          "event": "Acercándose a 10,000 reservas procesadas con ambiciosa meta de 50,000 clientes"
+        }
+      },
+      "mediaKit": {
+        "heading": "Kit de Medios",
+        "subtitle": "Descarga activos en alta resolución para prensa y cobertura mediática",
+        "asset1": {
+          "name": "Paquete de Logo de Marca",
+          "description": "Logos de BeautyCita en alta resolución en formatos PNG, SVG y vectorial",
+          "size": "2.3 MB"
+        },
+        "asset2": {
+          "name": "Fotos de la Compañía",
+          "description": "Fotos del equipo, imágenes de la oficina y tomas de la cultura de la compañía",
+          "size": "15.7 MB"
+        },
+        "asset3": {
+          "name": "Capturas de Pantalla del Producto",
+          "description": "Capturas de pantalla de la app en alta calidad, demos de interfaz y destacados de funciones",
+          "size": "8.4 MB"
+        },
+        "asset4": {
+          "name": "Fotos del Fundador y Equipo",
+          "description": "Retratos profesionales y fotos del equipo",
+          "size": "4.2 MB"
+        },
+        "download": "Descargar"
+      },
+      "contact": {
+        "heading": "Contacto de Prensa",
+        "email": "press@beautycita.com",
+        "response": "Tiempo de respuesta: Dentro de 24 horas"
+      }
     },
     "privacy": {
       "title": "Política de Privacidad",
@@ -1275,6 +1546,298 @@
       ],
       "introText": "Estos Términos de Servicio (\"Términos\") rigen tu uso de la plataforma BeautyCita, incluyendo nuestro sitio web, aplicaciones móviles y servicios relacionados. Al usar nuestra plataforma, aceptas estar vinculado por estos términos. Por favor léelos cuidadosamente antes de usar nuestros servicios. Si tienes preguntas sobre estos términos, contacta a nuestro equipo legal.",
       "contactText": "Si tienes preguntas sobre estos Términos de Servicio o necesitas aclaración sobre alguna disposición, nuestro equipo legal está aquí para ayudar."
+    },
+    "playStorePrivacy": {
+      "header": {
+        "title": "Aplicación Android de BeautyCita",
+        "subtitle": "Política de Privacidad",
+        "lastUpdated": "Última Actualización: 13 de Octubre de 2025",
+        "version": "Versión 1.0 | Para Google Play Store"
+      },
+      "toc": {
+        "heading": "Tabla de Contenidos",
+        "introduction": "1. Introducción",
+        "informationCollected": "2. Información Que Recopilamos",
+        "androidPermissions": "3. Permisos de la Aplicación Android",
+        "howWeUse": "4. Cómo Usamos Su Información",
+        "thirdParty": "5. Servicios y SDKs de Terceros",
+        "dataSharing": "6. Cómo Compartimos Su Información",
+        "dataRetention": "7. Retención de Datos",
+        "accountDeletion": "8. Eliminación de Cuenta y Datos",
+        "yourRights": "9. Sus Derechos de Privacidad",
+        "security": "10. Seguridad de Datos",
+        "children": "11. Privacidad de Menores",
+        "contact": "12. Contáctenos"
+      },
+      "introduction": {
+        "heading": "1. Introducción",
+        "paragraph1": "BeautyCita (\"nosotros,\" \"nuestro,\" o \"nos\") opera una plataforma de reservas de servicios de belleza. Esta Política de Privacidad explica cómo nuestra aplicación móvil Android (la \"Aplicación\") recopila, usa, protege y comparte su información personal.",
+        "paragraph2": "Al instalar y usar la aplicación Android de BeautyCita, acepta esta Política de Privacidad.",
+        "paragraph3": "Si no está de acuerdo con alguna parte de esta política, desinstale la aplicación inmediatamente.",
+        "paragraph4": "Esta política está diseñada específicamente para nuestra aplicación Android disponible en Google Play Store. Para nuestra política de privacidad web completa, visite",
+        "linkText": "beautycita.com/privacy",
+        "infoBox": {
+          "title": "🔒 Su Privacidad Importa",
+          "text": "Estamos comprometidos con la transparencia. Nunca vendemos su información personal. Solo recopilamos datos necesarios para brindarle excelentes servicios de reserva de belleza."
+        }
+      },
+      "informationCollected": {
+        "heading": "2. Información Que Recopilamos",
+        "personalInfo": {
+          "heading": "2.1 Información Personal Que Usted Proporciona",
+          "accountInfo": {
+            "title": "Información de Cuenta:",
+            "text": "Nombre, dirección de correo electrónico, número de teléfono, fecha de nacimiento, nombre de usuario, contraseña (encriptada), foto de perfil"
+          },
+          "paymentInfo": {
+            "title": "Información de Pago:",
+            "text": "Detalles de tarjeta de crédito/débito (procesados de forma segura por Stripe - no almacenamos números de tarjeta completos), direcciones de billetera Bitcoin para pagos con criptomonedas"
+          },
+          "bookingInfo": {
+            "title": "Información de Reserva:",
+            "text": "Preferencias de servicio, reservas de citas, historial de reservas, reseñas, calificaciones, estilistas favoritos"
+          },
+          "messagesInfo": {
+            "title": "Mensajes y Comunicaciones:",
+            "text": "Mensajes de chat con profesionales de belleza, conversaciones de atención al cliente"
+          },
+          "stylistInfo": {
+            "title": "Datos Profesionales del Estilista:",
+            "text": "Nombre comercial, certificaciones, especialidades, años de experiencia, imágenes de portafolio, descripciones de servicios, precios"
+          }
+        },
+        "automaticInfo": {
+          "heading": "2.2 Información Recopilada Automáticamente",
+          "deviceInfo": {
+            "title": "Información del Dispositivo:",
+            "text": "Modelo de dispositivo, fabricante, versión del sistema operativo, identificadores únicos del dispositivo (Android ID), información de red móvil, resolución de pantalla"
+          },
+          "usageData": {
+            "title": "Datos de Uso:",
+            "text": "Funciones de la aplicación accedidas, pantallas vistas, tiempo en la aplicación, consultas de búsqueda, patrones de clics, duración de la sesión"
+          },
+          "locationData": {
+            "title": "Datos de Ubicación:",
+            "text": "Ubicación GPS precisa (solo con su permiso explícito) para mostrar estilistas cercanos y rastrear citas. Dirección IP para ubicación general y prevención de fraude."
+          },
+          "cameraPhotos": {
+            "title": "Cámara y Fotos:",
+            "text": "Acceso a la cámara del dispositivo y galería de fotos (solo cuando elija tomar o subir fotos)"
+          },
+          "performanceData": {
+            "title": "Datos de Rendimiento y Errores:",
+            "text": "Registros de fallos, informes de errores, métricas de rendimiento de la aplicación, tiempos de carga"
+          }
+        },
+        "thirdPartyInfo": {
+          "heading": "2.3 Información de Fuentes de Terceros",
+          "googleSignIn": {
+            "title": "Inicio de Sesión con Google:",
+            "text": "Si usa Google para iniciar sesión, recibimos su nombre de Google, dirección de correo electrónico y foto de perfil"
+          },
+          "paymentProcessors": {
+            "title": "Procesadores de Pago:",
+            "text": "Datos de confirmación de transacciones de Stripe (pagos con tarjeta) y BTCPay Server (pagos con Bitcoin)"
+          }
+        }
+      },
+      "androidPermissions": {
+        "heading": "3. Permisos de la Aplicación Android",
+        "intro": "La aplicación Android de BeautyCita solicita los siguientes permisos de Android. Todos los permisos se solicitan solo cuando son necesarios y puede denegar cualquier permiso opcional.",
+        "location": {
+          "title": "📍 Ubicación (ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)",
+          "whyWeNeed": "Por qué lo necesitamos:",
+          "whyText": "Para mostrar profesionales de belleza cerca de usted, proporcionar direcciones paso a paso, habilitar el seguimiento de citas en tiempo real (comienza 3 horas antes de su cita) y calcular ETAs.",
+          "whenWeAccess": "Cuándo lo accedemos:",
+          "whenText": "Solo cuando abre el mapa de búsqueda de estilistas o cuando tiene una cita próxima con seguimiento habilitado.",
+          "canDeny": "¿Puede denegarlo?",
+          "canDenyText": "Sí ✓ La aplicación funciona sin acceso a ubicación, pero no verá resultados de búsqueda basados en distancia ni funciones de seguimiento de citas en tiempo real."
+        },
+        "camera": {
+          "title": "📷 Cámara (CAMERA)",
+          "whyWeNeed": "Por qué lo necesitamos:",
+          "whyText": "Para tomar fotos de perfil o fotos de portafolio directamente dentro de la aplicación.",
+          "whenWeAccess": "Cuándo lo accedemos:",
+          "whenText": "Solo cuando toca el botón de la cámara para tomar una nueva foto.",
+          "canDeny": "¿Puede denegarlo?",
+          "canDenyText": "Sí ✓ Aún puede subir fotos desde su galería."
+        },
+        "photos": {
+          "title": "Fotos/Medios/Archivos (READ_MEDIA_IMAGES, READ_EXTERNAL_STORAGE)",
+          "whyWeNeed": "Por qué lo necesitamos:",
+          "whyText": "Para permitirle elegir fotos de la galería de su dispositivo para su foto de perfil o portafolio de estilista.",
+          "whenWeAccess": "Cuándo lo accedemos:",
+          "whenText": "Solo cuando toca para subir una foto desde su galería.",
+          "canDeny": "¿Puede denegarlo?",
+          "canDenyText": "Sí ✓ No podrá subir fotos existentes, pero aún puede usar la cámara."
+        },
+        "notifications": {
+          "title": "🔔 Notificaciones (POST_NOTIFICATIONS - Android 13+)",
+          "whyWeNeed": "Por qué lo necesitamos:",
+          "whyText": "Para enviarle recordatorios de citas, confirmaciones de reservas, recibos de pago y mensajes de estilistas.",
+          "whenWeAccess": "Cuándo lo accedemos:",
+          "whenText": "Cuando tiene citas próximas o recibe actualizaciones importantes.",
+          "canDeny": "¿Puede denegarlo?",
+          "canDenyText": "Sí ✓ Pero perderá recordatorios de citas importantes y confirmaciones de reservas."
+        },
+        "internet": {
+          "title": "🌐 Internet (INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE)",
+          "whyWeNeed": "Por qué lo necesitamos:",
+          "whyText": "Requerido para toda la funcionalidad de la aplicación, incluida la navegación de estilistas, reservas, procesamiento de pagos y mensajería.",
+          "whenWeAccess": "Cuándo lo accedemos:",
+          "whenText": "Continuamente mientras la aplicación está abierta.",
+          "canDeny": "¿Puede denegarlo?",
+          "canDenyText": "No ✗ La aplicación no puede funcionar sin conectividad a Internet."
+        },
+        "managingPermissions": {
+          "title": "⚙️ Administrar Permisos",
+          "text": "Puede administrar todos los permisos de la aplicación en cualquier momento yendo a:",
+          "path": "Configuración de Android → Aplicaciones → BeautyCita → Permisos"
+        }
+      },
+      "viewComplete": {
+        "text": "Esta política de privacidad continúa con detalles completos sobre el uso de datos, servicios de terceros, medidas de seguridad y sus derechos.",
+        "button": "Ver Política de Privacidad Completa"
+      },
+      "contact": {
+        "heading": "12. Contáctenos",
+        "privacyQuestions": {
+          "title": "Preguntas sobre Privacidad",
+          "email": "Correo Electrónico:",
+          "emailAddress": "privacy@beautycita.com",
+          "responseTime": "Tiempo de Respuesta:",
+          "responseText": "Dentro de 1 día hábil"
+        },
+        "dataDeletion": {
+          "title": "Solicitudes de Eliminación de Datos",
+          "text": "Envíe un correo electrónico a privacy@beautycita.com con el asunto:",
+          "subject": "\"Eliminar Mi Cuenta\""
+        }
+      },
+      "footer": {
+        "copyright": "© 2025 BeautyCita. Todos los derechos reservados.",
+        "fullPrivacy": "Política de Privacidad Completa",
+        "terms": "Términos de Servicio",
+        "contactSupport": "Contactar Soporte",
+        "downloadApp": "Descargar Aplicación",
+        "complianceTitle": "Cumplimiento:",
+        "complianceText": "Esta política de privacidad cumple con los requisitos de Seguridad de Datos de Google Play Store, GDPR, CCPA/CPRA, LFPDPPP Mexicana y estándares PCI-DSS.",
+        "disclaimer": "Esta política de privacidad está diseñada específicamente para la aplicación Android de BeautyCita disponible en Google Play Store. Para obtener detalles completos sobre las prácticas de datos en todas las plataformas, visite nuestra política de privacidad completa."
+      }
+    },
+    "testimonials": {
+      "hero": {
+        "title": "Lo Que Dicen Nuestros Clientes",
+        "subtitle": "Lee reseñas reales de miles de clientes satisfechos que encontraron su estilista perfecto en BeautyCita"
+      },
+      "stats": {
+        "clients": "Clientes Felices",
+        "rating": "Calificación Promedio",
+        "satisfaction": "Tasa de Satisfacción",
+        "bookings": "Reservas Completadas"
+      },
+      "section": {
+        "title": "Historias Reales de Personas Reales",
+        "subtitle": "Descubre por qué nuestros clientes aman BeautyCita"
+      },
+      "testimonial1": {
+        "role": "Cliente Regular",
+        "quote": "¡BeautyCita hizo que encontrar un gran estilista fuera tan fácil! El proceso de reserva fue perfecto y mi estilista fue increíble."
+      },
+      "testimonial2": {
+        "role": "Estilista Profesional",
+        "quote": "Como estilista, BeautyCita ha transformado mi negocio. ¡He conectado con tantos clientes maravillosos!"
+      },
+      "testimonial3": {
+        "role": "Dueño de Negocio",
+        "quote": "La plataforma es intuitiva y profesional. Perfecta para gestionar las reservas de mi salón."
+      },
+      "testimonial4": {
+        "role": "Cliente Satisfecho",
+        "quote": "Me encanta lo fácil que es navegar por estilistas, ver su trabajo y reservar citas. ¡Muy recomendable!"
+      },
+      "testimonial5": {
+        "role": "Cliente Regular",
+        "quote": "La calidad del servicio es excepcional. Encontré mi estilista favorito a través de BeautyCita."
+      },
+      "testimonial6": {
+        "role": "Artista de Uñas",
+        "quote": "BeautyCita me ayudó a crecer mi base de clientes significativamente. El sistema de pagos es seguro y confiable."
+      },
+      "cta": {
+        "title": "¿Listo para Experimentar BeautyCita?",
+        "subtitle": "Únete a miles de clientes felices y encuentra tu estilista perfecto hoy",
+        "button": "Encuentra Tu Estilista"
+      }
+    },
+    "platform": {
+      "hero": {
+        "title": "Impulsado por Innovación",
+        "subtitle": "Experimenta la plataforma de reservas de belleza más avanzada con tecnología de vanguardia",
+        "cta1": "Comenzar",
+        "cta2": "Únete como Profesional"
+      },
+      "features": {
+        "title": "Características de la Plataforma",
+        "subtitle": "Todo lo que necesitas para reservas de belleza sin problemas",
+        "feature1": {
+          "title": "Diseño Móvil Primero",
+          "description": "Interfaz hermosa y responsiva que funciona perfectamente en cualquier dispositivo"
+        },
+        "feature2": {
+          "title": "Reserva Inteligente",
+          "description": "Calendario inteligente con disponibilidad en tiempo real y confirmaciones instantáneas"
+        },
+        "feature3": {
+          "title": "Pagos Seguros",
+          "description": "Múltiples opciones de pago con seguridad bancaria y procesamiento instantáneo"
+        },
+        "feature4": {
+          "title": "Chat en Tiempo Real",
+          "description": "Comunícate directamente con tu estilista antes y después de las citas"
+        },
+        "feature5": {
+          "title": "Panel de Analíticas",
+          "description": "Información completa para que los estilistas hagan crecer su negocio"
+        },
+        "feature6": {
+          "title": "Asistente IA",
+          "description": "Conoce a Afrodita, tu asistente personal de reservas de belleza con IA"
+        }
+      },
+      "tech": {
+        "title": "Construido con Tecnología Moderna",
+        "subtitle": "Infraestructura de nivel empresarial en la que puedes confiar",
+        "tech1": {
+          "title": "Ultrarrápido",
+          "description": "Rendimiento optimizado con cargas de página en menos de un segundo"
+        },
+        "tech2": {
+          "title": "Nativo en la Nube",
+          "description": "Arquitectura escalable que crece con tus necesidades"
+        },
+        "tech3": {
+          "title": "Seguro por Diseño",
+          "description": "Cifrado de extremo a extremo y cumplimiento con estándares de la industria"
+        },
+        "tech4": {
+          "title": "Privacidad Primero",
+          "description": "Tus datos están protegidos con los más altos estándares de seguridad"
+        }
+      },
+      "platforms": {
+        "title": "Disponible en Todas Partes",
+        "subtitle": "Accede a BeautyCita desde cualquier dispositivo, en cualquier lugar",
+        "mobile": "Aplicaciones nativas iOS y Android para la mejor experiencia móvil",
+        "web": "Aplicación web completa accesible desde cualquier navegador",
+        "pwa": "Instala como una aplicación web para acceso sin conexión y notificaciones push"
+      },
+      "cta": {
+        "title": "Experimenta el Futuro de las Reservas de Belleza",
+        "subtitle": "Únete a la revolución y descubre por qué miles eligen BeautyCita",
+        "button1": "Comenzar a Reservar",
+        "button2": "Saber Más"
+      }
     }
   },
   "homepage": {
@@ -2013,5 +2576,191 @@
     },
     "openTool": "Abrir Herramienta 🚀",
     "copiedToClipboard": "¡Copiado al portapapeles! 📋✨"
+  },
+  "report": {
+    "title": "Reportar un Problema",
+    "subtitle": "Tu seguridad es nuestra prioridad. Reporta cualquier preocupación.",
+    "safetyMatters": "Tu Seguridad Importa",
+    "commitment": "BeautyCita se compromete a mantener una comunidad segura y respetuosa",
+    "reviewTime": "Todos los reportes se revisan dentro de 24 horas",
+    "confidential": "Tu identidad se mantiene confidencial",
+    "urgentAction": "Acción inmediata en casos urgentes de seguridad",
+    "followUp": "Soporte de seguimiento y actualizaciones de estado",
+    "reportDetails": "Detalles del Reporte",
+    "reportType": "Tipo de Reporte",
+    "selectType": "Seleccionar tipo...",
+    "reportedUser": "Usuario Reportado (opcional)",
+    "usernamePlaceholder": "Nombre de usuario o ID",
+    "incidentDate": "Fecha del Incidente",
+    "description": "Descripción del Problema",
+    "descriptionPlaceholder": "Por favor, proporciona tantos detalles como sea posible...",
+    "contactEmail": "Email de Contacto",
+    "emailPlaceholder": "tu@email.com",
+    "urgent": "Esto es urgente y requiere atención inmediata",
+    "submit": "Enviar Reporte",
+    "disclaimer": "Al enviar este reporte, aceptas que la información proporcionada es veraz y precisa.",
+    "submitted": "¡Reporte Enviado!",
+    "thankYou": "Gracias por ayudarnos a mantener BeautyCita seguro.",
+    "reviewMessage": "Nuestro equipo de seguridad revisará tu reporte dentro de 24 horas.",
+    "emergency": "Emergencia Inmediata?",
+    "emergencyMessage": "Si estás en peligro inmediato, por favor contacta a las autoridades locales primero.",
+    "call911": "Llamar 911",
+    "types": {
+      "harassment": "Acoso o Intimidación",
+      "fraud": "Fraude o Estafa",
+      "inappropriate": "Comportamiento Inapropiado",
+      "fakeProfile": "Perfil Falso",
+      "spam": "Spam o Contenido Engañoso",
+      "safety": "Preocupación de Seguridad",
+      "payment": "Problema de Pago",
+      "other": "Otra Violación"
+    }
+  },
+  "panel": {
+    "welcomeBack": "¡Bienvenido de nuevo, {{name}}!",
+    "superAdminPanel": "Panel de Control de Super Admin",
+    "adminPanel": "Panel de Control de Admin",
+    "stylistDashboard": "Panel de Estilista",
+    "clientDashboard": "Tu Panel de BeautyCita",
+    "systemMetrics": "Métricas del Sistema",
+    "cpuUsage": "Uso de CPU",
+    "memory": "Memoria",
+    "networkBandwidth": "Ancho de Banda de Red",
+    "quickAccess": "📍 Acceso Rápido",
+    "myBookings": "Mis Reservas",
+    "quickActions": "Acciones Rápidas",
+    "platformHealth": "Salud de la Plataforma",
+    "userSatisfaction": "Satisfacción del Usuario",
+    "activeBookings": "Reservas Activas",
+    "pendingReviews": "Revisiones Pendientes",
+    "readyToLookBest": "¿Lista para verte espectacular?",
+    "bookAppointmentsMessage": "Reserva citas con los mejores estilistas en tu área y gestiona todo desde tu panel.",
+    "findStylists": "Buscar Estilistas",
+    "browseServices": "Explorar Servicios",
+    "becomeAStylist": "Conviértete en Estilista",
+    "actions": {
+      "userManagement": {
+        "title": "Gestión de Usuarios",
+        "description": "Gestionar todos los usuarios y cuentas"
+      },
+      "stylistApplications": {
+        "title": "Solicitudes de Estilista",
+        "pendingReview": "{{count}} pendientes de revisión",
+        "noPending": "No hay solicitudes pendientes"
+      },
+      "allBookings": {
+        "title": "Todas las Reservas",
+        "activeBookings": "{{count}} reservas activas",
+        "noActive": "No hay reservas activas"
+      },
+      "servicesManagement": {
+        "title": "Gestión de Servicios",
+        "description": "Gestionar todos los servicios de la plataforma"
+      },
+      "disputes": {
+        "title": "Disputas",
+        "activeDisputes": "{{count}} disputas activas",
+        "noActive": "No hay disputas activas"
+      },
+      "messages": {
+        "title": "Mensajes",
+        "unreadMessages": "{{count}} mensajes sin leer",
+        "noUnread": "No hay mensajes sin leer"
+      },
+      "issueTracker": {
+        "title": "Seguimiento de Problemas",
+        "openIssues": "{{count}} problemas abiertos",
+        "noOpen": "No hay problemas abiertos"
+      },
+      "marketingQr": {
+        "title": "Marketing y QR",
+        "description": "Generador de contenido IA y códigos QR"
+      },
+      "finance": {
+        "title": "Finanzas",
+        "description": "Ingresos y pagos"
+      },
+      "analytics": {
+        "title": "Analíticas",
+        "description": "Analíticas de la plataforma"
+      },
+      "systemMonitor": {
+        "title": "Monitor del Sistema",
+        "description": "Salud del servicio y registros"
+      },
+      "nativeApps": {
+        "title": "Aplicaciones Nativas",
+        "description": "Aplicaciones Android, iOS y Windows"
+      },
+      "settings": {
+        "title": "Configuración",
+        "description": "Configuración de la plataforma"
+      },
+      "businessDashboard": {
+        "title": "Panel de Negocio",
+        "description": "Gestiona tu negocio"
+      },
+      "bookings": {
+        "title": "Reservas",
+        "description": "Ver tus citas"
+      },
+      "stylistMessages": {
+        "title": "Mensajes",
+        "description": "Mensajes de clientes"
+      },
+      "profile": {
+        "title": "Perfil",
+        "yourProfile": "Tu perfil",
+        "manageProfile": "Gestionar tu perfil"
+      },
+      "businessLocations": {
+        "title": "Ubicaciones de Negocio",
+        "description": "Gestiona tus ubicaciones"
+      },
+      "clientBookings": {
+        "title": "Mis Reservas",
+        "description": "Tus citas"
+      },
+      "favorites": {
+        "title": "Favoritos",
+        "description": "Estilistas guardados"
+      },
+      "clientMessages": {
+        "title": "Mensajes",
+        "description": "Tus mensajes"
+      }
+    },
+    "stylistProfile": {
+      "back": "Volver",
+      "verified": "Verificado",
+      "yearsExperience": "años de experiencia",
+      "reviews": "reseñas",
+      "completedAppointments": "citas completadas",
+      "bookAppointment": "Reservar Cita",
+      "book": "Reservar",
+      "aboutMe": "Sobre mí",
+      "certifications": "Certificaciones",
+      "socialMedia": "Sígueme en redes sociales",
+      "availableServices": "Servicios Disponibles",
+      "noServicesYet": "Este estilista aún no ha publicado sus servicios",
+      "contactForInfo": "Contacta para más información",
+      "tabs": {
+        "about": "Acerca de",
+        "services": "Servicios",
+        "portfolio": "Portafolio",
+        "reviews": "Reseñas"
+      },
+      "notFound": {
+        "title": "Estilista No Encontrado",
+        "description": "El perfil que buscas no existe o ha sido eliminado.",
+        "backButton": "Ver Todos los Estilistas"
+      },
+      "errors": {
+        "loadFailed": "Error al cargar el perfil del estilista",
+        "loadError": "Error al cargar el perfil",
+        "signInRequired": "Por favor inicia sesión para reservar una cita",
+        "noServices": "Este estilista no tiene servicios disponibles"
+      }
+    }
   }
 }

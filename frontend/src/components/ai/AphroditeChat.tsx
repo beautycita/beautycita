@@ -394,7 +394,7 @@ export function AphroditeFloatingButton({ onClick, isOpen }: { onClick: () => vo
           onClick={onClick}
           className={`fixed bottom-8 right-24 flex items-center justify-center group ${isOpen ? 'z-40' : 'z-[9999]'}`}
         >
-          <img
+          <img loading="lazy"
             src="/aphroditeSm.png"
             alt="Aphrodite AI"
             className="w-full h-full object-contain group-hover:scale-110 transition-transform drop-shadow-[0_0_15px_rgba(255,105,180,0.5)] group-hover:drop-shadow-[0_0_25px_rgba(255,105,180,0.8)]"

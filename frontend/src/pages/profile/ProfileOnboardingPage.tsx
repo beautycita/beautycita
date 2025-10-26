@@ -581,7 +581,7 @@ export default function ProfileOnboardingPage() {
                               : 'border-gray-200 hover:border-purple-300'
                           }`}
                         >
-                          <img src={avatar} alt={`Avatar ${index + 1}`} className="w-full h-full object-cover" />
+                          <img loading="lazy" src={avatar} alt={`Avatar ${index + 1}`} className="w-full h-full object-cover" />
                           {selectedAvatar === avatar && (
                             <div className="absolute inset-0 bg-purple-500/20 flex items-center justify-center">
                               <CheckCircleIcon className="w-8 h-8 text-white" />
@@ -618,7 +618,7 @@ export default function ProfileOnboardingPage() {
                     >
                       {avatarPreview ? (
                         <div className="flex items-center gap-4">
-                          <img src={avatarPreview} alt="Preview" className="w-16 h-16 rounded-full object-cover" />
+                          <img loading="lazy" src={avatarPreview} alt="Preview" className="w-16 h-16 rounded-full object-cover" />
                           <span className="text-sm text-gray-600">Click to change photo</span>
                         </div>
                       ) : (

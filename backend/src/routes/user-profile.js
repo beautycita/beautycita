@@ -53,6 +53,7 @@ router.get('/profile', async (req, res) => {
       `SELECT id, email, name, first_name, last_name, username, phone, role, profile_picture_url,
               language_preference, timezone, notification_preferences,
               email_verified, phone_verified, is_active, last_active,
+              profile_complete, onboarding_completed, onboarding_completed_at,
               created_at, updated_at
        FROM users
        WHERE id = $1`,
@@ -212,6 +213,7 @@ router.put('/profile', async (req, res) => {
       `SELECT id, email, name, first_name, last_name, username, phone, role, profile_picture_url,
               language_preference, timezone, notification_preferences,
               email_verified, phone_verified, is_active, last_active,
+              profile_complete, onboarding_completed, onboarding_completed_at,
               created_at, updated_at
        FROM users
        WHERE id = $1`,

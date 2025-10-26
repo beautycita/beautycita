@@ -152,7 +152,7 @@ export default function ProfileEditPage() {
                     className="cursor-pointer group"
                   >
                     {previewUrl ? (
-                      <img
+                      <img loading="lazy"
                         src={previewUrl}
                         alt="Profile"
                         className="h-32 w-32 rounded-full object-cover border-4 border-white shadow-lg"

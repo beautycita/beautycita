@@ -30,6 +30,7 @@ import {
   MapPinIcon
 } from '@heroicons/react/24/outline'
 import { useAuthStore } from '../store/authStore'
+import { useTranslation } from 'react-i18next'
 import WorkStatusCard from '../components/stylist/WorkStatusCard'
 import BookingRequestsList from '../components/stylist/BookingRequestsList'
 import LateClientAlerts from '../components/stylist/LateClientAlerts'
@@ -72,6 +73,7 @@ interface QuickAction {
 
 export default function UnifiedPanel() {
   const { user, token } = useAuthStore()
+  const { t } = useTranslation()
   const [stats, setStats] = useState<DashboardStats>({
     users: 0,
     bookings: 0,
@@ -371,13 +373,13 @@ export default function UnifiedPanel() {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">
-              Welcome back, {user?.firstName || 'User'}!
+              {t('panel.welcomeBack', { name: user?.firstName || 'User' })}
             </h1>
             <p className="mt-2 text-gray-600">
-              {user?.role === 'SUPERADMIN' && 'Super Admin Control Panel'}
-              {user?.role === 'ADMIN' && 'Admin Control Panel'}
-              {user?.role === 'STYLIST' && 'Stylist Dashboard'}
-              {user?.role === 'CLIENT' && 'Your BeautyCita Dashboard'}
+              {user?.role === 'SUPERADMIN' && t('panel.superAdminPanel')}
+              {user?.role === 'ADMIN' && t('panel.adminPanel')}
+              {user?.role === 'STYLIST' && t('panel.stylistDashboard')}
+              {user?.role === 'CLIENT' && t('panel.clientDashboard')}
             </p>
           </div>
 
@@ -388,13 +390,13 @@ export default function UnifiedPanel() {
               animate={{ opacity: 1, y: 0 }}
               className="bg-white rounded-3xl shadow-2xl p-6"
             >
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">System Metrics</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('panel.systemMetrics')}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* CPU Usage */}
                 <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl">
                   <div className="flex items-center gap-3">
                     <CpuChipIcon className="w-6 h-6 text-blue-600" />
-                    <span className="text-base font-medium text-gray-900">CPU Usage</span>
+                    <span className="text-base font-medium text-gray-900">{t('panel.cpuUsage')}</span>
                   </div>
                   <span className="text-xl font-bold text-blue-600">{systemMetrics.cpu.toFixed(1)}%</span>
                 </div>
@@ -403,7 +405,7 @@ export default function UnifiedPanel() {
                 <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-2xl">
                   <div className="flex items-center gap-3">
                     <CircleStackIcon className="w-6 h-6 text-green-600" />
-                    <span className="text-base font-medium text-gray-900">Memory</span>
+                    <span className="text-base font-medium text-gray-900">{t('panel.memory')}</span>
                   </div>
                   <span className="text-xl font-bold text-green-600">{systemMetrics.memory.toFixed(1)}%</span>
                 </div>
@@ -414,7 +416,7 @@ export default function UnifiedPanel() {
                 <div className="mt-6 pt-6 border-t border-gray-200">
                   <div className="flex items-center gap-4">
                     <SignalIcon className="w-5 h-5 text-cyan-500" />
-                    <span className="text-sm font-medium text-gray-900">Network Bandwidth</span>
+                    <span className="text-sm font-medium text-gray-900">{t('panel.networkBandwidth')}</span>
                     <div className="flex items-center gap-2 px-3 py-1 bg-green-50 rounded-lg">
                       <span className="text-xs text-green-600">↓</span>
                       <span className="text-sm font-mono font-bold text-green-700">
@@ -446,7 +448,7 @@ export default function UnifiedPanel() {
                 <WorkStatusCard token={token} onStatusChange={() => fetchDashboardStats()} />
               </div>
               <div className="lg:col-span-2 bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-6 shadow-lg border border-purple-200">
-                <h3 className="text-lg font-bold text-gray-900 mb-3">📍 Quick Access</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-3">{t('panel.quickAccess')}</h3>
                 <div className="space-y-3">
                   <Link
                     to="/admin/bookings"
@@ -455,7 +457,7 @@ export default function UnifiedPanel() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <CalendarDaysIcon className="h-5 w-5 text-purple-600" />
-                        <span className="font-medium text-gray-900">My Bookings</span>
+                        <span className="font-medium text-gray-900">{t('panel.myBookings')}</span>
                       </div>
                       <span className="text-sm font-semibold text-purple-600">{stats.bookings}</span>
                     </div>
@@ -536,7 +538,7 @@ export default function UnifiedPanel() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('panel.quickActions')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {quickActions.map((action, index) => {
                 const CardContent = (
@@ -580,25 +582,25 @@ export default function UnifiedPanel() {
               transition={{ delay: 0.5 }}
               className="bg-white rounded-3xl shadow-2xl p-8"
             >
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Platform Health</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('panel.platformHealth')}</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center">
                   <div className="text-5xl font-bold bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent mb-2">
                     {stats.users > 0 ? '98.5%' : '0%'}
                   </div>
-                  <div className="text-gray-600">User Satisfaction</div>
+                  <div className="text-gray-600">{t('panel.userSatisfaction')}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-5xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent mb-2">
                     {stats.bookings.toLocaleString()}
                   </div>
-                  <div className="text-gray-600">Active Bookings</div>
+                  <div className="text-gray-600">{t('panel.activeBookings')}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-5xl font-bold bg-gradient-to-r from-pink-500 to-rose-600 bg-clip-text text-transparent mb-2">
                     {stats.applications.toLocaleString()}
                   </div>
-                  <div className="text-gray-600">Pending Reviews</div>
+                  <div className="text-gray-600">{t('panel.pendingReviews')}</div>
                 </div>
               </div>
             </motion.div>
@@ -613,29 +615,29 @@ export default function UnifiedPanel() {
               className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-3xl shadow-xl p-8"
             >
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Ready to look your best?
+                {t('panel.readyToLookBest')}
               </h2>
               <p className="text-gray-700 mb-6">
-                Book appointments with top stylists in your area and manage everything from your dashboard.
+                {t('panel.bookAppointmentsMessage')}
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link
                   to="/stylists"
                   className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold hover:shadow-lg transition-shadow"
                 >
-                  Find Stylists
+                  {t('panel.findStylists')}
                 </Link>
                 <Link
                   to="/services"
                   className="px-6 py-3 bg-white text-purple-600 rounded-xl font-semibold hover:shadow-lg transition-shadow"
                 >
-                  Browse Services
+                  {t('panel.browseServices')}
                 </Link>
                 <Link
                   to="/profile/become-stylist"
                   className="px-6 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-shadow"
                 >
-                  Become a Stylist
+                  {t('panel.becomeAStylist')}
                 </Link>
               </div>
             </motion.div>

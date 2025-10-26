@@ -1,0 +1,528 @@
+# BeautyCita GraphQL Schema
+# Optimized for mobile apps with efficient data fetching
+
+scalar DateTime
+scalar JSON
+
+# ============================================
+# User & Authentication Types
+# ============================================
+
+type User {
+  id: ID!
+  email: String!
+  fullName: String
+  phone: String
+  role: UserRole!
+  profilePictureUrl: String
+  createdAt: DateTime!
+
+  # Role-specific fields (resolved conditionally)
+  stylistProfile: StylistProfile
+  clientProfile: ClientProfile
+}
+
+enum UserRole {
+  CLIENT
+  STYLIST
+  ADMIN
+  SUPERADMIN
+}
+
+type StylistProfile {
+  id: ID!
+  userId: ID!
+  businessName: String!
+  bio: String
+  specialties: [String!]!
+  locationCity: String
+  locationState: String
+  locationLat: Float
+  locationLng: Float
+  locationAddress: String
+  isVerified: Boolean!
+  averageRating: Float
+  totalReviews: Int!
+  minPrice: Float
+  maxPrice: Float
+
+  # Nested resources
+  services(active: Boolean): [Service!]!
+  portfolio(limit: Int): [PortfolioItem!]!
+  reviews(limit: Int, offset: Int): ReviewConnection!
+  availability(startDate: DateTime!, endDate: DateTime!): [AvailabilitySlot!]!
+  bookings(status: BookingStatus, limit: Int): [Booking!]!
+}
+
+type ClientProfile {
+  id: ID!
+  userId: ID!
+  preferredServices: [String!]
+  bookingHistory(limit: Int): [Booking!]!
+  favoriteStylists: [StylistProfile!]!
+  totalBookings: Int!
+}
+
+# ============================================
+# Service Types
+# ============================================
+
+type Service {
+  id: ID!
+  stylistId: ID!
+  name: String!
+  description: String
+  category: String!
+  price: Float!
+  duration: Int!
+  isActive: Boolean!
+
+  stylist: StylistProfile!
+}
+
+# ============================================
+# Booking Types
+# ============================================
+
+type Booking {
+  id: ID!
+  clientId: ID!
+  stylistId: ID!
+  serviceId: ID!
+  bookingDate: DateTime!
+  bookingTime: String!
+  durationMinutes: Int!
+  status: BookingStatus!
+  totalPrice: Float!
+  notes: String
+  stylistNotes: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+
+  # Nested resources
+  client: User!
+  stylist: StylistProfile!
+  service: Service!
+  review: Review
+  events: [BookingEvent!]! # Event sourcing history
+}
+
+enum BookingStatus {
+  PENDING
+  VERIFY_ACCEPTANCE
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+  EXPIRED
+}
+
+# Event Sourcing - Booking audit trail
+type BookingEvent {
+  id: ID!
+  bookingId: ID!
+  eventType: BookingEventType!
+  eventData: JSON!
+  userId: ID!
+  timestamp: DateTime!
+  metadata: JSON
+}
+
+enum BookingEventType {
+  CREATED
+  CONFIRMED
+  RESCHEDULED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+  PAYMENT_RECEIVED
+  REFUND_ISSUED
+  NOTES_UPDATED
+}
+
+# ============================================
+# Review Types
+# ============================================
+
+type Review {
+  id: ID!
+  bookingId: ID!
+  clientId: ID!
+  stylistId: ID!
+  rating: Float!
+  comment: String
+  createdAt: DateTime!
+
+  client: User!
+  stylist: StylistProfile!
+  booking: Booking!
+}
+
+type ReviewConnection {
+  edges: [ReviewEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type ReviewEdge {
+  cursor: String!
+  node: Review!
+}
+
+# ============================================
+# Portfolio Types
+# ============================================
+
+type PortfolioItem {
+  id: ID!
+  stylistId: ID!
+  imageUrl: String!
+  caption: String
+  tags: [String!]
+  likeCount: Int!
+  createdAt: DateTime!
+
+  stylist: StylistProfile!
+}
+
+# ============================================
+# Availability Types
+# ============================================
+
+type AvailabilitySlot {
+  id: ID!
+  stylistId: ID!
+  startTime: DateTime!
+  endTime: DateTime!
+  isAvailable: Boolean!
+
+  stylist: StylistProfile!
+}
+
+# ============================================
+# Search & Filter Types
+# ============================================
+
+type StylistSearchResult {
+  stylists: [StylistProfile!]!
+  totalCount: Int!
+  hasMore: Boolean!
+}
+
+input StylistSearchInput {
+  query: String
+  city: String
+  state: String
+  services: [String!]
+  minRating: Float
+  maxPrice: Float
+  minPrice: Float
+  latitude: Float
+  longitude: Float
+  radius: Float # in miles
+  sortBy: StylistSortBy
+  limit: Int
+  offset: Int
+}
+
+enum StylistSortBy {
+  RATING
+  REVIEWS
+  PRICE_LOW
+  PRICE_HIGH
+  DISTANCE
+  RECENT
+}
+
+# ============================================
+# Pagination Types
+# ============================================
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+# ============================================
+# Payment Types
+# ============================================
+
+type Payment {
+  id: ID!
+  bookingId: ID!
+  amount: Float!
+  currency: String!
+  status: PaymentStatus!
+  paymentMethod: PaymentMethod!
+  transactionId: String
+  createdAt: DateTime!
+
+  booking: Booking!
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  BITCOIN
+  STRIPE
+  CASH
+}
+
+# ============================================
+# Notification Types
+# ============================================
+
+type Notification {
+  id: ID!
+  userId: ID!
+  type: NotificationType!
+  title: String!
+  message: String!
+  data: JSON
+  isRead: Boolean!
+  createdAt: DateTime!
+}
+
+enum NotificationType {
+  BOOKING_CONFIRMED
+  BOOKING_CANCELLED
+  BOOKING_REMINDER
+  NEW_REVIEW
+  PAYMENT_RECEIVED
+  MESSAGE_RECEIVED
+}
+
+# ============================================
+# QUERIES
+# ============================================
+
+type Query {
+  # User queries
+  me: User!
+  user(id: ID!): User
+
+  # Stylist queries
+  stylist(id: ID!): StylistProfile
+  stylists(limit: Int, offset: Int): [StylistProfile!]!
+  searchStylists(input: StylistSearchInput!): StylistSearchResult!
+  popularStylists(limit: Int): [StylistProfile!]!
+  nearbyStylists(latitude: Float!, longitude: Float!, radius: Float!, limit: Int): [StylistProfile!]!
+
+  # Service queries
+  service(id: ID!): Service
+  services(stylistId: ID, category: String): [Service!]!
+  serviceCategories: [ServiceCategory!]!
+
+  # Booking queries
+  booking(id: ID!): Booking
+  myBookings(status: BookingStatus, limit: Int): [Booking!]!
+  upcomingBookings(limit: Int): [Booking!]!
+  bookingHistory(limit: Int, offset: Int): [Booking!]!
+  bookingEvents(bookingId: ID!): [BookingEvent!]! # Event sourcing query
+
+  # Review queries
+  reviews(stylistId: ID!, limit: Int, offset: Int): ReviewConnection!
+
+  # Availability queries
+  checkAvailability(stylistId: ID!, date: DateTime!): [AvailabilitySlot!]!
+
+  # Notification queries
+  myNotifications(limit: Int, unreadOnly: Boolean): [Notification!]!
+  unreadNotificationCount: Int!
+
+  # Analytics queries (for stylists/admins)
+  stylistStats(stylistId: ID!, startDate: DateTime, endDate: DateTime): StylistStats!
+}
+
+type ServiceCategory {
+  name: String!
+  count: Int!
+  minPrice: Float
+  maxPrice: Float
+  avgDuration: Int
+}
+
+type StylistStats {
+  totalBookings: Int!
+  completedBookings: Int!
+  totalRevenue: Float!
+  averageRating: Float!
+  totalReviews: Int!
+  bookingsByStatus: JSON!
+  revenueByMonth: JSON!
+}
+
+# ============================================
+# MUTATIONS
+# ============================================
+
+type Mutation {
+  # Authentication
+  login(email: String!, password: String!): AuthPayload!
+  register(input: RegisterInput!): AuthPayload!
+  logout: Boolean!
+
+  # Booking mutations
+  createBooking(input: CreateBookingInput!): BookingPayload!
+  confirmBooking(bookingId: ID!): BookingPayload!
+  cancelBooking(bookingId: ID!, reason: String): BookingPayload!
+  rescheduleBooking(bookingId: ID!, newDate: DateTime!, newTime: String!): BookingPayload!
+  completeBooking(bookingId: ID!): BookingPayload!
+
+  # Review mutations
+  createReview(input: CreateReviewInput!): ReviewPayload!
+  updateReview(reviewId: ID!, input: UpdateReviewInput!): ReviewPayload!
+
+  # Service mutations
+  createService(input: CreateServiceInput!): ServicePayload!
+  updateService(serviceId: ID!, input: UpdateServiceInput!): ServicePayload!
+  deleteService(serviceId: ID!): Boolean!
+
+  # Profile mutations
+  updateProfile(input: UpdateProfileInput!): UserPayload!
+  updateStylistProfile(input: UpdateStylistProfileInput!): StylistProfilePayload!
+
+  # Portfolio mutations
+  addPortfolioItem(input: AddPortfolioInput!): PortfolioPayload!
+  deletePortfolioItem(portfolioId: ID!): Boolean!
+
+  # Notification mutations
+  markNotificationRead(notificationId: ID!): Boolean!
+  markAllNotificationsRead: Boolean!
+}
+
+# ============================================
+# Input Types
+# ============================================
+
+input RegisterInput {
+  email: String!
+  password: String!
+  fullName: String!
+  phone: String
+  role: UserRole!
+}
+
+input CreateBookingInput {
+  stylistId: ID!
+  serviceId: ID!
+  bookingDate: DateTime!
+  bookingTime: String!
+  notes: String
+}
+
+input CreateReviewInput {
+  bookingId: ID!
+  rating: Float!
+  comment: String
+}
+
+input UpdateReviewInput {
+  rating: Float
+  comment: String
+}
+
+input CreateServiceInput {
+  name: String!
+  description: String
+  category: String!
+  price: Float!
+  duration: Int!
+}
+
+input UpdateServiceInput {
+  name: String
+  description: String
+  category: String
+  price: Float
+  duration: Int
+  isActive: Boolean
+}
+
+input UpdateProfileInput {
+  fullName: String
+  phone: String
+  profilePictureUrl: String
+}
+
+input UpdateStylistProfileInput {
+  businessName: String
+  bio: String
+  specialties: [String!]
+  locationCity: String
+  locationState: String
+  locationAddress: String
+}
+
+input AddPortfolioInput {
+  imageUrl: String!
+  caption: String
+  tags: [String!]
+}
+
+# ============================================
+# Payload Types
+# ============================================
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type BookingPayload {
+  booking: Booking!
+  event: BookingEvent! # Event sourcing - returns the event created
+}
+
+type ReviewPayload {
+  review: Review!
+}
+
+type ServicePayload {
+  service: Service!
+}
+
+type UserPayload {
+  user: User!
+}
+
+type StylistProfilePayload {
+  stylist: StylistProfile!
+}
+
+type PortfolioPayload {
+  portfolio: PortfolioItem!
+}
+
+# ============================================
+# SUBSCRIPTIONS (Real-time updates)
+# ============================================
+
+type Subscription {
+  # Booking updates
+  bookingUpdated(userId: ID!): Booking!
+
+  # New notifications
+  notificationReceived(userId: ID!): Notification!
+
+  # New messages
+  messageReceived(userId: ID!): Message!
+}
+
+type Message {
+  id: ID!
+  senderId: ID!
+  receiverId: ID!
+  content: String!
+  createdAt: DateTime!
+}

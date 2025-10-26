@@ -155,7 +155,7 @@ export default function BentoGrid({ isDarkMode }: BentoGridProps) {
                       {service.image && (
                         <div className="absolute inset-0">
                           <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-80`} />
-                          <img
+                          <img loading="lazy"
                             src={service.image}
                             alt={service.title}
                             className="w-full h-full object-cover opacity-30"

@@ -71,7 +71,7 @@ export default function AboutPage() {
         gradient="from-pink-500 via-purple-500 to-blue-500"
         isDarkMode={isDarkMode}
         height="h-96"
-        videoSrc="https://pub-56305a12c77043c9bd5de9db79a5e542.r2.dev/beautycita/videos/dancing-optimized.mp4"
+        videoSrc="https://pub-56305a12c77043c9bd5de9db79a5e542.r2.dev/beautycita/videos/banner1.mp4"
       />
 
       {/* Stats */}

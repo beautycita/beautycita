@@ -1,6 +1,7 @@
 const express = require('express');
 const { query } = require('./db');
 const SMSService = require('./smsService');
+const EmailNotifications = require("./emailNotifications");
 // const StripeConnectService = require('./services/stripeConnectService');
 const router = express.Router();
 
@@ -313,6 +314,11 @@ router.post('/confirm', async (req, res) => {
     }
 
     console.log(`Payment confirmed: Booking ${booking.rows[0].id}, Status: PENDING_STYLIST_APPROVAL, Expires: ${requestExpiresAt}`);
+
+    // Send payment receipt email
+    EmailNotifications.sendPaymentReceipt(paymentIntentId).catch(err => {
+      console.error('Failed to send payment receipt:', err);
+    });
 
     res.json({
       success: true,

@@ -167,7 +167,7 @@ export default function PortfolioManager() {
                 {/* Before/After Images */}
                 <div className="grid grid-cols-2 gap-1">
                   <div className="relative aspect-square">
-                    <img
+                    <img loading="lazy"
                       src={item.before_photo_url}
                       alt="Antes"
                       className="w-full h-full object-cover rounded-tl-lg"
@@ -177,7 +177,7 @@ export default function PortfolioManager() {
                     </div>
                   </div>
                   <div className="relative aspect-square">
-                    <img
+                    <img loading="lazy"
                       src={item.after_photo_url}
                       alt="Después"
                       className="w-full h-full object-cover rounded-tr-lg"
@@ -392,7 +392,7 @@ function UploadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (
                 </label>
                 {beforePreview ? (
                   <div className="relative aspect-square">
-                    <img
+                    <img loading="lazy"
                       src={beforePreview}
                       alt="Antes"
                       className="w-full h-full object-cover rounded-full"
@@ -434,7 +434,7 @@ function UploadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: (
                 </label>
                 {afterPreview ? (
                   <div className="relative aspect-square">
-                    <img
+                    <img loading="lazy"
                       src={afterPreview}
                       alt="Después"
                       className="w-full h-full object-cover rounded-full"

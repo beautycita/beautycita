@@ -103,10 +103,10 @@ export default function Footer() {
   }
 
   const socialLinks = [
-    { name: 'Facebook', href: 'https://facebook.com/beautycita', icon: FacebookIcon },
-    { name: 'Twitter', href: 'https://twitter.com/beautycita', icon: TwitterIcon },
-    { name: 'Instagram', href: 'https://instagram.com/beautycita', icon: InstagramIcon },
-    { name: 'LinkedIn', href: 'https://linkedin.com/company/beautycita', icon: LinkedInIcon },
+    //     { name: 'Facebook', href: 'https://facebook.com/beautycita', icon: FacebookIcon },
+    //     { name: 'Twitter', href: 'https://twitter.com/beautycita', icon: TwitterIcon },
+    //     { name: 'Instagram', href: 'https://instagram.com/beautycita', icon: InstagramIcon },
+    //     { name: 'LinkedIn', href: 'https://linkedin.com/company/beautycita', icon: LinkedInIcon },
   ]
 
   return (
