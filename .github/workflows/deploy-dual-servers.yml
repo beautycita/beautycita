@@ -30,6 +30,8 @@ jobs:
         working-directory: ./frontend
         env:
           NODE_ENV: production
+          VITE_API_URL: https://beautycita.com/api
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
         run: npm run build
 
       - name: Upload build artifacts
