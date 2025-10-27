@@ -143,3 +143,21 @@ secrets.json
 
 # AI/ML directories
 /rasa/
+
+# BFG reports
+..bfg-report/
+bfg.jar
+
+# Claude settings
+.claude/settings.local.json
+
+# Backend runtime files
+backend/claude-agent.pid
+backend/uploads/profiles/
+
+# Backup scripts (will version separately)
+scripts/backup-full-system.sh
+scripts/setup-backup-cron.sh
+.env*
+GITHUB_SECRETS_SETUP.md
+API_KEYS_STATUS.md

@@ -131,68 +131,71 @@ export default function StripeOnboardingPage() {
   // Not yet onboarded
   if (!status?.hasStripeAccount) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-2xl overflow-hidden"
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border border-gray-100 dark:border-gray-700"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-8 text-center">
-              <CreditCardIcon className="w-16 h-16 text-white mx-auto mb-4" />
-              <h1 className="text-3xl font-bold text-white mb-2">Get Paid with BeautyCita</h1>
-              <p className="text-purple-100">Set up your payment account to start earning</p>
+            <div className="relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-600 to-blue-500 opacity-100"></div>
+              <div className="relative z-10 p-8 text-center">
+                <CreditCardIcon className="w-16 h-16 text-white mx-auto mb-4" />
+                <h1 className="text-3xl md:text-4xl font-serif font-bold text-white mb-2">Get Paid with BeautyCita</h1>
+                <p className="text-white/90 text-lg">Set up your payment account to start earning</p>
+              </div>
             </div>
 
             {/* Content */}
             <div className="p-8">
               <div className="space-y-6 mb-8">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-3xl flex items-center justify-center">
-                    <BanknotesIcon className="w-6 h-6 text-green-600" />
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center shadow-lg">
+                    <BanknotesIcon className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Secure Payments</h3>
-                    <p className="text-gray-600 text-sm">
+                    <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Secure Payments</h3>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm">
                       Receive payments directly to your bank account through Stripe, trusted by millions
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-3xl flex items-center justify-center">
-                    <ShieldCheckIcon className="w-6 h-6 text-blue-600" />
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
+                    <ShieldCheckIcon className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Bank-Level Security</h3>
-                    <p className="text-gray-600 text-sm">
+                    <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Bank-Level Security</h3>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm">
                       Your financial information is encrypted and protected by industry-leading security
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-purple-100 rounded-3xl flex items-center justify-center">
-                    <CheckCircleIcon className="w-6 h-6 text-purple-600" />
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+                    <CheckCircleIcon className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Fast Setup</h3>
-                    <p className="text-gray-600 text-sm">
+                    <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Fast Setup</h3>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm">
                       Complete the setup in just a few minutes and start accepting bookings
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-yellow-50 border border-yellow-200 rounded-3xl p-4 mb-6">
+              <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-800 rounded-2xl p-4 mb-6">
                 <div className="flex gap-3">
-                  <ExclamationTriangleIcon className="w-5 h-5 text-yellow-600 flex-shrink-0" />
+                  <ExclamationTriangleIcon className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold text-yellow-900 text-sm mb-1">
+                    <h4 className="font-semibold text-amber-900 dark:text-amber-200 text-sm mb-1">
                       You'll Need:
                     </h4>
-                    <ul className="text-sm text-yellow-800 space-y-1">
+                    <ul className="text-sm text-amber-800 dark:text-amber-300 space-y-1">
                       <li>• Government-issued ID</li>
                       <li>• Social Security Number (or Tax ID)</li>
                       <li>• Bank account information</li>
@@ -205,7 +208,7 @@ export default function StripeOnboardingPage() {
               <button
                 onClick={startOnboarding}
                 disabled={processing}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold py-4 px-6 rounded-3xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold py-4 px-6 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
                 {processing ? (
                   <>
@@ -220,7 +223,7 @@ export default function StripeOnboardingPage() {
                 )}
               </button>
 
-              <p className="text-center text-sm text-gray-500 mt-4">
+              <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
                 Powered by Stripe • Secure & Compliant
               </p>
             </div>
@@ -233,53 +236,56 @@ export default function StripeOnboardingPage() {
   // Onboarding incomplete
   if (!status.detailsSubmitted || !status.chargesEnabled) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-2xl overflow-hidden"
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border border-gray-100 dark:border-gray-700"
           >
-            <div className="bg-gradient-to-r from-yellow-500 to-orange-500 p-8 text-center">
-              <ExclamationTriangleIcon className="w-16 h-16 text-white mx-auto mb-4" />
-              <h1 className="text-3xl font-bold text-white mb-2">Complete Your Setup</h1>
-              <p className="text-yellow-100">Finish setting up your payment account</p>
+            <div className="relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-500 opacity-100"></div>
+              <div className="relative z-10 p-8 text-center">
+                <ExclamationTriangleIcon className="w-16 h-16 text-white mx-auto mb-4" />
+                <h1 className="text-3xl md:text-4xl font-serif font-bold text-white mb-2">Complete Your Setup</h1>
+                <p className="text-white/90 text-lg">Finish setting up your payment account</p>
+              </div>
             </div>
 
             <div className="p-8">
               <div className="space-y-4 mb-8">
                 <div className="flex items-center gap-3">
                   {status.detailsSubmitted ? (
-                    <CheckCircleIcon className="w-6 h-6 text-green-500" />
+                    <CheckCircleIcon className="w-6 h-6 text-emerald-500" />
                   ) : (
                     <XCircleIcon className="w-6 h-6 text-red-500" />
                   )}
-                  <span className="text-gray-700">Business details submitted</span>
+                  <span className="text-gray-700 dark:text-gray-300">Business details submitted</span>
                 </div>
                 <div className="flex items-center gap-3">
                   {status.chargesEnabled ? (
-                    <CheckCircleIcon className="w-6 h-6 text-green-500" />
+                    <CheckCircleIcon className="w-6 h-6 text-emerald-500" />
                   ) : (
                     <XCircleIcon className="w-6 h-6 text-red-500" />
                   )}
-                  <span className="text-gray-700">Charges enabled</span>
+                  <span className="text-gray-700 dark:text-gray-300">Charges enabled</span>
                 </div>
                 <div className="flex items-center gap-3">
                   {status.payoutsEnabled ? (
-                    <CheckCircleIcon className="w-6 h-6 text-green-500" />
+                    <CheckCircleIcon className="w-6 h-6 text-emerald-500" />
                   ) : (
                     <XCircleIcon className="w-6 h-6 text-red-500" />
                   )}
-                  <span className="text-gray-700">Payouts enabled</span>
+                  <span className="text-gray-700 dark:text-gray-300">Payouts enabled</span>
                 </div>
               </div>
 
               {status.requirements && status.requirements.currently_due.length > 0 && (
-                <div className="bg-red-50 border border-red-200 rounded-3xl p-4 mb-6">
-                  <h4 className="font-semibold text-red-900 text-sm mb-2">
+                <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-2xl p-4 mb-6">
+                  <h4 className="font-semibold text-red-900 dark:text-red-200 text-sm mb-2">
                     Required Information:
                   </h4>
-                  <ul className="text-sm text-red-800 space-y-1">
+                  <ul className="text-sm text-red-800 dark:text-red-300 space-y-1">
                     {status.requirements.currently_due.map((req) => (
                       <li key={req}>• {req.replace(/_/g, ' ')}</li>
                     ))}
@@ -290,7 +296,7 @@ export default function StripeOnboardingPage() {
               <button
                 onClick={continueOnboarding}
                 disabled={processing}
-                className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold py-4 px-6 rounded-3xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold py-4 px-6 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
                 {processing ? (
                   <>
@@ -313,46 +319,49 @@ export default function StripeOnboardingPage() {
 
   // Fully onboarded
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl shadow-2xl overflow-hidden"
+          className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border border-gray-100 dark:border-gray-700"
         >
-          <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-8 text-center">
-            <CheckCircleIcon className="w-16 h-16 text-white mx-auto mb-4" />
-            <h1 className="text-3xl font-bold text-white mb-2">You're All Set!</h1>
-            <p className="text-green-100">Your payment account is fully configured</p>
+          <div className="relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 opacity-100"></div>
+            <div className="relative z-10 p-8 text-center">
+              <CheckCircleIcon className="w-16 h-16 text-white mx-auto mb-4" />
+              <h1 className="text-3xl md:text-4xl font-serif font-bold text-white mb-2">You're All Set!</h1>
+              <p className="text-white/90 text-lg">Your payment account is fully configured</p>
+            </div>
           </div>
 
           <div className="p-8">
             <div className="space-y-4 mb-8">
               <div className="flex items-center gap-3">
-                <CheckCircleIcon className="w-6 h-6 text-green-500" />
-                <span className="text-gray-700">Ready to accept payments</span>
+                <CheckCircleIcon className="w-6 h-6 text-emerald-500" />
+                <span className="text-gray-700 dark:text-gray-300">Ready to accept payments</span>
               </div>
               <div className="flex items-center gap-3">
-                <CheckCircleIcon className="w-6 h-6 text-green-500" />
-                <span className="text-gray-700">Payouts enabled</span>
+                <CheckCircleIcon className="w-6 h-6 text-emerald-500" />
+                <span className="text-gray-700 dark:text-gray-300">Payouts enabled</span>
               </div>
               <div className="flex items-center gap-3">
-                <CheckCircleIcon className="w-6 h-6 text-green-500" />
-                <span className="text-gray-700">Account verified</span>
+                <CheckCircleIcon className="w-6 h-6 text-emerald-500" />
+                <span className="text-gray-700 dark:text-gray-300">Account verified</span>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <button
                 onClick={goToDashboard}
                 disabled={processing}
-                className="bg-purple-600 text-white font-semibold py-3 px-6 rounded-3xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
                 Stripe Dashboard
               </button>
               <button
                 onClick={() => navigate('/dashboard/stylist')}
-                className="bg-gray-100 text-gray-700 font-semibold py-3 px-6 rounded-3xl hover:bg-gray-200 transition-colors"
+                className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-white font-semibold py-3 px-6 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
               >
                 Back to Dashboard
               </button>
