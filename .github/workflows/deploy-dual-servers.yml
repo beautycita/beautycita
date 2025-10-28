@@ -30,7 +30,15 @@ jobs:
           NODE_ENV: production
           VITE_API_URL: https://beautycita.com/api
           VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
-        run: npm run build
+        run: |
+          echo "=== Starting frontend build ==="
+          echo "Node version: $(node --version)"
+          echo "NPM version: $(npm --version)"
+          echo "Working directory: $(pwd)"
+          echo "=== Installed dependencies ==="
+          npm list --depth=0 || true
+          echo "=== Running build ==="
+          npm run build 2>&1 | tee build.log || (echo "BUILD FAILED" && cat build.log && exit 1)
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
