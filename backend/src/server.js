@@ -2817,13 +2817,13 @@ app.use("/api", calendarRoutes);
 
 app.use('/api', securityRoutes);
 
-// Sentry error handler - must be AFTER all routes
-if (process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN) {
-  app.use(Sentry.Handlers.requestHandler());
-  app.use(Sentry.Handlers.tracingHandler());
-  app.use(Sentry.Handlers.errorHandler());
-}
-
+// // Sentry error handler - must be AFTER all routes
+// if (process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN) {
+//   app.use(Sentry.Handlers.requestHandler());
+//   app.use(Sentry.Handlers.tracingHandler());
+//   app.use(Sentry.Handlers.errorHandler());
+// }
+// 
 // Serve static files
 app.use(express.static(path.join(__dirname, '../../public')));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
