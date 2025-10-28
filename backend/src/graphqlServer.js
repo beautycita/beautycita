@@ -1,4 +1,5 @@
-const { ApolloServer } = require('apollo-server-express');
+const { ApolloServer } = require('@apollo/server');
+const { expressMiddleware } = require('@apollo/server/express4');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 const { readFileSync } = require('fs');
 const { join } = require('path');
@@ -590,44 +591,39 @@ const schema = makeExecutableSchema({
 async function createGraphQLServer(app) {
   const server = new ApolloServer({
     schema,
-    context: async ({ req }) => {
-      // Extract JWT token from header
-      const token = req.headers.authorization?.replace('Bearer ', '');
-
-      let user = null;
-      if (token) {
-        try {
-          // Validate JWT and extract user info
-          const decoded = validateJWT(token);
-          user = {
-            userId: decoded.userId,
-            email: decoded.email,
-            role: decoded.role,
-            userAgent: req.headers['user-agent'],
-            ipAddress: req.ip
-          };
-        } catch (error) {
-          // Invalid token - user remains null (public access)
-          console.log('Invalid JWT token:', error.message);
-        }
-      }
-
-      return {
-        user,
-        db,
-        cacheService
-      };
-    },
     formatError: (error) => {
       console.error('GraphQL Error:', error);
       return error;
     },
     introspection: process.env.NODE_ENV !== 'production',
-    playground: process.env.NODE_ENV !== 'production'
   });
 
   await server.start();
-  server.applyMiddleware({ app, path: '/graphql' });
+
+  app.use(
+    '/graphql',
+    expressMiddleware(server, {
+      context: async ({ req }) => {
+        const token = req.headers.authorization?.replace('Bearer ', '');
+        let user = null;
+        if (token) {
+          try {
+            const decoded = validateJWT(token);
+            user = {
+              userId: decoded.userId,
+              email: decoded.email,
+              role: decoded.role,
+              userAgent: req.headers['user-agent'],
+              ipAddress: req.ip
+            };
+          } catch (error) {
+            console.log('Invalid JWT token:', error.message);
+          }
+        }
+        return { user, db, cacheService };
+      }
+    })
+  );
 
   console.log(`🚀 GraphQL server ready at /graphql`);
 

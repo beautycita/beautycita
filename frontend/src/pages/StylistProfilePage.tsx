@@ -48,11 +48,11 @@ export default function StylistProfilePage() {
       if (response.success && response.data) {
         setStylist(response.data)
       } else {
-        toast.error(t('stylistProfile.errors.loadFailed'))
+        toast.error(t('panel.stylistProfile.errors.loadFailed'))
       }
     } catch (error) {
       console.error('Error loading stylist profile:', error)
-      toast.error(t('stylistProfile.errors.loadError'))
+      toast.error(t('panel.stylistProfile.errors.loadError'))
     }
   }
 
@@ -75,7 +75,7 @@ export default function StylistProfilePage() {
 
   const handleBookService = (serviceId: string) => {
     if (!isAuthenticated) {
-      toast.error(t('stylistProfile.errors.signInRequired'))
+      toast.error(t('panel.stylistProfile.errors.signInRequired'))
       navigate('/login')
       return
     }
@@ -84,14 +84,14 @@ export default function StylistProfilePage() {
 
   const handleBookStylist = () => {
     if (!isAuthenticated) {
-      toast.error(t('stylistProfile.errors.signInRequired'))
+      toast.error(t('panel.stylistProfile.errors.signInRequired'))
       navigate('/login')
       return
     }
     if (stylist?.services && stylist.services.length > 0) {
       navigate(`/book/${id}/${stylist.services[0].id}`)
     } else {
-      toast.error(t('stylistProfile.errors.noServices'))
+      toast.error(t('panel.stylistProfile.errors.noServices'))
     }
   }
 
@@ -112,16 +112,16 @@ export default function StylistProfilePage() {
           className="text-center bg-white dark:bg-gray-800 rounded-3xl p-12 shadow-xl max-w-md mx-4"
         >
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-            {t('stylistProfile.notFound.title')}
+            {t('panel.stylistProfile.notFound.title')}
           </h1>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
-            {t('stylistProfile.notFound.description')}
+            {t('panel.stylistProfile.notFound.description')}
           </p>
           <Link
             to="/stylists"
             className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-full font-semibold hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 transition-all shadow-lg hover:shadow-xl"
           >
-            {t('stylistProfile.notFound.backButton')}
+            {t('panel.stylistProfile.notFound.backButton')}
           </Link>
         </motion.div>
       </div>
@@ -129,10 +129,10 @@ export default function StylistProfilePage() {
   }
 
   const tabs = [
-    { key: 'about', label: t('stylistProfile.tabs.about') },
-    { key: 'services', label: t('stylistProfile.tabs.services') },
-    { key: 'portfolio', label: t('stylistProfile.tabs.portfolio') },
-    { key: 'reviews', label: t('stylistProfile.tabs.reviews') }
+    { key: 'about', label: t('panel.stylistProfile.tabs.about') },
+    { key: 'services', label: t('panel.stylistProfile.tabs.services') },
+    { key: 'portfolio', label: t('panel.stylistProfile.tabs.portfolio') },
+    { key: 'reviews', label: t('panel.stylistProfile.tabs.reviews') }
   ] as const
 
   return (
@@ -146,7 +146,7 @@ export default function StylistProfilePage() {
           className="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white mb-6 transition-colors group"
         >
           <ArrowLeftIcon className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-          {t('stylistProfile.back')}
+          {t('panel.stylistProfile.back')}
         </motion.button>
 
         {/* Profile Hero Card */}
@@ -184,7 +184,7 @@ export default function StylistProfilePage() {
                         {stylist.business_name}
                       </h1>
                       {stylist.is_verified && (
-                        <CheckBadgeIcon className="w-8 h-8 text-blue-500" title={t('stylistProfile.verified')} />
+                        <CheckBadgeIcon className="w-8 h-8 text-blue-500" title={t('panel.stylistProfile.verified')} />
                       )}
                     </div>
                     <p className="text-xl text-gray-700 dark:text-gray-300 font-medium mb-3">{stylist.name}</p>
@@ -195,7 +195,7 @@ export default function StylistProfilePage() {
                       </div>
                       <div className="flex items-center">
                         <ClockIcon className="w-4 h-4 mr-1" />
-                        <span>{stylist.experience_years} {t('stylistProfile.yearsExperience')}</span>
+                        <span>{stylist.experience_years} {t('panel.stylistProfile.yearsExperience')}</span>
                       </div>
                     </div>
                     <div className="flex flex-wrap items-center gap-4 mb-4">
@@ -205,11 +205,11 @@ export default function StylistProfilePage() {
                           {parseFloat(stylist.rating_average.toString()).toFixed(1)}
                         </span>
                         <span className="text-gray-600 dark:text-gray-400 ml-1">
-                          ({stylist.rating_count} {t('stylistProfile.reviews')})
+                          ({stylist.rating_count} {t('panel.stylistProfile.reviews')})
                         </span>
                       </div>
                       <div className="flex items-center text-gray-600 dark:text-gray-400 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full">
-                        <span>{stylist.total_bookings} {t('stylistProfile.completedAppointments')}</span>
+                        <span>{stylist.total_bookings} {t('panel.stylistProfile.completedAppointments')}</span>
                       </div>
                     </div>
                   </div>
@@ -258,7 +258,7 @@ export default function StylistProfilePage() {
                     className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-full font-semibold hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 transition-all shadow-lg hover:shadow-xl"
                   >
                     <CalendarDaysIcon className="w-5 h-5 mr-2" />
-                    {t('stylistProfile.bookAppointment')}
+                    {t('panel.stylistProfile.bookAppointment')}
                   </button>
                 </div>
               </div>
@@ -305,7 +305,7 @@ export default function StylistProfilePage() {
               {stylist.bio && (
                 <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-lg p-8">
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                    {t('stylistProfile.aboutMe')}
+                    {t('panel.stylistProfile.aboutMe')}
                   </h3>
                   <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">{stylist.bio}</p>
                 </div>
@@ -316,7 +316,7 @@ export default function StylistProfilePage() {
                 <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-lg p-8">
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                     <AcademicCapIcon className="w-6 h-6 mr-2 text-purple-600" />
-                    {t('stylistProfile.certifications')}
+                    {t('panel.stylistProfile.certifications')}
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {stylist.certifications.map((cert, index) => (
@@ -333,7 +333,7 @@ export default function StylistProfilePage() {
               {stylist.social_media_links && (
                 <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-lg p-8">
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                    {t('stylistProfile.socialMedia')}
+                    {t('panel.stylistProfile.socialMedia')}
                   </h3>
                   <div className="flex flex-wrap gap-4">
                     {stylist.social_media_links.instagram && (
@@ -366,7 +366,7 @@ export default function StylistProfilePage() {
           {activeTab === 'services' && (
             <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-lg p-8">
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                {t('stylistProfile.availableServices')}
+                {t('panel.stylistProfile.availableServices')}
               </h3>
               {services.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -396,7 +396,7 @@ export default function StylistProfilePage() {
                             onClick={() => handleBookService(service.id)}
                             className="px-6 py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-full font-semibold hover:from-pink-600 hover:to-purple-600 transition-all shadow-md hover:shadow-lg"
                           >
-                            {t('stylistProfile.book')}
+                            {t('panel.stylistProfile.book')}
                           </button>
                         </div>
                       </div>
@@ -406,13 +406,13 @@ export default function StylistProfilePage() {
               ) : (
                 <div className="text-center py-12">
                   <p className="text-gray-500 dark:text-gray-400 mb-6">
-                    {t('stylistProfile.noServicesYet')}
+                    {t('panel.stylistProfile.noServicesYet')}
                   </p>
                   <button
                     onClick={handleBookStylist}
                     className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white rounded-full font-semibold hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 transition-all shadow-lg hover:shadow-xl"
                   >
-                    {t('stylistProfile.contactForInfo')}
+                    {t('panel.stylistProfile.contactForInfo')}
                   </button>
                 </div>
               )}

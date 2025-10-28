@@ -1,5 +1,24 @@
 // Load environment variables FIRST (before any other imports)
 require('dotenv').config({ path: '/var/www/beautycita.com/.env' });
+
+// Initialize Sentry for error tracking
+const Sentry = require('@sentry/node');
+// const { ProfilingIntegration } = require('@sentry/profiling-node');
+
+if (process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    integrations: [
+      // new ProfilingIntegration(),
+    ],
+    tracesSampleRate: 0.1,
+    profilesSampleRate: 0.1,
+    environment: process.env.NODE_ENV || 'development',
+    release: 'beautycita-backend@1.0.0',
+  });
+  console.log('✅ Sentry initialized for backend');
+}
+
 const express = require('express');
 const http = require('http');
 const path = require('path');
@@ -1890,8 +1909,8 @@ app.get('/api/stylists/:id/services', async (req, res) => {
 
 // Create new booking
 app.post('/api/bookings', validateJWT, async (req, res) => {
-  // Check if user is CLIENT
-  if (req.userRole !== 'CLIENT') {
+  // Check if user is CLIENT or STYLIST (stylists can book services from other stylists)
+  if (req.userRole !== 'CLIENT' && req.userRole !== 'STYLIST') {
     return res.status(403).json({ success: false, message: 'Insufficient permissions' });
   }
   try {
@@ -2797,6 +2816,13 @@ app.use("/api/users", gdprRoutes);
 app.use("/api", calendarRoutes);
 
 app.use('/api', securityRoutes);
+
+// Sentry error handler - must be AFTER all routes
+if (process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN) {
+  app.use(Sentry.Handlers.requestHandler());
+  app.use(Sentry.Handlers.tracingHandler());
+  app.use(Sentry.Handlers.errorHandler());
+}
 
 // Serve static files
 app.use(express.static(path.join(__dirname, '../../public')));

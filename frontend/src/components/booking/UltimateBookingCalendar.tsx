@@ -296,6 +296,7 @@ export default function UltimateBookingCalendar({
       <div className="flex items-center justify-center gap-2 bg-gray-100 p-2 rounded-2xl w-fit mx-auto">
         {(['month', 'week', 'time'] as const).map((mode) => (
           <button
+            type="button"
             key={mode}
             onClick={() => {
               setViewMode(mode)
@@ -341,7 +342,7 @@ export default function UltimateBookingCalendar({
           >
             {/* Month Navigation */}
             <div className="flex items-center justify-between mb-6">
-              <button
+              <button type="button"
                 onClick={() => handleMonthNav('prev')}
                 className="p-3 hover:bg-gray-100 rounded-2xl transition-all hover:scale-110"
               >
@@ -352,7 +353,7 @@ export default function UltimateBookingCalendar({
                 {format(currentDate, 'MMMM yyyy')}
               </h3>
 
-              <button
+              <button type="button"
                 onClick={() => handleMonthNav('next')}
                 className="p-3 hover:bg-gray-100 rounded-2xl transition-all hover:scale-110"
               >
@@ -466,7 +467,7 @@ export default function UltimateBookingCalendar({
             className="bg-white rounded-3xl shadow-xl p-6"
           >
             <div className="flex items-center justify-between mb-6">
-              <button
+              <button type="button"
                 onClick={() => handleWeekNav('prev')}
                 className="p-3 hover:bg-gray-100 rounded-2xl transition-all hover:scale-110"
               >
@@ -477,7 +478,7 @@ export default function UltimateBookingCalendar({
                 {format(weekDays[0], 'MMM d')} - {format(weekDays[6], 'MMM d, yyyy')}
               </h3>
 
-              <button
+              <button type="button"
                 onClick={() => handleWeekNav('next')}
                 className="p-3 hover:bg-gray-100 rounded-2xl transition-all hover:scale-110"
               >
@@ -552,7 +553,7 @@ export default function UltimateBookingCalendar({
                 animate={{ opacity: 1, height: 'auto' }}
                 className="mt-6 text-center"
               >
-                <button
+                <button type="button"
                   onClick={() => setViewMode('time')}
                   className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all hover:scale-105"
                 >
@@ -582,7 +583,7 @@ export default function UltimateBookingCalendar({
                 <p className="text-gray-500">Select your preferred time</p>
               </div>
 
-              <button
+              <button type="button"
                 onClick={() => setViewMode('week')}
                 className="px-4 py-2 text-purple-600 hover:bg-purple-50 rounded-xl transition-all font-medium"
               >
@@ -614,7 +615,7 @@ export default function UltimateBookingCalendar({
                 <p className="text-gray-500 mb-6">
                   This date is fully booked. Please try another day.
                 </p>
-                <button
+                <button type="button"
                   onClick={() => setViewMode('week')}
                   className="px-6 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all font-medium"
                 >

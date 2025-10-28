@@ -10,7 +10,20 @@
       "Bash(npm test:*)",
       "Read(//home/beautycita/img/**)",
       "Read(//home/beautycita/**)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Read(//var/www/**)",
+      "Bash(PGPASSWORD='qGXA1CR3FVnsq4fp78Z6h31ROzzU2DJsSF0lX1Aq7Uk=' psql -h localhost -U beautycita_app -d beautycita -c \"SELECT pg_size_pretty(pg_database_size(''beautycita'')) as db_size;\")",
+      "Bash(chmod:*)",
+      "Bash(git remote get-url:*)",
+      "Bash(PGPASSWORD='qGXA1CR3FVnsq4fp78Z6h31ROzzU2DJsSF0lX1Aq7Uk=' psql -h localhost -U beautycita_app -d beautycita -c \"SELECT id, email, phone, role, phone_verified FROM users WHERE phone IN (''+523221215551'', ''+527206777070'');\")",
+      "Bash(PGPASSWORD='qGXA1CR3FVnsq4fp78Z6h31ROzzU2DJsSF0lX1Aq7Uk=' psql -h localhost -U beautycita_app -d beautycita -c \"SELECT id, email, phone, role, phone_verified, is_active FROM users ORDER BY created_at DESC LIMIT 10;\")",
+      "Read(//tmp/**)",
+      "Bash(curl:*)",
+      "Bash(tailscale:*)",
+      "Bash(netstat:*)",
+      "Bash(ss:*)",
+      "Read(//etc/nginx/sites-enabled/**)",
+      "Read(//etc/prometheus/**)"
     ],
     "deny": [],
     "ask": []

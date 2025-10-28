@@ -81,29 +81,57 @@ export default function BookingPage() {
   const loadBookingData = async () => {
     try {
       setLoading(true)
-      const [stylistResponse, servicesResponse, paymentMethodsResponse] = await Promise.all([
+
+      // Load stylist and services
+      const [stylistResponse, servicesResponse] = await Promise.all([
         bookingService.getStylist(stylistId!),
-        bookingService.getStylistServices(stylistId!),
-        axios.get('/api/payment-methods', {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-        })
+        bookingService.getStylistServices(stylistId!)
       ])
+
+      console.log('Stylist response:', stylistResponse)
+      console.log('Services response:', servicesResponse)
+      console.log('Looking for service ID:', serviceId, 'type:', typeof serviceId)
 
       if (stylistResponse.success && stylistResponse.data) {
         setStylist(stylistResponse.data)
+      } else {
+        console.error('Failed to load stylist:', stylistResponse)
       }
 
       if (servicesResponse.success && servicesResponse.data) {
-        const selectedService = servicesResponse.data.find((s: StylistService) => s.id === parseInt(serviceId!))
+        console.log('Services data:', servicesResponse.data)
+        console.log('First service:', servicesResponse.data[0])
+
+        const selectedService = servicesResponse.data.find((s: any) => {
+          console.log('Comparing service', s.id, 'with', serviceId, ':', String(s.id) === String(serviceId))
+          // Handle both string and number IDs
+          return String(s.id) === String(serviceId)
+        })
+
+        console.log('Selected service:', selectedService)
+
         if (selectedService) {
           setService(selectedService)
         } else {
+          console.error('Service not found. Available services:', servicesResponse.data.map((s: any) => s.id))
           toast.error(t('booking.messages.serviceNotFound'))
           navigate('/stylists')
+          return
         }
+      } else {
+        console.error('Failed to load services:', servicesResponse)
       }
 
-      setPaymentMethods(paymentMethodsResponse.data || [])
+      // Load payment methods separately (may fail if not logged in)
+      try {
+        const paymentMethodsResponse = await axios.get('/api/payment-methods', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        })
+        setPaymentMethods(paymentMethodsResponse.data || [])
+      } catch (error) {
+        console.warn('Could not load payment methods:', error)
+        setPaymentMethods([])
+      }
     } catch (error) {
       console.error('Error loading booking data:', error)
       toast.error(t('booking.messages.loadError'))
@@ -292,9 +320,10 @@ export default function BookingPage() {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchemas[currentStep]}
-          onSubmit={(values) => {
+          onSubmit={(values, { setSubmitting }) => {
             if (currentStep < steps.length - 1) {
               setCurrentStep(currentStep + 1)
+              setSubmitting(false)
             } else {
               handleSubmit(values)
             }

@@ -107,6 +107,7 @@ const BlogPostPage = lazy(() => import('./pages/BlogPostPage'))
 const HelpPage = lazy(() => import('./pages/HelpPage'))
 const StylistGuidePage = lazy(() => import('./pages/StylistGuidePage'))
 const ContactPage = lazy(() => import('./pages/ContactPage'))
+const BtcPaymentSupportPage = lazy(() => import('./pages/BtcPaymentSupportPage'))
 const StatusPage = lazy(() => import('./pages/StatusPage'))
 const ReportPage = lazy(() => import('./pages/ReportPage'))
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'))
@@ -215,6 +216,7 @@ function AppLayout() {
                   <Route path="/help" element={<HelpPage />} />
                   <Route path="/stylist-guide" element={<StylistGuidePage />} />
                   <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/support/btc-payment" element={<BtcPaymentSupportPage />} />
                   <Route path="/status" element={<StatusPage />} />
                   <Route path="/report" element={<ReportPage />} />
                   <Route path="/privacy" element={<PrivacyPage />} />

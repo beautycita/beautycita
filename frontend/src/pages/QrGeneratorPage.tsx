@@ -52,8 +52,8 @@ interface QRCustomization {
 }
 
 export default function QrGeneratorPage() {
-  const [qrType, setQrType] = useState<QRType>('profile')
-  const [customUrl, setCustomUrl] = useState('')
+  const [qrType, setQrType] = useState<QRType>('custom')
+  const [customUrl, setCustomUrl] = useState('https://beautycita.com')
   const [stylistId, setStylistId] = useState('')
   const [serviceId, setServiceId] = useState('')
   const [promoCode, setPromoCode] = useState('')
@@ -64,26 +64,26 @@ export default function QrGeneratorPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const logoInputRef = useRef<HTMLInputElement>(null)
 
-  // QR Customization state
+  // QR Customization state - BeautyCita branded defaults
   const [customization, setCustomization] = useState<QRCustomization>({
-    moduleStyle: 'rounded',
-    moduleColor: '#000000',
+    moduleStyle: 'extra-rounded',
+    moduleColor: '#ec4899',
     backgroundColor: '#ffffff',
     useGradient: true,
     gradientType: 'linear',
-    gradientColor1: '#ec4899',
-    gradientColor2: '#a855f7',
-    gradientColor3: '#3b82f6',
-    finderStyle: 'rounded',
-    finderInnerStyle: 'rounded',
-    finderOuterColor: '#000000',
-    finderInnerColor: '#000000',
+    gradientColor1: '#ec4899', // pink-500
+    gradientColor2: '#9333ea', // purple-600
+    gradientColor3: '#3b82f6', // blue-500
+    finderStyle: 'rounded', // curved-corner square for outer
+    finderInnerStyle: 'dots', // heart shape for inner pupil
+    finderOuterColor: '#9333ea', // purple gradient color
+    finderInnerColor: '#ec4899', // pink gradient color
     logoImage: null,
-    logoSize: 100,
-    logoMargin: 10,
+    logoSize: 120,
+    logoMargin: 20,
     errorCorrection: 'H',
     size: 500,
-    margin: 2
+    margin: 4
   })
 
   const baseUrl = import.meta.env.VITE_APP_URL || 'https://beautycita.com'
@@ -92,7 +92,7 @@ export default function QrGeneratorPage() {
   useEffect(() => {
     const loadDefaultLogo = async () => {
       try {
-        const response = await fetch('/media/brand/official-logo.svg')
+        const response = await fetch('/logo-icon.svg')
         const svgText = await response.text()
         const blob = new Blob([svgText], { type: 'image/svg+xml' })
         const reader = new FileReader()
@@ -567,8 +567,29 @@ export default function QrGeneratorPage() {
       roundRect(ctx, x + innerOffset, y + innerOffset, innerSize, innerSize, innerSize * 0.2)
       ctx.fill()
     } else if (innerStyle === 'dots') {
+      // Draw heart shape for BeautyCita branded QR
       ctx.beginPath()
-      ctx.arc(cx, cy, innerSize / 2, 0, Math.PI * 2)
+      const heartSize = innerSize * 0.8
+      const topCurveHeight = heartSize * 0.3
+
+      // Start at bottom point of heart
+      ctx.moveTo(cx, cy + heartSize / 2)
+
+      // Left side of heart
+      ctx.bezierCurveTo(
+        cx - heartSize / 2, cy + heartSize / 4,
+        cx - heartSize / 2, cy - topCurveHeight,
+        cx, cy - topCurveHeight
+      )
+
+      // Right side of heart
+      ctx.bezierCurveTo(
+        cx + heartSize / 2, cy - topCurveHeight,
+        cx + heartSize / 2, cy + heartSize / 4,
+        cx, cy + heartSize / 2
+      )
+
+      ctx.closePath()
       ctx.fill()
     } else if (innerStyle === 'diamond') {
       ctx.beginPath()
