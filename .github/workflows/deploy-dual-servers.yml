@@ -29,7 +29,10 @@ jobs:
         env:
           NODE_ENV: production
           VITE_API_URL: https://beautycita.com/api
-          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+          VITE_APP_URL: https://beautycita.com
+          VITE_GOOGLE_MAPS_API_KEY: AIzaSyCsy8MrU8leZ1HonRBL40s804jW91Xb5Nc
+          VITE_STRIPE_PUBLISHABLE_KEY: pk_test_51S8BFV1gowsWsAIVpEULMtFNclXuEw29KOvCGJrpKE72PDzpGFN3HlcqgKJKcW32iNYmEYsbvNrhZHeq13nuF82M00bdxDHAUm
+          VITE_SENTRY_DSN: https://3ffa879e65080eaec1b7c016dd390e64@o4510248503869440.ingest.us.sentry.io/4510248532049921
         run: |
           echo "=== Starting frontend build ==="
           echo "Node version: $(node --version)"
