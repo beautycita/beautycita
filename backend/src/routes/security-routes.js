@@ -534,5 +534,210 @@ router.get('/admin/security-events',
     }
   }
 );
+// ==================== PHONE VERIFICATION ENDPOINTS ====================
+
+/**
+ * POST /api/auth/send-phone-verification
+ * Send SMS verification code for phone number verification
+ */
+router.post('/auth/send-phone-verification',
+  rateLimitPresets.api,
+  async (req, res) => {
+    try {
+      const { phone, email } = req.body;
+
+      if (!phone) {
+        return res.status(400).json({
+          success: false,
+          message: 'Phone number is required'
+        });
+      }
+
+      console.log('[PHONE_VERIFICATION] Send code request:', { phone, email });
+
+      // Validate E.164 format
+      const e164Regex = /^\+[1-9]\d{1,14}$/;
+      if (!e164Regex.test(phone)) {
+        console.log('[PHONE_VERIFICATION] Invalid phone format:', phone);
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid phone number format. Use E.164 format: +1234567890'
+        });
+      }
+
+      // Generate 6-digit code
+      const crypto = require('crypto');
+      const verificationCode = crypto.randomInt(100000, 999999).toString();
+
+      // Store in database with 10-minute expiration
+      const { query } = require('../db');
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+      await query(`
+        INSERT INTO verification_codes (phone, code, expires_at, created_at, email)
+        VALUES ($1, $2, $3, NOW(), $4)
+        ON CONFLICT (phone)
+        DO UPDATE SET code = $2, expires_at = $3, created_at = NOW(), email = $4
+      `, [phone, verificationCode, expiresAt, email]);
+
+      // Send SMS with Web OTP format for auto-fill
+      const twilio = require('twilio');
+      const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
+      // Web OTP format: @domain #code
+      const message = `Your BeautyCita verification code is: ${verificationCode}\n\n@beautycita.com #${verificationCode}`;
+
+
+      // Use Messaging Service SID for better reliability (automatically selects from pool)
+      const messageParams = {
+        body: message,
+        to: phone
+      };
+
+      // Use Messaging Service SID if available, otherwise use from number
+      if (process.env.TWILIO_MESSAGING_SERVICE_SID) {
+        messageParams.messagingServiceSid = process.env.TWILIO_MESSAGING_SERVICE_SID;
+      } else {
+        messageParams.from = process.env.TWILIO_PHONE_NUMBER;
+      }
+
+      await client.messages.create(messageParams);
+
+      res.json({
+        success: true,
+        message: 'Verification code sent via SMS'
+      });
+
+    } catch (error) {
+      console.error('[PHONE_VERIFICATION] Send SMS error:', error);
+
+      if (error.code === 21211) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid phone number'
+        });
+      }
+
+      if (error.code === 21614) {
+        return res.status(429).json({
+          success: false,
+          message: 'Too many requests. Please wait before requesting another code.'
+        });
+      }
+
+      res.status(500).json({
+        success: false,
+        message: 'Failed to send verification code',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
+    }
+  }
+);
+
+/**
+ * POST /api/auth/verify-phone
+ * Verify phone number with SMS code
+ */
+router.post('/auth/verify-phone',
+  rateLimitPresets.api,
+  async (req, res) => {
+    try {
+      const { phone, code, email } = req.body;
+
+      if (!phone || !code) {
+        return res.status(400).json({
+          success: false,
+          message: 'Phone number and verification code are required'
+        });
+      }
+
+      // Validate code format (6 digits)
+      if (!/^\d{6}$/.test(code)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Verification code must be 6 digits'
+        });
+      }
+
+      console.log('[PHONE_VERIFICATION] Verify code request:', { phone, email });
+
+      // Check code against database
+      const { query } = require('../db');
+      const result = await query(`
+        SELECT code, expires_at
+        FROM verification_codes
+        WHERE phone = $1
+        ORDER BY created_at DESC
+        LIMIT 1
+      `, [phone]);
+
+      if (result.rows.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'No verification code found for this number'
+        });
+      }
+
+      const storedCode = result.rows[0].code;
+      const expiresAt = new Date(result.rows[0].expires_at);
+
+      // Check if code has expired
+      if (new Date() > expiresAt) {
+        return res.status(400).json({
+          success: false,
+          message: 'Verification code has expired'
+        });
+      }
+
+      // Check if code matches
+      if (code !== storedCode) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid verification code'
+        });
+      }
+
+      // Code is valid - delete it so it can't be reused
+      await query('DELETE FROM verification_codes WHERE phone = $1', [phone]);
+
+      // Update user's phone and phone_verified status if email is provided
+      if (email) {
+        await query(`
+          UPDATE users
+          SET phone = $1, phone_verified = true, updated_at = NOW()
+          WHERE email = $2
+        `, [phone, email]);
+
+        console.log('[PHONE_VERIFICATION] User phone verified:', { email, phone });
+      }
+
+      // Log security event
+      const db = req.app.locals.db;
+      if (email && db) {
+        const userResult = await db.query('SELECT id FROM users WHERE email = $1', [email]);
+        if (userResult.rows.length > 0) {
+          await db.query(
+            `INSERT INTO security_events (event_type, user_id, ip_address, user_agent, severity, details)
+             VALUES ('PHONE_VERIFIED', $1, $2, $3, 'INFO', $4)`,
+            [userResult.rows[0].id, req.ip, req.headers['user-agent'], JSON.stringify({ phone })]
+          );
+        }
+      }
+
+      res.json({
+        success: true,
+        message: 'Phone number verified successfully'
+      });
+
+    } catch (error) {
+      console.error('[PHONE_VERIFICATION] Verify code error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to verify code',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
+    }
+  }
+);
 
 module.exports = router;

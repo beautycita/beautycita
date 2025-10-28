@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { StarIcon, SparklesIcon, HeartIcon } from '@heroicons/react/24/outline'
 import { StarIcon as StarSolid } from '@heroicons/react/24/solid'
+import { getMediaUrl } from '@/config/media'
 
 interface TestimonialsSectionProps {
   isDarkMode: boolean
@@ -12,7 +13,7 @@ const testimonials = [
     id: 1,
     name: 'Sarah Mitchell',
     role: 'Fashion Influencer',
-    avatar: '/media/img/avatar/A6.png',
+    avatar: getMediaUrl('img/avatar/A6.png'),
     content: 'BeautyCita completely transformed how I manage my beauty routine. The AI recommendations are spot-on, and I love discovering new stylists!',
     rating: 5,
     service: 'Hair Styling',
@@ -22,7 +23,7 @@ const testimonials = [
     id: 2,
     name: 'Jessica Lee',
     role: 'Marketing Director',
-    avatar: '/media/img/avatar/A7.png',
+    avatar: getMediaUrl('img/avatar/A7.png'),
     content: 'Finally, a platform that understands professional women. Quick bookings, amazing stylists, and the convenience I need for my busy schedule.',
     rating: 5,
     service: 'Makeup',
@@ -32,7 +33,7 @@ const testimonials = [
     id: 3,
     name: 'Maria Garcia',
     role: 'Med Student',
-    avatar: '/media/img/avatar/A8.png',
+    avatar: getMediaUrl('img/avatar/A8.png'),
     content: 'Student-friendly prices and flexible booking times. Found my go-to nail artist here and she\'s absolutely amazing!',
     rating: 5,
     service: 'Nail Art',
@@ -42,7 +43,7 @@ const testimonials = [
     id: 4,
     name: 'Emily Thompson',
     role: 'Yoga Instructor',
-    avatar: '/media/img/avatar/A9.png',
+    avatar: getMediaUrl('img/avatar/A9.png'),
     content: 'The mindfulness approach to beauty here is refreshing. Love the skincare specialists and the holistic treatment options.',
     rating: 5,
     service: 'Skincare',
@@ -52,7 +53,7 @@ const testimonials = [
     id: 5,
     name: 'Sophia Rodriguez',
     role: 'Event Planner',
-    avatar: '/media/img/avatar/A10.png',
+    avatar: getMediaUrl('img/avatar/A10.png'),
     content: 'I book all my event styling through BeautyCita. The stylists are professional, punctual, and incredibly talented.',
     rating: 5,
     service: 'Event Styling',
@@ -62,7 +63,7 @@ const testimonials = [
     id: 6,
     name: 'Isabella Chen',
     role: 'Tech Entrepreneur',
-    avatar: '/media/img/avatar/A11.png',
+    avatar: getMediaUrl('img/avatar/A11.png'),
     content: 'The tech-forward approach and seamless booking experience make this my favorite beauty platform. Highly recommend!',
     rating: 5,
     service: 'Lash Extensions',

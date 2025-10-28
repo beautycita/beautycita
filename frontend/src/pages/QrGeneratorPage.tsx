@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { getMediaUrl } from '@/config/media'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
@@ -697,7 +698,7 @@ export default function QrGeneratorPage() {
   // Reset to default BeautyCita logo
   const resetToDefaultLogo = async () => {
     try {
-      const response = await fetch('/media/brand/official-logo.svg')
+      const response = await fetch(getMediaUrl('brand/official-logo.svg'))
       const svgText = await response.text()
       const blob = new Blob([svgText], { type: 'image/svg+xml' })
       const reader = new FileReader()

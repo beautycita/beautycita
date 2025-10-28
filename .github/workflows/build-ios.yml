@@ -1,0 +1,188 @@
+name: Build iOS IPA
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_name:
+        description: 'Version name (e.g., 1.0.4)'
+        required: true
+        default: '1.0.4'
+      build_number:
+        description: 'Build number (e.g., 6)'
+        required: true
+        default: '6'
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-ios:
+    name: Build iOS IPA
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm install --legacy-peer-deps
+
+      - name: Build frontend
+        working-directory: ./frontend
+        env:
+          NODE_ENV: production
+          VITE_API_URL: https://beautycita.com/api
+          VITE_APP_URL: https://beautycita.com
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
+          VITE_STRIPE_PUBLISHABLE_KEY: ${{ secrets.VITE_STRIPE_PUBLISHABLE_KEY }}
+          VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+        run: npm run build
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+
+      - name: Install CocoaPods
+        run: gem install cocoapods
+
+      - name: Sync Capacitor
+        working-directory: ./frontend
+        run: npx cap sync ios
+
+      - name: Install iOS dependencies
+        working-directory: ./frontend/ios/App
+        run: pod install
+
+      - name: Update version and build number
+        working-directory: ./frontend/ios/App
+        run: |
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${{ github.event.inputs.version_name || '1.0.4' }}" App/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${{ github.event.inputs.build_number || '6' }}" App/Info.plist
+
+      - name: Import signing certificate
+        env:
+          P12_BASE64: ${{ secrets.IOS_P12_BASE64 }}
+          P12_PASSWORD: ${{ secrets.IOS_P12_PASSWORD }}
+        run: |
+          # Create keychain
+          security create-keychain -p "" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "" build.keychain
+          security set-keychain-settings -t 3600 -u build.keychain
+
+          # Import certificate
+          echo "$P12_BASE64" | base64 --decode > certificate.p12
+          security import certificate.p12 -k build.keychain -P "$P12_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
+          rm certificate.p12
+
+      - name: Import provisioning profile
+        env:
+          PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "$PROVISIONING_PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
+
+      - name: Build iOS app
+        working-directory: ./frontend/ios/App
+        run: |
+          xcodebuild -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath App.xcarchive \
+            archive
+
+      - name: Export IPA
+        working-directory: ./frontend/ios/App
+        env:
+          EXPORT_OPTIONS: ${{ secrets.IOS_EXPORT_OPTIONS_BASE64 }}
+        run: |
+          echo "$EXPORT_OPTIONS" | base64 --decode > ExportOptions.plist
+          xcodebuild -exportArchive \
+            -archivePath App.xcarchive \
+            -exportPath export \
+            -exportOptionsPlist ExportOptions.plist
+
+      - name: Rename IPA
+        working-directory: ./frontend/ios/App/export
+        run: |
+          VERSION="${{ github.event.inputs.version_name || '1.0.4' }}"
+          mv *.ipa beautycita-v${VERSION}.ipa
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-ipa
+          path: frontend/ios/App/export/beautycita-v*.ipa
+          retention-days: 30
+
+      - name: Create release notes
+        run: |
+          cat > RELEASE_NOTES_iOS_v${{ github.event.inputs.version_name || '1.0.4' }}.md << 'EOF'
+          # BeautyCita iOS v${{ github.event.inputs.version_name || '1.0.4' }} Release Notes
+
+          **Release Date:** $(date +%Y-%m-%d)
+          **Version:** ${{ github.event.inputs.version_name || '1.0.4' }} (Build ${{ github.event.inputs.build_number || '6' }})
+          **Platform:** iOS
+
+          ## Features
+
+          - ⭐ Favorite Stylists
+          - 📱 SMS Notification Preferences
+          - 🔐 Biometric Authentication (Touch ID, Face ID)
+          - 📍 Location-based Stylist Discovery
+          - 📅 Real-time Booking Calendar
+          - 💳 Stripe Connect Payments
+          - 🎥 Video Consultations
+          - 📊 Complete Booking History
+
+          ## Requirements
+
+          - iOS 13.0 or later
+          - iPhone, iPad, or iPod touch
+
+          ## Installation
+
+          - Download from App Store
+          - Or install via TestFlight (beta)
+
+          ---
+
+          Built with GitHub Actions on macOS
+          EOF
+
+      - name: Upload release notes
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-release-notes
+          path: RELEASE_NOTES_iOS_v*.md
+          retention-days: 30
+
+      - name: Create GitHub Release (if tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            frontend/ios/App/export/beautycita-v*.ipa
+            RELEASE_NOTES_iOS_v*.md
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Summary
+        run: |
+          echo "## 🎉 iOS Build Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ github.event.inputs.version_name || '1.0.4' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Build:** ${{ github.event.inputs.build_number || '6' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Download the IPA from the 'Artifacts' section above." >> $GITHUB_STEP_SUMMARY

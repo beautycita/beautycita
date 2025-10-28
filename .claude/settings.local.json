@@ -23,7 +23,8 @@
       "Bash(netstat:*)",
       "Bash(ss:*)",
       "Read(//etc/nginx/sites-enabled/**)",
-      "Read(//etc/prometheus/**)"
+      "Read(//etc/prometheus/**)",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []

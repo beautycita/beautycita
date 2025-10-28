@@ -1,4 +1,5 @@
 /**
+import { getMediaUrl } from '@/config/media'
  * BeautyCita Card Components
  * Specialized cards for services, stylists, bookings, etc.
  */
@@ -173,7 +174,7 @@ export const StylistCard = ({
         <div className="absolute -bottom-12 left-6">
           <div className="relative">
             <img loading="lazy"
-              src={image || '/media/img/avatar/A0.png'}
+              src={image || getMediaUrl('img/avatar/A0.png')}
               alt={name}
               className="w-24 h-24 rounded-3xl border-4 border-white shadow-beauty-soft object-cover"
             />

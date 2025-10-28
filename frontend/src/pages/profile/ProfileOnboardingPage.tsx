@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { getMediaUrl } from '@/config/media'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -55,18 +56,18 @@ const STORAGE_KEY = 'beautycita-onboarding-progress'
 
 // Predefined avatars
 const AVATARS = [
-  '/media/img/avatar/A0.png',
-  '/media/img/avatar/A1.png',
-  '/media/img/avatar/A2.png',
-  '/media/img/avatar/A4.png',
-  '/media/img/avatar/A5.png',
-  '/media/img/avatar/A6.png',
-  '/media/img/avatar/A7.png',
-  '/media/img/avatar/A8.png',
-  '/media/img/avatar/A9.png',
-  '/media/img/avatar/A10.png',
-  '/media/img/avatar/A11.png',
-  '/media/img/avatar/A12.png',
+  getMediaUrl('img/avatar/A0.png'),
+  getMediaUrl('img/avatar/A1.png'),
+  getMediaUrl('img/avatar/A2.png'),
+  getMediaUrl('img/avatar/A4.png'),
+  getMediaUrl('img/avatar/A5.png'),
+  getMediaUrl('img/avatar/A6.png'),
+  getMediaUrl('img/avatar/A7.png'),
+  getMediaUrl('img/avatar/A8.png'),
+  getMediaUrl('img/avatar/A9.png'),
+  getMediaUrl('img/avatar/A10.png'),
+  getMediaUrl('img/avatar/A11.png'),
+  getMediaUrl('img/avatar/A12.png'),
 ]
 
 export default function ProfileOnboardingPage() {

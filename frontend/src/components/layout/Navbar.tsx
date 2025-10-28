@@ -13,6 +13,7 @@ import {
 import { useAuthStore } from '../../store/authStore'
 import LanguageSwitcher from '../ui/LanguageSwitcher'
 import NotificationBell from '../notifications/NotificationBell'
+import { getMediaUrl } from '@/config/media'
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -120,7 +121,7 @@ export default function Navbar() {
                   : 'bg-white/80 border-white/20 hover:bg-white/90'
               }`}
             >
-              <img loading="lazy" src="/media/brand/official-logo.svg" alt={t('nav.logoAlt')} className="h-8 w-auto object-contain" />
+              <img loading="lazy" src={getMediaUrl("brand/official-logo.svg")} alt={t('nav.logoAlt')} className="h-8 w-auto object-contain" />
               <span className="text-lg font-bold bg-gradient-to-r from-pink-500 via-purple-600 via-blue-500 via-pink-500 via-purple-600 via-blue-500 to-pink-500 bg-clip-text text-transparent animate-gradient-flow">
                 BeautyCita
               </span>
@@ -367,7 +368,7 @@ export default function Navbar() {
                 {/* Mobile Menu Header */}
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center gap-3">
-                    <img loading="lazy" src="/media/brand/official-logo.svg" alt={t('nav.logoAlt')} className="h-8 w-auto object-contain" />
+                    <img loading="lazy" src={getMediaUrl("brand/official-logo.svg")} alt={t('nav.logoAlt')} className="h-8 w-auto object-contain" />
                     <span className="text-lg font-bold bg-gradient-to-r from-pink-500 via-purple-600 via-blue-500 via-pink-500 via-purple-600 via-blue-500 to-pink-500 bg-clip-text text-transparent animate-gradient-flow">
                       BeautyCita
                     </span>

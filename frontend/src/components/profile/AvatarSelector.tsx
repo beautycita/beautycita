@@ -8,20 +8,21 @@ import {
 import { useAuthStore } from '../../store/authStore'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { getMediaUrl } from '@/config/media'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 
 // Default avatar options from local media
 const DEFAULT_AVATARS = [
-  { id: 1, url: '/media/img/avatar/A1.png', name: 'Avatar 1' },
-  { id: 2, url: '/media/img/avatar/A2.png', name: 'Avatar 2' },
-  { id: 4, url: '/media/img/avatar/A4.png', name: 'Avatar 4' },
-  { id: 5, url: '/media/img/avatar/A5.png', name: 'Avatar 5' },
-  { id: 6, url: '/media/img/avatar/A6.png', name: 'Avatar 6' },
-  { id: 7, url: '/media/img/avatar/A7.png', name: 'Avatar 7' },
-  { id: 'm1', url: '/media/brand/m1.png', name: 'Makeup 1' },
-  { id: 'm2', url: '/media/brand/m2.png', name: 'Makeup 2' },
-  { id: 'm3', url: '/media/brand/m3.png', name: 'Makeup 3' }
+  { id: 1, url: getMediaUrl('img/avatar/A1.png'), name: 'Avatar 1' },
+  { id: 2, url: getMediaUrl('img/avatar/A2.png'), name: 'Avatar 2' },
+  { id: 4, url: getMediaUrl('img/avatar/A4.png'), name: 'Avatar 4' },
+  { id: 5, url: getMediaUrl('img/avatar/A5.png'), name: 'Avatar 5' },
+  { id: 6, url: getMediaUrl('img/avatar/A6.png'), name: 'Avatar 6' },
+  { id: 7, url: getMediaUrl('img/avatar/A7.png'), name: 'Avatar 7' },
+  { id: 'm1', url: getMediaUrl('brand/m1.png'), name: 'Makeup 1' },
+  { id: 'm2', url: getMediaUrl('brand/m2.png'), name: 'Makeup 2' },
+  { id: 'm3', url: getMediaUrl('brand/m3.png'), name: 'Makeup 3' }
 ]
 
 interface AvatarSelectorProps {

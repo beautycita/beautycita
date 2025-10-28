@@ -9,6 +9,7 @@ import {
   CameraIcon,
   PaintBrushIcon
 } from '@heroicons/react/24/outline'
+import { getMediaUrl } from '@/config/media'
 
 interface BentoGridProps {
   isDarkMode: boolean
@@ -20,7 +21,7 @@ const services = [
     title: 'Hair Styling',
     description: 'Premium cuts, colors, and treatments',
     icon: SparklesIcon,
-    image: '/media/img/avatar/A3.png',
+    image: getMediaUrl('img/avatar/A3.png'),
     price: 'From $45',
     gradient: 'from-pink-500 to-purple-600',
     size: 'large',
@@ -31,7 +32,7 @@ const services = [
     title: 'Nail Art',
     description: 'Manicure & pedicure perfection',
     icon: HeartIcon,
-    image: '/media/img/avatar/A5.png',
+    image: getMediaUrl('img/avatar/A5.png'),
     price: 'From $30',
     gradient: 'from-purple-500 to-pink-600',
     size: 'medium'
@@ -41,7 +42,7 @@ const services = [
     title: 'Makeup',
     description: 'Professional artistry',
     icon: PaintBrushIcon,
-    image: '/media/img/avatar/A7.png',
+    image: getMediaUrl('img/avatar/A7.png'),
     price: 'From $60',
     gradient: 'from-rose-500 to-pink-600',
     size: 'medium'
@@ -51,7 +52,7 @@ const services = [
     title: 'Skincare',
     description: 'Facials & treatments',
     icon: StarIcon,
-    image: '/media/img/avatar/A9.png',
+    image: getMediaUrl('img/avatar/A9.png'),
     price: 'From $75',
     gradient: 'from-teal-500 to-blue-600',
     size: 'small'
@@ -61,7 +62,7 @@ const services = [
     title: 'Lashes',
     description: 'Extensions & lifts',
     icon: CameraIcon,
-    image: '/media/img/avatar/A11.png',
+    image: getMediaUrl('img/avatar/A11.png'),
     price: 'From $80',
     gradient: 'from-purple-500 to-indigo-600',
     size: 'medium'

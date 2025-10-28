@@ -17,6 +17,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { SparklesIcon as SparklesSolid } from '@heroicons/react/24/solid'
 
+import { getMediaUrl } from '@/config/media'
 // Import our new modular components
 import VideoSection from '../components/home/VideoSection'
 import SectionTransition from '../components/home/SectionTransition'

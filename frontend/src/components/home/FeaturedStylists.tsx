@@ -10,6 +10,7 @@ import {
   CheckBadgeIcon,
   SparklesIcon
 } from '@heroicons/react/24/outline'
+import { getMediaUrl } from '@/config/media'
 import { StarIcon as StarSolid } from '@heroicons/react/24/solid'
 
 interface FeaturedStylistsProps {
@@ -21,7 +22,7 @@ const stylists = [
     id: 1,
     name: 'Luna Rodriguez',
     specialty: 'Hair Color Specialist',
-    image: '/media/img/avatar/A0.png',
+    image: getMediaUrl('img/avatar/A0.png'),
     rating: 4.9,
     reviews: 234,
     location: 'Downtown LA',
@@ -34,7 +35,7 @@ const stylists = [
     id: 2,
     name: 'Emma Chen',
     specialty: 'Nail Artist',
-    image: '/media/img/avatar/A1.png',
+    image: getMediaUrl('img/avatar/A1.png'),
     rating: 5.0,
     reviews: 189,
     location: 'Beverly Hills',
@@ -46,7 +47,7 @@ const stylists = [
     id: 3,
     name: 'Sofia Martinez',
     specialty: 'Makeup Artist',
-    image: '/media/img/avatar/A2.png',
+    image: getMediaUrl('img/avatar/A2.png'),
     rating: 4.8,
     reviews: 312,
     location: 'Santa Monica',
@@ -58,7 +59,7 @@ const stylists = [
     id: 4,
     name: 'Isabella Kim',
     specialty: 'Lash Technician',
-    image: '/media/img/avatar/A3.png',
+    image: getMediaUrl('img/avatar/A3.png'),
     rating: 4.9,
     reviews: 156,
     location: 'Westwood',
@@ -71,7 +72,7 @@ const stylists = [
     id: 5,
     name: 'Olivia Johnson',
     specialty: 'Skincare Expert',
-    image: '/media/img/avatar/A4.png',
+    image: getMediaUrl('img/avatar/A4.png'),
     rating: 4.9,
     reviews: 278,
     location: 'Pasadena',
@@ -83,7 +84,7 @@ const stylists = [
     id: 6,
     name: 'Ava Williams',
     specialty: 'Brow Specialist',
-    image: '/media/img/avatar/A5.png',
+    image: getMediaUrl('img/avatar/A5.png'),
     rating: 4.8,
     reviews: 198,
     location: 'Venice Beach',

@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { SparklesIcon, ArrowRightIcon, ChevronDownIcon, PlayIcon, PauseIcon } from '@heroicons/react/24/outline'
 import { SparklesIcon as SparklesSolid } from '@heroicons/react/24/solid'
+import { getMediaUrl } from '@/config/media'
 import { useVideoPreloader } from '../../hooks/useVideoPreloader'
 import VideoSkeleton from '../ui/VideoSkeleton'
 
@@ -69,7 +70,7 @@ export default function VideoHero({ isDarkMode }: VideoHeroProps) {
           className={`w-full h-full object-cover transition-opacity duration-700 ${
             isLoaded ? 'opacity-100' : 'opacity-0'
           }`}
-          poster="/media/img/hero0-poster.jpg"
+          poster={getMediaUrl("img/hero0-poster.jpg")}
         >
           <source src={videoSrc} type="video/mp4" />
         </video>

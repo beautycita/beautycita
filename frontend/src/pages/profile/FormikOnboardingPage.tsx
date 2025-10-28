@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { getMediaUrl } from '@/config/media'
 import { useNavigate } from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
@@ -28,18 +29,18 @@ import axios from 'axios'
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 
 const AVATARS = [
-  '/media/img/avatar/A0.webp',
-  '/media/img/avatar/A1.webp',
-  '/media/img/avatar/A2.webp',
-  '/media/img/avatar/A4.webp',
-  '/media/img/avatar/A5.webp',
-  '/media/img/avatar/A6.webp',
-  '/media/img/avatar/A7.webp',
-  '/media/img/avatar/A8.webp',
-  '/media/img/avatar/A9.webp',
-  '/media/img/avatar/A10.webp',
-  '/media/img/avatar/A11.webp',
-  '/media/img/avatar/A12.webp',
+  getMediaUrl('img/avatar/A0.webp'),
+  getMediaUrl('img/avatar/A1.webp'),
+  getMediaUrl('img/avatar/A2.webp'),
+  getMediaUrl('img/avatar/A4.webp'),
+  getMediaUrl('img/avatar/A5.webp'),
+  getMediaUrl('img/avatar/A6.webp'),
+  getMediaUrl('img/avatar/A7.webp'),
+  getMediaUrl('img/avatar/A8.webp'),
+  getMediaUrl('img/avatar/A9.webp'),
+  getMediaUrl('img/avatar/A10.webp'),
+  getMediaUrl('img/avatar/A11.webp'),
+  getMediaUrl('img/avatar/A12.webp'),
 ]
 
 const SERVICE_INTERESTS = [

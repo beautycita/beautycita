@@ -101,9 +101,10 @@ const CookieConsentBanner: React.FC = () => {
                 <h3 className="text-lg font-bold text-white">Cookie Settings</h3>
               </div>
               <button
-                onClick={() => setShowBanner(false)}
+                onClick={() => saveConsent(false)}
                 className="text-white hover:text-gray-200 transition-colors"
-                aria-label="Close"
+                aria-label="Close and save necessary cookies only"
+                title="Close and save necessary cookies only"
               >
                 <X className="w-5 h-5" />
               </button>

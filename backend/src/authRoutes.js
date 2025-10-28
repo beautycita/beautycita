@@ -1533,66 +1533,111 @@ router.post('/register/stylist', upload.array('portfolioImages', 6), async (req,
 });
 
 // Send phone verification code
+// Send phone verification code
 router.post('/send-phone-verification', async (req, res) => {
   try {
-    const { phone } = req.body;
+    const { phone, email } = req.body;
 
-    if (!phone || !phone.trim()) {
+    if (!phone) {
       return res.status(400).json({
         success: false,
         message: 'Phone number is required'
       });
     }
 
-    const cleanedPhone = phone.trim();
+    console.log('[PHONE_VERIFICATION] Send code request:', { phone, email });
 
-    // For registration flow, we need to handle verification without a user ID
-    // Create a temporary verification record using phone number as identifier
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-
-    // Store verification record in database (using phone as temporary identifier)
-    const verificationQuery = `
-      INSERT INTO user_phone_verification (user_id, phone_number, verification_code, expires_at, created_at)
-      VALUES (NULL, $1, $2, CURRENT_TIMESTAMP + INTERVAL '10 minutes', CURRENT_TIMESTAMP)
-      ON CONFLICT (phone_number)
-      DO UPDATE SET
-        verification_code = $2,
-        is_verified = false,
-        attempts = 0,
-        created_at = CURRENT_TIMESTAMP,
-        expires_at = CURRENT_TIMESTAMP + INTERVAL '10 minutes'
-      RETURNING id
-    `;
-
-    await query(verificationQuery, [cleanedPhone, code]);
-
-    // Send SMS using the SMS service
-    const smsResult = await smsService.sendSMS(
-      null, // no userId for registration flow
-      cleanedPhone,
-      `Your BeautyCita verification code is: ${code}. This code expires in 10 minutes.`,
-      'PHONE_VERIFICATION'
-    );
-
-    if (smsResult.success) {
-      return res.status(200).json({
-        success: true,
-        message: 'Verification code sent successfully',
-        expiresIn: 600 // 10 minutes in seconds
-      });
-    } else {
-      return res.status(500).json({
+    // Validate E.164 format
+    const e164Regex = /^\+[1-9]\d{1,14}$/;
+    if (!e164Regex.test(phone)) {
+      console.log('[PHONE_VERIFICATION] Invalid phone format:', phone);
+      return res.status(400).json({
         success: false,
-        message: 'Failed to send verification code'
+        message: 'Invalid phone number format. Use E.164 format: +1234567890'
       });
     }
 
+    // Generate 6-digit code
+    const crypto = require('crypto');
+    const verificationCode = crypto.randomInt(100000, 999999).toString();
+
+    // Store in database with 10-minute expiration
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    await query(`
+      INSERT INTO verification_codes (phone, code, expires_at, created_at)
+      VALUES ($1, $2, $3, NOW())
+      ON CONFLICT (phone)
+      DO UPDATE SET code = $2, expires_at = $3, created_at = NOW()
+    `, [phone, verificationCode, expiresAt]);
+
+    // Update user_phone_verification table if email is provided (for backward compatibility)
+    if (email) {
+      await query(`
+        INSERT INTO user_phone_verification (user_id, phone_number, verification_code, expires_at, created_at)
+        SELECT id, $1, $2, $3, NOW()
+        FROM users WHERE email = $4
+        ON CONFLICT (phone_number)
+        DO UPDATE SET
+          verification_code = $2,
+          is_verified = false,
+          attempts = 0,
+          created_at = NOW(),
+          expires_at = $3
+      `, [phone, verificationCode, expiresAt, email]);
+    }
+
+    // Send SMS with Web OTP format for auto-fill
+    const twilio = require('twilio');
+    const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
+    // Web OTP format: @domain #code
+    const message = `Your BeautyCita verification code is: ${verificationCode}\n\n@beautycita.com #${verificationCode}`;
+
+    // Use Messaging Service SID for better reliability (automatically selects from pool)
+    const messageParams = {
+      body: message,
+      to: phone
+    };
+
+    // Use Messaging Service SID if available, otherwise use from number
+    if (process.env.TWILIO_MESSAGING_SERVICE_SID) {
+      messageParams.messagingServiceSid = process.env.TWILIO_MESSAGING_SERVICE_SID;
+    } else if (process.env.TWILIO_PHONE_NUMBER) {
+      messageParams.from = process.env.TWILIO_PHONE_NUMBER;
+    }
+
+    await client.messages.create(messageParams);
+
+    console.log('[PHONE_VERIFICATION] SMS sent successfully to:', phone);
+
+    res.json({
+      success: true,
+      message: 'Verification code sent via SMS',
+      expiresIn: 600 // 10 minutes in seconds
+    });
+
   } catch (error) {
-    console.error('Send phone verification error:', error);
-    logger.error('Send phone verification error:', error);
+    console.error('[PHONE_VERIFICATION] Send SMS error:', error);
+
+    if (error.code === 21211) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid phone number'
+      });
+    }
+
+    if (error.code === 21614) {
+      return res.status(429).json({
+        success: false,
+        message: 'Too many requests. Please wait before requesting another code.'
+      });
+    }
+
     res.status(500).json({
       success: false,
-      message: 'Internal server error'
+      message: 'Failed to send verification code',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 });

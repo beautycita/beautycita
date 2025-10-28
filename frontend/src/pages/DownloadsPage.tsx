@@ -34,11 +34,18 @@ const DownloadsPage: React.FC = () => {
       items: [
         {
           name: 'Android APK (Latest)',
-          description: 'Version 1.0.4 - Optimized build with R2 media',
-          size: '~10 MB',
-          url: '/downloads/android/beautycita-v1.0.4.apk',
+          description: 'Version 1.0.4 - All 18 core features complete',
+          size: '151 MB',
+          url: '/downloads/beautycita-v1.0.4.apk',
           format: 'APK',
-          contents: ['Android app package', 'Direct installation file', 'No Google Play required']
+          contents: [
+            'Favorite stylists & SMS preferences',
+            'Biometric authentication (Touch ID, Face ID)',
+            'Video consultations & en route tracking',
+            'Complete booking history',
+            'All Capacitor plugins included'
+          ],
+          releaseNotes: '/downloads/RELEASE_NOTES_v1.0.4.md'
         },
         {
           name: 'Android APK (v1.0.3)',
@@ -46,7 +53,7 @@ const DownloadsPage: React.FC = () => {
           size: '23 MB',
           url: '/downloads/android/beautycita-v1.0.3.apk',
           format: 'APK',
-          contents: ['Android app package', 'Stable release', 'All features included']
+          contents: ['Android app package', 'Stable release', 'Core features included']
         },
         {
           name: 'iOS App (Coming Soon)',
@@ -68,130 +75,42 @@ const DownloadsPage: React.FC = () => {
         {
           name: 'Logo Pack',
           description: 'All logo variations in multiple formats',
-          size: '~2 MB',
+          size: '8.5 MB',
           url: `${R2_PUBLIC_URL}/beautycita/branding/logos.zip`,
           format: 'ZIP',
           contents: [
-            '5 logo variations (Smart Mirror, Geometric, Text, etc.)',
-            'SVG, PNG (16px-512px), WebP formats',
+            '9 logo variations (Smart Mirror + variants)',
+            'SVG source files',
+            'PNG exports (512px)',
             'Light & dark mode versions',
-            'Transparent backgrounds',
-            'Brand guidelines PDF'
+            'Transparent backgrounds'
           ]
         },
         {
           name: 'Brand Colors',
           description: 'Official color palette and gradients',
-          size: '~500 KB',
+          size: '2.6 KB',
           url: `${R2_PUBLIC_URL}/beautycita/branding/colors.zip`,
           format: 'ZIP',
           contents: [
             'Pink (#ec4899), Purple (#9333ea), Blue (#3b82f6)',
-            'Gradient swatches',
-            'CSS variables',
+            'CSS variables file',
             'Tailwind config',
-            'Adobe Swatch Exchange (.ase)'
+            'Usage documentation'
           ]
         },
         {
           name: 'Typography',
           description: 'Font files and usage guidelines',
-          size: '~1 MB',
+          size: '1.6 KB',
           url: `${R2_PUBLIC_URL}/beautycita/branding/typography.zip`,
           format: 'ZIP',
           contents: [
             'Playfair Display (headings)',
             'Inter (body text)',
-            'Web font files (WOFF2, TTF)',
-            'License information',
+            'Google Fonts download links',
+            'CSS implementation guide',
             'Usage examples'
-          ]
-        }
-      ]
-    },
-    {
-      title: 'Media Kit',
-      description: 'Photos, screenshots, and promotional materials',
-      icon: PhotoIcon,
-      gradient: 'from-blue-500 to-indigo-600',
-      items: [
-        {
-          name: 'App Screenshots',
-          description: 'High-resolution screenshots for press',
-          size: '~5 MB',
-          url: `${R2_PUBLIC_URL}/beautycita/media-kit/screenshots.zip`,
-          format: 'ZIP',
-          contents: [
-            '20+ app screenshots',
-            'iOS and Android versions',
-            'Multiple screen sizes',
-            'Dark & light mode',
-            'PNG format (2x, 3x retina)'
-          ]
-        },
-        {
-          name: 'Product Photos',
-          description: 'Promotional images and banners',
-          size: '~8 MB',
-          url: `${R2_PUBLIC_URL}/beautycita/media-kit/product-photos.zip`,
-          format: 'ZIP',
-          contents: [
-            'Hero banners',
-            'Feature highlights',
-            'App in context photos',
-            'Social media ready',
-            'High-resolution (4K)'
-          ]
-        },
-        {
-          name: 'Team Photos',
-          description: 'Leadership and team member headshots',
-          size: '~3 MB',
-          url: `${R2_PUBLIC_URL}/beautycita/media-kit/team.zip`,
-          format: 'ZIP',
-          contents: [
-            'CEO, CTO, CFO, COO headshots',
-            'Marketing, HR, Customer Service',
-            'Professional photography',
-            'Square and portrait formats',
-            'JPEG optimized'
-          ]
-        }
-      ]
-    },
-    {
-      title: 'Audio Assets',
-      description: 'Sound effects and theme music',
-      icon: MusicalNoteIcon,
-      gradient: 'from-purple-500 to-pink-600',
-      items: [
-        {
-          name: 'Theme Song',
-          description: '"Resplandece" by BeautyCita',
-          size: '1 MB',
-          url: `${R2_PUBLIC_URL}/audio/resplandece.mp3`,
-          format: 'MP3',
-          contents: [
-            'Official BeautyCita theme song',
-            '128 kbps MP3',
-            'Duration: 1:30',
-            'Spanish language',
-            'Royalty-free for promotional use'
-          ]
-        },
-        {
-          name: 'Sound Effects Pack',
-          description: 'UI sounds and notifications',
-          size: '~300 KB',
-          url: `${R2_PUBLIC_URL}/beautycita/audio/sound-effects.zip`,
-          format: 'ZIP',
-          contents: [
-            'Appointment confirmation',
-            'Booking sparkle',
-            'Profile flourish',
-            'Error tone',
-            'New message alert',
-            'WAV format (high quality)'
           ]
         }
       ]
@@ -205,7 +124,7 @@ const DownloadsPage: React.FC = () => {
         {
           name: 'Brand Guidelines',
           description: 'Complete brand identity manual',
-          size: '~2 MB',
+          size: '385 KB',
           url: `${R2_PUBLIC_URL}/beautycita/docs/brand-guidelines.pdf`,
           format: 'PDF',
           contents: [
@@ -219,29 +138,29 @@ const DownloadsPage: React.FC = () => {
         {
           name: 'Press Kit',
           description: 'Company info and press releases',
-          size: '~1 MB',
+          size: '495 KB',
           url: `${R2_PUBLIC_URL}/beautycita/docs/press-kit.pdf`,
           format: 'PDF',
           contents: [
             'Company overview',
-            'Latest press releases',
             'Key statistics',
             'Executive bios',
+            'Platform features',
             'Contact information'
           ]
         },
         {
           name: 'API Documentation',
           description: 'Developer integration guide',
-          size: '~500 KB',
+          size: '670 KB',
           url: `${R2_PUBLIC_URL}/beautycita/docs/api-docs.pdf`,
           format: 'PDF',
           contents: [
             'REST API endpoints',
-            'Authentication methods',
+            'JWT authentication',
             'WebAuthn integration',
             'Stripe Connect setup',
-            'Code examples'
+            'Code examples (cURL, JavaScript)'
           ]
         }
       ]
@@ -352,16 +271,32 @@ const DownloadsPage: React.FC = () => {
                       Coming Soon
                     </button>
                   ) : (
-                    <a
-                      href={item.url}
-                      download
-                      className={`w-full px-6 py-3 rounded-full font-semibold bg-gradient-to-r ${category.gradient} text-white hover:shadow-lg transition-all block text-center`}
-                    >
-                      <div className="flex items-center justify-center gap-2">
-                        <ArrowDownTrayIcon className="h-5 w-5" />
-                        Download {item.format}
-                      </div>
-                    </a>
+                    <div className="space-y-2">
+                      <a
+                        href={item.url}
+                        download
+                        className={`w-full px-6 py-3 rounded-full font-semibold bg-gradient-to-r ${category.gradient} text-white hover:shadow-lg transition-all block text-center`}
+                      >
+                        <div className="flex items-center justify-center gap-2">
+                          <ArrowDownTrayIcon className="h-5 w-5" />
+                          Download {item.format}
+                        </div>
+                      </a>
+                      {(item as any).releaseNotes && (
+                        <a
+                          href={(item as any).releaseNotes}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`w-full px-4 py-2 rounded-full text-sm font-medium border-2 transition-all block text-center ${
+                            isDarkMode
+                              ? 'border-purple-400 text-purple-400 hover:bg-purple-400/10'
+                              : 'border-purple-600 text-purple-600 hover:bg-purple-50'
+                          }`}
+                        >
+                          View Release Notes
+                        </a>
+                      )}
+                    </div>
                   )}
                 </motion.div>
               ))}

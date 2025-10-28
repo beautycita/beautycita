@@ -1,4 +1,5 @@
 import { ITheme } from 'survey-core'
+import { getMediaUrl } from './media'
 
 export const profileOnboardingSurveyJson = {
   title: "Complete Your Profile",
@@ -112,18 +113,18 @@ export const profileOnboardingSurveyJson = {
           name: "selectedAvatar",
           title: "Choose a Predefined Avatar",
           choices: [
-            { value: "/media/img/avatar/A0.png", imageLink: "/media/img/avatar/A0.png" },
-            { value: "/media/img/avatar/A1.png", imageLink: "/media/img/avatar/A1.png" },
-            { value: "/media/img/avatar/A2.png", imageLink: "/media/img/avatar/A2.png" },
-            { value: "/media/img/avatar/A4.png", imageLink: "/media/img/avatar/A4.png" },
-            { value: "/media/img/avatar/A5.png", imageLink: "/media/img/avatar/A5.png" },
-            { value: "/media/img/avatar/A6.png", imageLink: "/media/img/avatar/A6.png" },
-            { value: "/media/img/avatar/A7.png", imageLink: "/media/img/avatar/A7.png" },
-            { value: "/media/img/avatar/A8.png", imageLink: "/media/img/avatar/A8.png" },
-            { value: "/media/img/avatar/A9.png", imageLink: "/media/img/avatar/A9.png" },
-            { value: "/media/img/avatar/A10.png", imageLink: "/media/img/avatar/A10.png" },
-            { value: "/media/img/avatar/A11.png", imageLink: "/media/img/avatar/A11.png" },
-            { value: "/media/img/avatar/A12.png", imageLink: "/media/img/avatar/A12.png" }
+            { value: getMediaUrl("img/avatar/A0.png"), imageLink: getMediaUrl("img/avatar/A0.png") },
+            { value: getMediaUrl("img/avatar/A1.png"), imageLink: getMediaUrl("img/avatar/A1.png") },
+            { value: getMediaUrl("img/avatar/A2.png"), imageLink: getMediaUrl("img/avatar/A2.png") },
+            { value: getMediaUrl("img/avatar/A4.png"), imageLink: getMediaUrl("img/avatar/A4.png") },
+            { value: getMediaUrl("img/avatar/A5.png"), imageLink: getMediaUrl("img/avatar/A5.png") },
+            { value: getMediaUrl("img/avatar/A6.png"), imageLink: getMediaUrl("img/avatar/A6.png") },
+            { value: getMediaUrl("img/avatar/A7.png"), imageLink: getMediaUrl("img/avatar/A7.png") },
+            { value: getMediaUrl("img/avatar/A8.png"), imageLink: getMediaUrl("img/avatar/A8.png") },
+            { value: getMediaUrl("img/avatar/A9.png"), imageLink: getMediaUrl("img/avatar/A9.png") },
+            { value: getMediaUrl("img/avatar/A10.png"), imageLink: getMediaUrl("img/avatar/A10.png") },
+            { value: getMediaUrl("img/avatar/A11.png"), imageLink: getMediaUrl("img/avatar/A11.png") },
+            { value: getMediaUrl("img/avatar/A12.png"), imageLink: getMediaUrl("img/avatar/A12.png") }
           ],
           colCount: 4,
           imageHeight: 80,

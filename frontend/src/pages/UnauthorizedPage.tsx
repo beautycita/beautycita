@@ -10,6 +10,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { getMediaUrl } from '@/config/media'
 import { useAuthStore } from '../store/authStore'
 
 export default function UnauthorizedPage() {
@@ -77,7 +78,7 @@ export default function UnauthorizedPage() {
               className="flex justify-center mb-8"
             >
               <img loading="lazy"
-                src="/media/brand/official-logo.svg"
+                src={getMediaUrl("brand/official-logo.svg")}
                 alt="BeautyCita"
                 className="h-20 w-auto"
               />
