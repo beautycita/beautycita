@@ -927,6 +927,10 @@ app.use('/api/stylist', validateJWT, stylistBookingRoutes);
 const clientSelfRoutes = require('./routes/client-self');
 app.use('/api/client', validateJWT, clientSelfRoutes);
 
+// Client favorites routes
+const favoritesRoutes = require('./routes/favorites');
+app.use('/api/client/favorites', validateJWT, favoritesRoutes);
+
 // Dashboard routes (authenticated users - stylists and clients) - use JWT authentication
 app.use('/api/dashboard', validateJWT, dashboardRoutes);
 
@@ -1310,6 +1314,10 @@ app.use('/api/webhooks', btcpayWebhooksRoutes);
 const notificationsRoutes = require('./routes/notifications');
 app.use('/api/notifications', validateJWT, notificationsRoutes);
 
+
+// SMS Preferences routes (user notification settings)
+const smsPreferencesRoutes = require('./routes/sms-preferences');
+app.use('/api/sms-preferences', validateJWT, smsPreferencesRoutes);
 // Stripe Connect routes (for stylist payouts)
 const stripeConnectRoutes = require('./routes/stripeConnect');
 app.use('/api/stripe-connect', stripeConnectRoutes);
