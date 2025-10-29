@@ -50,7 +50,7 @@ export default function BookingDetailScreen() {
   return (
     <View className="flex-1 bg-gray-900">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className={\`p-4 \${getStatusColor(booking.status)}\`}>
+        <View className={`p-4 ${getStatusColor(booking.status)}`}>
           <Text className="text-white text-center font-bold text-lg">{booking.status}</Text>
         </View>
 
@@ -93,7 +93,7 @@ export default function BookingDetailScreen() {
             <Text className="text-white font-bold text-lg mb-3">Payment</Text>
             <View className="flex-row justify-between">
               <Text className="text-gray-400">Total Amount</Text>
-              <Text className="text-pink-400 font-bold text-lg">\${booking.total_price}</Text>
+              <Text className="text-pink-400 font-bold text-lg">${booking.total_price}</Text>
             </View>
           </GradientCard>
 

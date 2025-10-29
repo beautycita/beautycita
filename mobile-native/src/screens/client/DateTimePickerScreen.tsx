@@ -82,11 +82,11 @@ export default function DateTimePickerScreen() {
                   <TouchableOpacity
                     key={slot}
                     onPress={() => setSelectedTime(slot)}
-                    className={\`px-4 py-3 rounded-full mr-2 mb-2 \${
+                    className={`px-4 py-3 rounded-full mr-2 mb-2 ${
                       selectedTime === slot ? 'bg-pink-500' : 'bg-gray-800'
-                    }\`}
+                    }`}
                   >
-                    <Text className={\`font-medium \${selectedTime === slot ? 'text-white' : 'text-gray-400'}\`}>
+                    <Text className={`font-medium ${selectedTime === slot ? 'text-white' : 'text-gray-400'}`}>
                       {slot}
                     </Text>
                   </TouchableOpacity>

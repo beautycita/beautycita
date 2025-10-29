@@ -46,18 +46,18 @@ export default function MyBookingsScreen() {
             <Text className="text-white font-semibold">{item.stylist?.business_name}</Text>
             <Text className="text-gray-400 text-sm">{item.service?.name}</Text>
           </View>
-          <View className={\`px-3 py-1 rounded-full \${
+          <View className={`px-3 py-1 rounded-full ${
             item.status === 'CONFIRMED' ? 'bg-green-500/20' :
             item.status === 'PENDING' ? 'bg-yellow-500/20' :
             item.status === 'COMPLETED' ? 'bg-blue-500/20' :
             'bg-red-500/20'
-          }\`}>
-            <Text className={\`text-xs font-medium \${
+          }`}>
+            <Text className={`text-xs font-medium ${
               item.status === 'CONFIRMED' ? 'text-green-400' :
               item.status === 'PENDING' ? 'text-yellow-400' :
               item.status === 'COMPLETED' ? 'text-blue-400' :
               'text-red-400'
-            }\`}>
+            }`}>
               {item.status}
             </Text>
           </View>
@@ -82,17 +82,17 @@ export default function MyBookingsScreen() {
       <View className="flex-row border-b border-gray-800">
         <TouchableOpacity
           onPress={() => setActiveTab('upcoming')}
-          className={\`flex-1 py-4 \${activeTab === 'upcoming' ? 'border-b-2 border-pink-400' : ''}\`}
+          className={`flex-1 py-4 ${activeTab === 'upcoming' ? 'border-b-2 border-pink-400' : ''}`}
         >
-          <Text className={\`text-center font-semibold \${activeTab === 'upcoming' ? 'text-pink-400' : 'text-gray-400'}\`}>
+          <Text className={`text-center font-semibold ${activeTab === 'upcoming' ? 'text-pink-400' : 'text-gray-400'}`}>
             Upcoming
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => setActiveTab('past')}
-          className={\`flex-1 py-4 \${activeTab === 'past' ? 'border-b-2 border-pink-400' : ''}\`}
+          className={`flex-1 py-4 ${activeTab === 'past' ? 'border-b-2 border-pink-400' : ''}`}
         >
-          <Text className={\`text-center font-semibold \${activeTab === 'past' ? 'text-pink-400' : 'text-gray-400'}\`}>
+          <Text className={`text-center font-semibold ${activeTab === 'past' ? 'text-pink-400' : 'text-gray-400'}`}>
             Past
           </Text>
         </TouchableOpacity>

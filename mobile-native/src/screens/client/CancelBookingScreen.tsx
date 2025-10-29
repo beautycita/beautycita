@@ -66,12 +66,12 @@ export default function CancelBookingScreen() {
             onPress={() => setSelectedReason(reason)}
             className="mb-3"
           >
-            <GradientCard className={\`p-4 flex-row items-center \${
+            <GradientCard className={`p-4 flex-row items-center ${
               selectedReason === reason ? 'border-2 border-pink-500' : ''
-            }\`}>
-              <View className={\`w-5 h-5 rounded-full border-2 mr-3 \${
+            }`}>
+              <View className={`w-5 h-5 rounded-full border-2 mr-3 ${
                 selectedReason === reason ? 'border-pink-500 bg-pink-500' : 'border-gray-600'
-              }\`} />
+              }`} />
               <Text className="text-white">{reason}</Text>
             </GradientCard>
           </TouchableOpacity>

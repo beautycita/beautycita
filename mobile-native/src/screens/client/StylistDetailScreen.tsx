@@ -34,8 +34,8 @@ export default function StylistDetailScreen() {
   const handleShare = async () => {
     try {
       await Share.share({
-        message: \`Check out \${stylist?.business_name} on BeautyCita!\`,
-        url: \`https://beautycita.com/stylists/\${stylistId}\`,
+        message: `Check out ${stylist?.business_name} on BeautyCita!`,
+        url: `https://beautycita.com/stylists/${stylistId}`,
       });
     } catch (error) {
       console.log('Share error:', error);
@@ -87,7 +87,7 @@ export default function StylistDetailScreen() {
         <View className="flex-row border-b border-gray-800 px-6">
           {(['services', 'portfolio', 'reviews', 'about'] as const).map((tab) => (
             <TouchableOpacity key={tab} onPress={() => setActiveTab(tab)} className="mr-6 pb-3">
-              <Text className={\`\${activeTab === tab ? 'text-pink-400 font-semibold' : 'text-gray-400'} capitalize\`}>
+              <Text className={`${activeTab === tab ? 'text-pink-400 font-semibold' : 'text-gray-400'} capitalize`}>
                 {tab}
               </Text>
               {activeTab === tab && <View className="absolute bottom-0 left-0 right-0 h-0.5 bg-pink-400" />}

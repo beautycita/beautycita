@@ -44,7 +44,7 @@ export default function NotificationsScreen() {
         contentContainerStyle={{padding: 24}}
         renderItem={({item}) => (
           <TouchableOpacity onPress={() => handleNotificationPress(item)} className="mb-4">
-            <GradientCard className={\`p-4 \${!item.read ? 'border-l-4 border-pink-500' : ''}\`}>
+            <GradientCard className={`p-4 ${!item.read ? 'border-l-4 border-pink-500' : ''}`}>
               <View className="flex-row items-start">
                 <Text className="text-2xl mr-3">{getIcon(item.type)}</Text>
                 <View className="flex-1">

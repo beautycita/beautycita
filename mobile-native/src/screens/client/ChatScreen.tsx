@@ -41,11 +41,11 @@ export default function ChatScreen() {
   const renderMessage = ({item}) => {
     const isMe = item.sender_id === 'current_user_id'; // Replace with actual user ID
     return (
-      <View className={\`mb-4 flex-row \${isMe ? 'justify-end' : 'justify-start'}\`}>
+      <View className={`mb-4 flex-row ${isMe ? 'justify-end' : 'justify-start'}`}>
         <View
-          className={\`max-w-[75%] px-4 py-3 rounded-2xl \${
+          className={`max-w-[75%] px-4 py-3 rounded-2xl ${
             isMe ? 'bg-pink-500' : 'bg-gray-800'
-          }\`}
+          }`}
         >
           <Text className="text-white">{item.message}</Text>
           <Text className="text-gray-300 text-xs mt-1">

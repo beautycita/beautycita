@@ -49,9 +49,9 @@ export default function PaymentMethodScreen() {
         renderItem={({item}) => (
           <TouchableOpacity onPress={() => setSelectedId(item.id)} className="mb-4">
             <GradientCard className="p-4 flex-row items-center">
-              <View className={\`w-5 h-5 rounded-full border-2 mr-3 \${
+              <View className={`w-5 h-5 rounded-full border-2 mr-3 ${
                 selectedId === item.id ? 'border-pink-500 bg-pink-500' : 'border-gray-600'
-              }\`} />
+              }`} />
               <View className="flex-1">
                 <Text className="text-white font-semibold">{item.brand} •••• {item.last4}</Text>
                 <Text className="text-gray-400 text-sm">Expires {item.exp_month}/{item.exp_year}</Text>
