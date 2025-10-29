@@ -33,36 +33,71 @@ const DownloadsPage: React.FC = () => {
       gradient: 'from-pink-500 to-purple-600',
       items: [
         {
-          name: 'Android APK (Latest)',
-          description: 'Version 1.0.4 - All 18 core features complete',
-          size: '151 MB',
-          url: '/downloads/beautycita-v1.0.4.apk',
+          name: 'Android Native App (v1.2.0) ⭐ NEW',
+          description: 'React Native - Full native experience with offline support',
+          size: '~45 MB',
+          url: `${R2_PUBLIC_URL}/downloads/mobile-native/BeautyCita-v1.2.0.apk`,
           format: 'APK',
           contents: [
+            'Built with React Native (TypeScript)',
+            'Biometric authentication (Face ID, Touch ID, Fingerprint)',
+            'Real-time chat with Socket.IO',
+            'Google Maps integration for stylist discovery',
+            'Camera & gallery access for portfolios',
+            'Native Stripe payments (Apple Pay, Google Pay)',
+            'Push notifications via OneSignal',
+            'Full offline support',
+            'Dark mode throughout'
+          ],
+          releaseNotes: '/downloads/mobile-native/RELEASE_NOTES_v1.2.0.md'
+        },
+        {
+          name: 'iOS Native App (v1.2.0) ⭐ NEW',
+          description: 'React Native - Optimized for iPhone & iPad',
+          size: '~38 MB',
+          url: `${R2_PUBLIC_URL}/downloads/mobile-native/BeautyCita-v1.2.0.ipa`,
+          format: 'IPA',
+          contents: [
+            'iOS app package (unsigned for development)',
+            'Built with React Native (TypeScript)',
+            'Face ID & Touch ID authentication',
+            'Apple Pay integration',
+            'Real-time messaging',
+            'Native maps & location services',
+            'Camera integration for portfolios',
+            'Push notifications',
+            'Requires installation via Xcode/AltStore/TestFlight'
+          ],
+          releaseNotes: '/downloads/mobile-native/RELEASE_NOTES_v1.2.0.md'
+        },
+        {
+          name: 'Android PWA (v1.0.4)',
+          description: 'Progressive Web App - Lightweight version',
+          size: '6.2 MB',
+          url: `${R2_PUBLIC_URL}/downloads/android/beautycita-v1.0.4-build6.apk`,
+          format: 'APK',
+          contents: [
+            'Progressive Web App (PWA)',
             'Favorite stylists & SMS preferences',
-            'Biometric authentication (Touch ID, Face ID)',
+            'Biometric authentication',
             'Video consultations & en route tracking',
-            'Complete booking history',
-            'All Capacitor plugins included'
+            'Media assets loaded from CDN (optimized size)'
           ],
           releaseNotes: '/downloads/RELEASE_NOTES_v1.0.4.md'
         },
         {
-          name: 'Android APK (v1.0.3)',
-          description: 'Previous stable version',
-          size: '23 MB',
-          url: '/downloads/android/beautycita-v1.0.3.apk',
-          format: 'APK',
-          contents: ['Android app package', 'Stable release', 'Core features included']
-        },
-        {
-          name: 'iOS App (Coming Soon)',
-          description: 'Apple App Store version in review',
-          size: 'TBA',
-          url: '#',
+          name: 'iOS PWA (v1.0.4)',
+          description: 'Progressive Web App - Optimized with CDN',
+          size: '3.8 MB',
+          url: `${R2_PUBLIC_URL}/downloads/ios/beautycita-v1.0.4-optimized-unsigned.ipa`,
           format: 'IPA',
-          disabled: true,
-          contents: ['iOS app package', 'App Store submission pending', 'TestFlight beta available soon']
+          contents: [
+            'Progressive Web App (PWA)',
+            'iOS app package (unsigned)',
+            'Media assets loaded from CDN',
+            'For development and testing',
+            'Requires device installation via Xcode/AltStore'
+          ]
         }
       ]
     },
