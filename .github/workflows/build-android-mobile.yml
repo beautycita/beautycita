@@ -46,6 +46,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Set Android SDK location
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > mobile-native/android/local.properties
+          cat mobile-native/android/local.properties
+
       - name: Make gradlew executable
         working-directory: mobile-native/android
         run: chmod +x gradlew
