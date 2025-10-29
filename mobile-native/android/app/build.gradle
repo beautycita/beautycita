@@ -57,7 +57,7 @@ react {
 /**
  * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
  */
-def enableProguardInReleaseBuilds = true
+def enableProguardInReleaseBuilds = false
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
@@ -77,39 +77,16 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.beautycitanative"
+    namespace "com.beautycitaminimal"
     defaultConfig {
-        applicationId "com.beautycitanative"
+        applicationId "com.beautycitaminimal"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 2
         versionName "1.2.0"
-
-        // Multidex support for large app
-        multiDexEnabled true
-
-        // Vector drawable support
-        vectorDrawables.useSupportLibrary = true
     }
     signingConfigs {
         debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-        }
-        release {
-            // For production builds, create a release keystore:
-            // keytool -genkeypair -v -storetype PKCS12 -keystore beautycita-release.keystore \
-            //   -alias beautycita -keyalg RSA -keysize 2048 -validity 10000
-            // Then uncomment below and add credentials to ~/.gradle/gradle.properties
-
-            // storeFile file('beautycita-release.keystore')
-            // storePassword BEAUTYCITA_RELEASE_STORE_PASSWORD
-            // keyAlias BEAUTYCITA_RELEASE_KEY_ALIAS
-            // keyPassword BEAUTYCITA_RELEASE_KEY_PASSWORD
-
-            // For now, using debug keystore (NOT FOR PRODUCTION!)
             storeFile file('debug.keystore')
             storePassword 'android'
             keyAlias 'androiddebugkey'
@@ -119,22 +96,13 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
-            applicationIdSuffix ".debug"
-            debuggable true
         }
         release {
-            signingConfig signingConfigs.release
+            // Caution! In production, you need to generate your own keystore file.
+            // see https://reactnative.dev/docs/signed-apk-android.
+            signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
-            shrinkResources enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-
-            // Disable debuggable in production
-            debuggable false
-
-            // Enable crash reporting
-            ndk {
-                debugSymbolLevel 'FULL'
-            }
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
 }
