@@ -60,7 +60,7 @@ export default function UnifiedAuthPage({
   const { login, register: registerUser, isLoading } = useAuthStore()
   const navigate = useNavigate()
   const location = useLocation()
-  const { t } = useTranslation()
+  const { t } = useTranslation('common')
 
   const from = location.state?.from?.pathname || '/'
   const isBiometricSupported = biometricCapabilities.isSupported
@@ -365,8 +365,8 @@ export default function UnifiedAuthPage({
             <p className="text-xl text-white/90 mb-4">{pageTitle}</p>
             <p className="text-white/80 max-w-md">
               {mode === 'register'
-                ? 'Secure, passwordless registration with biometrics'
-                : 'Quick and secure login with your fingerprint or face'}
+                ? t('auth.methodSelection.biometricRegisterDescription')
+                : t('auth.methodSelection.biometricLoginDescription')}
             </p>
           </motion.div>
         </div>
@@ -396,7 +396,7 @@ export default function UnifiedAuthPage({
                 {pageTitle}
               </h2>
               <p className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>
-                {mode === 'register' ? 'Choose your preferred signup method' : 'Choose your preferred login method'}
+                {mode === 'register' ? t('auth.methodSelection.registerPrompt') : t('auth.methodSelection.loginPrompt')}
               </p>
             </div>
 
@@ -410,7 +410,7 @@ export default function UnifiedAuthPage({
                   className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold py-4 px-6 rounded-3xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-3"
                 >
                   <FingerPrintIcon className="h-6 w-6" />
-                  <span>{mode === 'login' ? 'Login with Biometric' : 'Register with Biometric'}</span>
+                  <span>{mode === 'login' ? t('auth.methodSelection.biometricLoginButton') : t('auth.methodSelection.biometricRegisterButton')}</span>
                 </button>
               )}
 
@@ -869,31 +869,6 @@ export default function UnifiedAuthPage({
                 </button>
               </p>
             </div>
-
-            {/* Role Switch */}
-            <div className="mt-4 text-center">
-              <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                {role === 'CLIENT' ? t('auth.links.beautyProfessional') : 'Looking for beauty services?'}{' '}
-                <Link
-                  to={role === 'CLIENT' ? '/stylist/auth' : '/auth'}
-                  className="font-medium bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent hover:opacity-80"
-                >
-                  {role === 'CLIENT' ? t('auth.links.joinAsStylist') : 'Sign in as Client'}
-                </Link>
-              </p>
-            </div>
-
-            {/* Admin Login Link */}
-            {role !== 'ADMIN' && (
-              <div className="mt-4 text-center">
-                <Link
-                  to="/admin/login"
-                  className={`text-xs ${isDarkMode ? 'text-gray-600 hover:text-gray-400' : 'text-gray-400 hover:text-gray-600'} transition-colors`}
-                >
-                  Staff Login
-                </Link>
-              </div>
-            )}
           </GradientCard>
         </div>
       </div>

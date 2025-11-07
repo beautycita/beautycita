@@ -162,8 +162,13 @@ function AppLayout() {
   // Don't show navbar/footer on homepage (it has its own)
   const hideLayout = false
 
-  // Hide Aphrodite on panel pages
-  const hideAphrodite = location.pathname.startsWith('/panel')
+  // Hide Aphrodite on panel pages and auth pages (login/register)
+  const hideAphrodite = location.pathname.startsWith('/panel') ||
+                        location.pathname.startsWith('/login') ||
+                        location.pathname.startsWith('/register') ||
+                        location.pathname.startsWith('/auth') ||
+                        location.pathname.includes('/stylist/login') ||
+                        location.pathname.includes('/admin/login')
 
   return (
     <>
@@ -172,27 +177,33 @@ function AppLayout() {
         <Suspense fallback={<BCLoading size="xl" fullScreen text={t('common.loading')} />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
-                  {/* Unified Auth Pages - Biometric + Google OAuth */}
+                  {/* Unified Auth Pages - All registration methods (Google, Biometric, Email/Password) */}
                   <Route path="/auth" element={<UnifiedAuthPage mode="login" role="CLIENT" />} />
                   <Route path="/login" element={<UnifiedAuthPage mode="login" role="CLIENT" />} />
-                  <Route path="/register" element={<SimpleRegisterPage />} />
+                  <Route path="/register" element={<UnifiedAuthPage mode="register" role="CLIENT" />} />
+
+                  {/* Stylist auth - LOGIN ONLY (registration via client onboarding + upgrade) */}
                   <Route path="/stylist/auth" element={<UnifiedAuthPage mode="login" role="STYLIST" />} />
                   <Route path="/stylist/login" element={<UnifiedAuthPage mode="login" role="STYLIST" />} />
-                  <Route path="/stylist/register" element={<SimpleRegisterPage />} />
+                  <Route path="/stylist/register" element={<Navigate to="/register" replace />} />
 
                   {/* Client routes (matching stylist pattern) */}
                   <Route path="/client/auth" element={<UnifiedAuthPage mode="login" role="CLIENT" />} />
                   <Route path="/client/login" element={<UnifiedAuthPage mode="login" role="CLIENT" />} />
-                  <Route path="/client/register" element={<SimpleRegisterPage />} />
+                  <Route path="/client/register" element={<UnifiedAuthPage mode="register" role="CLIENT" />} />
 
                   {/* Admin routes */}
                   <Route path="/admin/login" element={<UnifiedAuthPage mode="login" role="ADMIN" />} />
                   <Route path="/login/admin" element={<UnifiedAuthPage mode="login" role="ADMIN" />} />
 
-                  {/* Legacy routes for backward compatibility - redirect to new auth system */}
+                  {/* Legacy routes for backward compatibility */}
                   <Route path="/login/client" element={<UnifiedAuthPage mode="login" role="CLIENT" />} />
                   <Route path="/login/stylist" element={<UnifiedAuthPage mode="login" role="STYLIST" />} />
                   <Route path="/register/client" element={<UnifiedAuthPage mode="register" role="CLIENT" />} />
+                  <Route path="/register/stylist" element={<Navigate to="/register" replace />} />
+
+                  {/* Legacy phone-only registration (deprecated, use /register instead) */}
+                  <Route path="/register/phone" element={<SimpleRegisterPage />} />
 
                   {/* Password recovery and verification */}
                   <Route path="/forgot-password" element={<ForgotPasswordPage />} />
