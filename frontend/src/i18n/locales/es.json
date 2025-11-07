@@ -2761,6 +2761,308 @@
         "signInRequired": "Por favor inicia sesión para reservar una cita",
         "noServices": "Este estilista no tiene servicios disponibles"
       }
+    },
+    "clientOnboarding": {
+      "header": "Completa Tu Perfil",
+      "step": "Paso {{current}} de {{total}}",
+      "step1": {
+        "title": "Verifica Tu Teléfono",
+        "description": "Te enviaremos un código de verificación",
+        "phoneLabel": "Número de Teléfono",
+        "phonePlaceholder": "3221234567",
+        "phoneHelper": "Ingresa tu número de 10 dígitos",
+        "sendCodeButton": "Enviar Código de Verificación",
+        "errors": {
+          "phoneRequired": "El número de teléfono debe tener 10 dígitos",
+          "phoneInvalid": "Por favor ingresa un número de teléfono válido",
+          "sendFailed": "Error al enviar el código de verificación. Por favor inténtalo de nuevo."
+        },
+        "verification": {
+          "title": "Ingresa el Código de 6 Dígitos",
+          "description": "Enviado a {{phone}}",
+          "resendButton": "Reenviar código",
+          "resendAvailableIn": "Reenviar disponible en {{seconds}}s",
+          "changeNumberButton": "Cambiar número",
+          "verifying": "Verificando...",
+          "errors": {
+            "verificationFailed": "Código de verificación inválido. Por favor inténtalo de nuevo.",
+            "codeIncomplete": "Por favor ingresa el código completo de 6 dígitos"
+          },
+          "success": "¡Teléfono verificado exitosamente!"
+        }
+      },
+      "step2": {
+        "title": "Elige Tu Avatar",
+        "description": "Selecciona un avatar o sube tu propia foto",
+        "nameLabel": "Tu Nombre",
+        "namePlaceholder": "Ingresa tu nombre completo",
+        "uploadButton": "Subir Foto Propia",
+        "continueButton": "Continuar",
+        "errors": {
+          "nameRequired": "Por favor ingresa tu nombre",
+          "avatarRequired": "Por favor selecciona un avatar o sube una foto",
+          "uploadFailed": "Error al subir la foto. Por favor inténtalo de nuevo."
+        }
+      },
+      "step3": {
+        "title": "Agrega Método de Pago",
+        "description": "Asegura tus reservas con un método de pago",
+        "whyTitle": "¿Por qué agregar un método de pago?",
+        "reasons": {
+          "faster": "Proceso de reserva más rápido",
+          "secure": "Reserva segura de citas",
+          "easy": "Gestión fácil de pagos"
+        },
+        "addButton": "Agregar Método de Pago",
+        "skipButton": "Omitir por ahora",
+        "skipHelper": "Puedes agregar uno más tarde en configuración",
+        "errors": {
+          "addFailed": "Error al agregar método de pago. Por favor inténtalo de nuevo."
+        }
+      },
+      "step4": {
+        "title": "¡Todo Listo!",
+        "subtitle": "Tu perfil está completo",
+        "welcome": "¡Bienvenido a BeautyCita, {{name}}!",
+        "description": "Estás listo para descubrir increíbles estilistas y reservar tu próxima cita de belleza.",
+        "features": {
+          "search": "Busca estilistas cercanos",
+          "book": "Reserva citas al instante",
+          "track": "Rastrea tus citas",
+          "review": "Deja reseñas"
+        },
+        "startButton": "Comenzar a Explorar",
+        "goToDashboard": "Ir al Panel"
+      },
+      "paymentModal": {
+        "title": "Elige Método de Pago",
+        "description": "Selecciona cómo te gustaría agregar fondos a tu cuenta",
+        "creditCard": {
+          "title": "Tarjeta de Crédito/Débito",
+          "description": "Paga al instante con Visa, Mastercard o American Express"
+        },
+        "oxxo": {
+          "title": "Pago en Efectivo OXXO",
+          "description": "Paga en efectivo en cualquier OXXO, 7-Eleven o tiendas participantes"
+        },
+        "bankTransfer": {
+          "title": "Transferencia Bancaria (SPEI)",
+          "description": "Transferencia bancaria directa usando SPEI o transferencia bancaria"
+        },
+        "crypto": {
+          "title": "Criptomoneda",
+          "description": "Paga con Bitcoin, Ethereum u otras criptomonedas"
+        },
+        "cancelButton": "Cancelar",
+        "processing": "Procesando..."
+      },
+      "navigation": {
+        "next": "Siguiente",
+        "back": "Atrás",
+        "finish": "Finalizar"
+      },
+      "errors": {
+        "genericError": "Ocurrió un error. Por favor inténtalo de nuevo.",
+        "networkError": "Error de conexión. Verifica tu internet.",
+        "sessionExpired": "Tu sesión ha expirado. Por favor inicia sesión de nuevo."
+      }
+    },
+    "stylistOnboarding": {
+      "header": "Conviértete en un Profesional de BeautyCita",
+      "subtitle": "Completa tu perfil para comenzar a aceptar clientes",
+      "step": "Paso {{current}} de {{total}}",
+      "step1": {
+        "title": "Elige Tu Nombre de Usuario",
+        "description": "Este será tu identificador único en BeautyCita",
+        "usernameLabel": "Nombre de Usuario",
+        "usernamePlaceholder": "nombredeusuario",
+        "usernameHelper": "Solo letras, números y guiones bajos. Mínimo 3 caracteres.",
+        "checking": "Verificando disponibilidad...",
+        "available": "¡Disponible!",
+        "unavailable": "No disponible",
+        "continueButton": "Continuar",
+        "errors": {
+          "required": "El nombre de usuario es requerido",
+          "tooShort": "El nombre de usuario debe tener al menos 3 caracteres",
+          "invalid": "Solo letras, números y guiones bajos permitidos",
+          "taken": "Este nombre de usuario ya está en uso",
+          "checkFailed": "Error al verificar disponibilidad. Por favor inténtalo de nuevo."
+        }
+      },
+      "step2": {
+        "title": "Verifica Tu Email",
+        "description": "Te enviaremos un código de verificación",
+        "emailLabel": "Dirección de Email",
+        "emailPlaceholder": "tu@email.com",
+        "sendCodeButton": "Enviar Código de Verificación",
+        "errors": {
+          "required": "Email es requerido",
+          "invalid": "Por favor ingresa un email válido",
+          "sendFailed": "Error al enviar código de verificación"
+        },
+        "verification": {
+          "title": "Ingresa el Código de 6 Dígitos",
+          "description": "Enviado a {{email}}",
+          "resendButton": "Reenviar código",
+          "resendAvailableIn": "Reenviar disponible en {{seconds}}s",
+          "changeEmailButton": "Cambiar email",
+          "verifying": "Verificando...",
+          "errors": {
+            "verificationFailed": "Código de verificación inválido",
+            "codeIncomplete": "Por favor ingresa el código completo de 6 dígitos"
+          },
+          "success": "¡Email verificado exitosamente!"
+        }
+      },
+      "step3": {
+        "title": "Cuéntanos Sobre Tu Negocio",
+        "description": "Comparte detalles sobre tus servicios profesionales",
+        "businessNameLabel": "Nombre del Negocio",
+        "businessNamePlaceholder": "Ej: Salón de Belleza Elegante",
+        "businessNameHelper": "El nombre de tu salón o negocio",
+        "bioLabel": "Biografía Profesional",
+        "bioPlaceholder": "Cuéntanos sobre tu experiencia, especialidades y lo que te hace único...",
+        "bioHelper": "Comparte tu experiencia y especialidades (mínimo 50 caracteres)",
+        "bioCount": "{{count}}/500 caracteres",
+        "specialtiesLabel": "Especialidades",
+        "specialtiesPlaceholder": "Ej: Coloración de cabello, Cortes modernos, Peinados de novia",
+        "specialtiesHelper": "Tus áreas de especialización (separadas por comas)",
+        "experienceLabel": "Años de Experiencia",
+        "experiencePlaceholder": "5",
+        "continueButton": "Continuar",
+        "errors": {
+          "businessNameRequired": "Nombre del negocio es requerido",
+          "bioRequired": "Biografía es requerida",
+          "bioTooShort": "La biografía debe tener al menos 50 caracteres",
+          "specialtiesRequired": "Por favor ingresa al menos una especialidad",
+          "experienceRequired": "Años de experiencia es requerido",
+          "experienceInvalid": "Por favor ingresa un número válido de años"
+        }
+      },
+      "step4": {
+        "title": "Tu Ubicación",
+        "description": "¿Dónde ofreces tus servicios?",
+        "addressLabel": "Dirección",
+        "addressPlaceholder": "123 Calle Principal",
+        "cityLabel": "Ciudad",
+        "cityPlaceholder": "Ciudad de México",
+        "stateLabel": "Estado",
+        "statePlaceholder": "CDMX",
+        "zipLabel": "Código Postal",
+        "zipPlaceholder": "01000",
+        "continueButton": "Continuar",
+        "errors": {
+          "addressRequired": "Dirección es requerida",
+          "cityRequired": "Ciudad es requerida",
+          "stateRequired": "Estado es requerido",
+          "zipRequired": "Código postal es requerido",
+          "zipInvalid": "Por favor ingresa un código postal válido"
+        }
+      },
+      "step5": {
+        "title": "Agrega Tu Primer Servicio",
+        "description": "Comencemos con un servicio que ofreces",
+        "serviceNameLabel": "Nombre del Servicio",
+        "serviceNamePlaceholder": "Ej: Corte de Cabello y Peinado",
+        "categoryLabel": "Categoría",
+        "categoryPlaceholder": "Selecciona una categoría",
+        "categories": {
+          "haircut": "Corte de Cabello",
+          "hairColor": "Color de Cabello",
+          "hairStyling": "Peinado",
+          "makeup": "Maquillaje",
+          "nails": "Uñas",
+          "skincare": "Cuidado de la Piel",
+          "waxing": "Depilación",
+          "massage": "Masaje",
+          "other": "Otro"
+        },
+        "durationLabel": "Duración (minutos)",
+        "durationPlaceholder": "60",
+        "priceLabel": "Precio",
+        "pricePlaceholder": "500",
+        "priceHelper": "Precio en tu moneda local",
+        "descriptionLabel": "Descripción del Servicio",
+        "descriptionPlaceholder": "Describe lo que incluye este servicio...",
+        "continueButton": "Continuar",
+        "errors": {
+          "nameRequired": "Nombre del servicio es requerido",
+          "categoryRequired": "Categoría es requerida",
+          "durationRequired": "Duración es requerida",
+          "durationInvalid": "La duración debe ser al menos 15 minutos",
+          "priceRequired": "Precio es requerido",
+          "priceInvalid": "Por favor ingresa un precio válido"
+        }
+      },
+      "step6": {
+        "title": "Configuración de Pago con Stripe",
+        "description": "Configura tu cuenta de Stripe para recibir pagos",
+        "whyStripe": "¿Por qué Stripe?",
+        "benefits": {
+          "secure": "Pagos seguros y confiables",
+          "fast": "Depósitos rápidos a tu cuenta bancaria",
+          "global": "Acepta tarjetas de todo el mundo",
+          "support": "Soporte 24/7"
+        },
+        "setupButton": "Configurar Cuenta de Stripe",
+        "completeSetup": "Completar Configuración en Stripe",
+        "status": {
+          "notStarted": "No configurado",
+          "pending": "Configuración pendiente",
+          "completed": "Configuración completa"
+        },
+        "continueButton": "Continuar",
+        "skipButton": "Omitir por ahora",
+        "skipHelper": "Puedes configurar Stripe más tarde, pero necesitarás completarlo antes de recibir reservas.",
+        "errors": {
+          "setupFailed": "Error al configurar Stripe. Por favor inténtalo de nuevo."
+        }
+      },
+      "step7": {
+        "title": "Acuerdo de la Plataforma",
+        "description": "Por favor revisa y acepta nuestros términos",
+        "terms": {
+          "title": "Términos del Servicio de Estilista",
+          "term1": "Profesionalismo: Proporcionar servicios profesionales de alta calidad a todos los clientes.",
+          "term2": "Puntualidad: Llegar a tiempo a todas las citas programadas. Llegadas tardías repetidas pueden resultar en penalizaciones.",
+          "term3": "Comunicación: Responder a consultas de clientes y solicitudes de reserva dentro de 24 horas.",
+          "term4": "Comisión: BeautyCita cobra una tarifa de servicio del 3% en reservas completadas.",
+          "term5": "Cancelaciones: Notificar a los clientes al menos 24 horas antes si necesitas cancelar una cita.",
+          "term6": "Privacidad: Respetar la privacidad del cliente y mantener confidencial la información personal.",
+          "term7": "Conducta: Mantener conducta profesional en todo momento. El comportamiento inapropiado puede resultar en suspensión de cuenta.",
+          "term8": "Cumplimiento: Cumplir con todas las leyes y regulaciones locales relacionadas con servicios de belleza."
+        },
+        "agreementLabel": "Acepto los Términos del Servicio de Estilista y la Política de Privacidad",
+        "submitButton": "Completar Onboarding",
+        "submitting": "Enviando...",
+        "errors": {
+          "agreementRequired": "Debes aceptar los términos para continuar",
+          "submitFailed": "Error al enviar. Por favor inténtalo de nuevo."
+        }
+      },
+      "success": {
+        "title": "¡Bienvenido a BeautyCita!",
+        "message": "Tu perfil de estilista ha sido creado exitosamente.",
+        "nextSteps": "Próximos Pasos:",
+        "steps": {
+          "complete": "Completa tu perfil agregando más servicios",
+          "upload": "Sube fotos de portafolio de tu trabajo",
+          "set": "Configura tu disponibilidad y calendario",
+          "start": "¡Comienza a aceptar reservas!"
+        },
+        "goToDashboard": "Ir al Panel de Estilista"
+      },
+      "navigation": {
+        "next": "Siguiente",
+        "back": "Atrás",
+        "finish": "Finalizar"
+      },
+      "errors": {
+        "genericError": "Ocurrió un error. Por favor inténtalo de nuevo.",
+        "networkError": "Error de conexión. Verifica tu internet.",
+        "sessionExpired": "Tu sesión ha expirado. Por favor inicia sesión de nuevo.",
+        "saveFailed": "Error al guardar. Por favor inténtalo de nuevo."
+      }
     }
   }
 }

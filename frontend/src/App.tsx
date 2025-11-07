@@ -47,7 +47,7 @@ const BookingPage = lazy(() => import('./pages/BookingPage'))
 const ProfilePage = lazy(() => import('./pages/ProfilePage'))
 const ProfileEditPage = lazy(() => import('./pages/profile/ProfileEditPage'))
 const ProfileOnboardingPage = lazy(() => import('./pages/profile/FormikOnboardingPage'))
-const ClientOnboardingPage = lazy(() => import("./pages/ClientOnboardingPage"))
+const ClientOnboardingWizard = lazy(() => import("./pages/ClientOnboardingWizard"))
 const BecomeStylistPage = lazy(() => import('./pages/profile/BecomeStylistPage'))
 const SettingsPage = lazy(() => import('./pages/SettingsPage'))
 const NotificationsPage = lazy(() => import('./pages/NotificationsPage'))
@@ -82,6 +82,7 @@ const UnifiedPanel = lazy(() => import('./pages/UnifiedPanel'))
 // Panel sub-pages (admin/superadmin management pages)
 const PanelUsers = lazy(() => import('./pages/panel/PanelUsers'))
 const PanelApplications = lazy(() => import('./pages/panel/PanelApplications'))
+const PanelStylistApplications = lazy(() => import('./pages/panel/PanelStylistApplications'))
 const PanelMarketing = lazy(() => import('./pages/panel/PanelMarketing'))
 const PanelBookings = lazy(() => import('./pages/panel/PanelBookings'))
 const PanelServices = lazy(() => import('./pages/panel/PanelServices'))
@@ -264,7 +265,7 @@ function AppLayout() {
                     path="/client/onboarding"
                     element={
                       <ProtectedRoute>
-                        <ClientOnboardingPage />
+                        <ClientOnboardingWizard />
                       </ProtectedRoute>
                     }
                   />
@@ -464,6 +465,14 @@ function AppLayout() {
                     element={
                       <ProtectedRoute roles={['SUPERADMIN', 'ADMIN']}>
                         <PanelApplications />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/panel/stylist-applications"
+                    element={
+                      <ProtectedRoute roles={['SUPERADMIN', 'ADMIN']}>
+                        <PanelStylistApplications />
                       </ProtectedRoute>
                     }
                   />
