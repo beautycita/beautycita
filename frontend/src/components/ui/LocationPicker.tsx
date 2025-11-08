@@ -1,8 +1,7 @@
 import React, { useCallback, useRef, useState, useMemo } from 'react'
 import { Wrapper, Status } from '@googlemaps/react-wrapper'
 import { useTranslation } from 'react-i18next'
-import { MapPinIcon, PencilIcon, CheckIcon, XMarkIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
-import { locationSessionManager } from '../../services/LocationSessionManager'
+import { MapPinIcon, PencilIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 interface LocationData {
   address: string
@@ -24,13 +23,30 @@ interface MapProps {
   zoom: number
   onLocationChange: (location: LocationData) => void
   userSelectedAddress: string | null
+  originalCenter: google.maps.LatLngLiteral
 }
 
-const Map: React.FC<MapProps> = ({ center, zoom, onLocationChange, userSelectedAddress }) => {
+const Map: React.FC<MapProps> = ({ center, zoom, onLocationChange, userSelectedAddress, originalCenter }) => {
   const ref = useRef<HTMLDivElement>(null)
   const [map, setMap] = useState<google.maps.Map>()
   const [marker, setMarker] = useState<google.maps.Marker>()
   const [geocoder, setGeocoder] = useState<google.maps.Geocoder>()
+
+  // Calculate distance between two points in meters using Haversine formula
+  const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
+    const R = 6371e3 // Earth's radius in meters
+    const φ1 = lat1 * Math.PI / 180
+    const φ2 = lat2 * Math.PI / 180
+    const Δφ = (lat2 - lat1) * Math.PI / 180
+    const Δλ = (lng2 - lng1) * Math.PI / 180
+
+    const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ/2) * Math.sin(Δλ/2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+
+    return R * c // Distance in meters
+  }
 
   const initializeMap = useCallback(() => {
     if (ref.current && !map) {
@@ -54,7 +70,7 @@ const Map: React.FC<MapProps> = ({ center, zoom, onLocationChange, userSelectedA
         position: center,
         map: newMap,
         draggable: true,
-        title: 'Drag me to your exact business entrance'
+        title: 'Drag me to your exact business entrance (max 30 meters)'
       })
 
       const newGeocoder = new window.google.maps.Geocoder()
@@ -66,7 +82,24 @@ const Map: React.FC<MapProps> = ({ center, zoom, onLocationChange, userSelectedA
           const lat = position.lat()
           const lng = position.lng()
 
-          console.log('📍 Marker dragged to:', { lat, lng })
+          // Calculate distance from original position
+          const distance = calculateDistance(originalCenter.lat, originalCenter.lng, lat, lng)
+          console.log('📍 Marker dragged - distance from origin:', distance.toFixed(2), 'meters')
+
+          // Check if within 30-meter limit
+          if (distance > 30) {
+            console.warn('⚠️ Marker dragged beyond 30-meter limit, snapping back')
+            // Snap marker back to original position
+            newMarker.setPosition(originalCenter)
+            // Show visual feedback by briefly animating the marker
+            newMarker.setAnimation(google.maps.Animation.BOUNCE)
+            setTimeout(() => {
+              newMarker.setAnimation(null)
+            }, 700)
+            return
+          }
+
+          console.log('✅ Marker position within 30-meter limit')
 
           // If user manually selected an address, preserve it and only update coordinates
           if (userSelectedAddress) {
@@ -106,7 +139,7 @@ const Map: React.FC<MapProps> = ({ center, zoom, onLocationChange, userSelectedA
       setGeocoder(newGeocoder)
       console.log('✅ Google Map initialized successfully')
     }
-  }, [center, zoom, onLocationChange, map])
+  }, [center, zoom, onLocationChange, map, originalCenter])
 
   React.useEffect(() => {
     initializeMap()
@@ -181,7 +214,7 @@ const render = (status: Status) => {
   }
 }
 
-export default function LocationPicker({ value, onChange, error, apiKey }: LocationPickerProps) {
+function LocationPickerInner({ value, onChange, error, apiKey }: LocationPickerProps) {
   const { t } = useTranslation()
   const [searchValue, setSearchValue] = useState(value?.address || '')
   const [searchResults, setSearchResults] = useState<google.maps.places.AutocompletePrediction[]>([])
@@ -191,7 +224,7 @@ export default function LocationPicker({ value, onChange, error, apiKey }: Locat
   const [manualAddress, setManualAddress] = useState('')
   const [addressSupplement, setAddressSupplement] = useState('')
   const [baseLocation, setBaseLocation] = useState<LocationData | null>(null)
-  const autocompleteService = useRef<google.maps.places.AutocompleteService>()
+  const [originalCenter, setOriginalCenter] = useState<google.maps.LatLngLiteral | null>(null)
   const searchTimeoutRef = useRef<NodeJS.Timeout>()
   const [isSearching, setIsSearching] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -205,17 +238,6 @@ export default function LocationPicker({ value, onChange, error, apiKey }: Locat
   }
 
   const currentLocation = value || defaultLocation
-  const [locationPermissionDenied, setLocationPermissionDenied] = useState(false)
-  const [requestingPermission, setRequestingPermission] = useState(false)
-
-  // Check location permission status on mount
-  React.useEffect(() => {
-    const checkPermission = async () => {
-      const status = await locationSessionManager.checkPermissionStatus()
-      setLocationPermissionDenied(status === 'denied')
-    }
-    checkPermission()
-  }, [])
 
   // Update dropdown position for mobile (fixed positioning)
   const updateDropdownPosition = useCallback(() => {
@@ -253,119 +275,12 @@ export default function LocationPicker({ value, onChange, error, apiKey }: Locat
     }
   }, [])
 
-  // Handle input focus - request location permission
+  // Handle input focus - optional location permission (non-blocking)
   const handleInputFocus = async () => {
-    const session = locationSessionManager.getSession()
-
-    // If permission not yet granted and not denied, request it
-    if (session.permissionStatus === 'prompt' || session.permissionStatus === 'checking') {
-      setRequestingPermission(true)
-      const granted = await locationSessionManager.requestLocationPermission()
-      setRequestingPermission(false)
-
-      if (granted) {
-        // Location permission granted, get current location
-        const lastLocation = locationSessionManager.getLastLocation()
-        if (lastLocation) {
-          // Use the user's current location to search nearby
-          console.log('📍 Using user location for search:', lastLocation)
-        }
-      } else {
-        setLocationPermissionDenied(true)
-      }
-    }
+    // Don't request permission automatically - let user type first
+    // Location permission is optional and only used for biasing search results
+    updateDropdownPosition()
   }
-
-  // Initialize Places API services with better timing and window load detection
-  React.useEffect(() => {
-    let initializationTimeout: NodeJS.Timeout
-    let retryInterval: NodeJS.Timeout
-    let isInitializing = false
-
-    const initializePlacesService = () => {
-      if (isInitializing) return false
-
-      console.log('🔧 LocationPicker: Checking Places API availability...', {
-        hasGoogleMaps: !!window.google,
-        hasPlacesAPI: !!(window.google && window.google.maps && window.google.maps.places),
-        hasAutocompleteService: !!autocompleteService.current,
-        documentReady: document.readyState
-      })
-
-      if (window.google && window.google.maps && window.google.maps.places && !autocompleteService.current) {
-        isInitializing = true
-        try {
-          autocompleteService.current = new window.google.maps.places.AutocompleteService()
-          console.log('✅ LocationPicker: AutocompleteService initialized successfully')
-          isInitializing = false
-          return true
-        } catch (error) {
-          console.error('❌ LocationPicker: Failed to initialize AutocompleteService:', error)
-          isInitializing = false
-          return false
-        }
-      } else if (!window.google) {
-        console.warn('⚠️ LocationPicker: Google Maps API not loaded')
-        return false
-      } else if (!window.google.maps) {
-        console.warn('⚠️ LocationPicker: Google Maps core API not loaded')
-        return false
-      } else if (!window.google.maps.places) {
-        console.warn('⚠️ LocationPicker: Google Places API not loaded - retrying...')
-        return false
-      } else if (autocompleteService.current) {
-        console.log('✅ LocationPicker: AutocompleteService already initialized')
-        return true
-      }
-      return false
-    }
-
-    const attemptInitialization = () => {
-      // Try to initialize immediately
-      if (initializePlacesService()) {
-        return
-      }
-
-      // If not ready, retry with intervals
-      let retryCount = 0
-      const maxRetries = 20 // Increased retries
-      const retryIntervalMs = 300 // Shorter interval
-
-      retryInterval = setInterval(() => {
-        retryCount++
-        console.log(`🔄 LocationPicker: Retry ${retryCount}/${maxRetries} - Attempting to initialize Places API...`)
-
-        if (initializePlacesService() || retryCount >= maxRetries) {
-          clearInterval(retryInterval)
-          if (retryCount >= maxRetries) {
-            console.error('❌ LocationPicker: Failed to initialize Places API after maximum retries')
-          }
-        }
-      }, retryIntervalMs)
-    }
-
-    // Check if Google Maps script is already loaded
-    if (window.google && window.google.maps && window.google.maps.places) {
-      attemptInitialization()
-    } else {
-      // Wait for window load if not already loaded
-      if (document.readyState === 'complete') {
-        attemptInitialization()
-      } else {
-        const handleWindowLoad = () => {
-          initializationTimeout = setTimeout(attemptInitialization, 100)
-          window.removeEventListener('load', handleWindowLoad)
-        }
-        window.addEventListener('load', handleWindowLoad)
-      }
-    }
-
-    return () => {
-      if (initializationTimeout) clearTimeout(initializationTimeout)
-      if (retryInterval) clearInterval(retryInterval)
-      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current)
-    }
-  }, [])
 
   // Improved mobile detection - prioritize user agent over viewport width
   const isMobile = () => {
@@ -394,16 +309,17 @@ export default function LocationPicker({ value, onChange, error, apiKey }: Locat
   }
 
   const handleSearch = useCallback(async (query: string) => {
-    setSearchValue(query)
-    console.log('🔍 LocationPicker: Places API search:', {
+    console.log('🔍 LocationPicker: handleSearch called:', {
       query,
       length: query.length,
-      isMobile: isMobile(),
-      userAgent: navigator.userAgent.substring(0, 50)
+      hasPlacesAPI: !!window.google?.maps?.places
     })
+
+    setSearchValue(query)
 
     // Clear previous results immediately
     if (query.length <= 2) {
+      console.log('⚠️ LocationPicker: Query too short, clearing results')
       setSearchResults([])
       setShowSearchResults(false)
       return
@@ -412,108 +328,132 @@ export default function LocationPicker({ value, onChange, error, apiKey }: Locat
     // Update dropdown position before showing results
     updateDropdownPosition()
 
-    if (autocompleteService.current) {
-      try {
-        const request = {
-          input: query,
-          componentRestrictions: { country: ['mx', 'us'] }, // Mexico and US
-          types: ['establishment', 'geocode'],
-          // Add mobile-specific options
-          ...(isMobile() && {
-            radius: 50000, // 50km radius for mobile to get more relevant results
-            strictBounds: false
+    if (!window.google?.maps?.places?.AutocompleteSuggestion) {
+      console.error('❌ LocationPicker: AutocompleteSuggestion API not available!', {
+        hasGoogle: !!window.google,
+        hasMaps: !!window.google?.maps,
+        hasPlaces: !!window.google?.maps?.places
+      })
+      setSearchResults([])
+      setShowSearchResults(false)
+      return
+    }
+
+    try {
+      const request = {
+        input: query,
+        includedRegionCodes: ['mx', 'us'],
+        locationRestriction: null
+      }
+
+      console.log('📡 LocationPicker: Calling fetchAutocompleteSuggestions with:', request)
+
+      const { suggestions } = await window.google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions(request)
+
+      console.log('📥 LocationPicker: fetchAutocompleteSuggestions response:', {
+        suggestionsCount: suggestions?.length || 0,
+        firstSuggestion: suggestions?.[0],
+        firstPlacePrediction: suggestions?.[0]?.placePrediction
+      })
+
+      if (suggestions && suggestions.length > 0) {
+        console.log('✅ LocationPicker: Setting search results:', suggestions.length, 'results')
+
+        // Convert new API format to old format for compatibility
+        const predictions = suggestions.map(suggestion => {
+          const placePrediction = suggestion.placePrediction
+
+          // Extract text values from the new API format
+          const mainText = placePrediction?.structuredFormat?.mainText?.text ||
+                          placePrediction?.structuredFormat?.mainText?.toString() ||
+                          placePrediction?.text?.text ||
+                          ''
+          const secondaryText = placePrediction?.structuredFormat?.secondaryText?.text ||
+                               placePrediction?.structuredFormat?.secondaryText?.toString() ||
+                               ''
+          const fullText = placePrediction?.text?.text ||
+                          placePrediction?.text?.toString() ||
+                          ''
+
+          console.log('🔍 LocationPicker: Converting suggestion:', {
+            mainText,
+            secondaryText,
+            fullText,
+            placeId: placePrediction?.placeId
           })
-        }
 
-        console.log('📡 LocationPicker: Places API request:', request)
-
-        autocompleteService.current.getPlacePredictions(request, (predictions, status) => {
-          console.log('📥 LocationPicker: Places API response:', {
-            status,
-            predictionsCount: predictions?.length || 0,
-            statusCode: google.maps.places.PlacesServiceStatus[status],
-            isMobile: isMobile()
-          })
-
-          if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
-            console.log('✅ LocationPicker: Places API success:', predictions.map(p => ({
-              description: p.description,
-              place_id: p.place_id,
-              types: p.types
-            })))
-            setSearchResults(predictions)
-            setShowSearchResults(true)
-          } else {
-            console.warn('⚠️ LocationPicker: Places API non-OK status:', {
-              status,
-              statusText: google.maps.places.PlacesServiceStatus[status],
-              predictions: predictions?.length || 'none',
-              isMobile: isMobile()
-            })
-            setSearchResults([])
-            setShowSearchResults(false)
+          return {
+            description: fullText,
+            place_id: placePrediction?.placeId || '',
+            structured_formatting: {
+              main_text: mainText,
+              secondary_text: secondaryText
+            },
+            types: []
           }
         })
-      } catch (error) {
-        console.error('❌ LocationPicker: Places API error:', error)
+
+        setSearchResults(predictions)
+        setShowSearchResults(true)
+      } else {
+        console.warn('⚠️ LocationPicker: No suggestions returned')
         setSearchResults([])
         setShowSearchResults(false)
       }
-    } else {
-      console.warn('⚠️ LocationPicker: AutocompleteService not available', {
-        isMobile: isMobile(),
-        hasGoogle: !!window.google,
-        hasPlaces: !!(window.google && window.google.maps && window.google.maps.places)
-      })
+    } catch (error) {
+      console.error('❌ LocationPicker: Exception in handleSearch:', error)
       setSearchResults([])
       setShowSearchResults(false)
     }
   }, [])
 
-  const handlePlaceSelect = useCallback((placeId: string, description: string) => {
+  const handlePlaceSelect = useCallback(async (placeId: string, description: string) => {
     console.log('🎯 LocationPicker: Place selected:', { placeId, description })
     setSearchValue(description)
     setShowSearchResults(false)
     setUserSelectedAddress(description) // Track that user manually selected this address
 
-    // Get place details to extract coordinates
-    if (window.google) {
-      const service = new window.google.maps.places.PlacesService(document.createElement('div'))
-      console.log('📍 LocationPicker: Requesting place details for:', placeId)
+    // Get place details to extract coordinates using new Place API
+    if (window.google?.maps?.places?.Place) {
+      try {
+        console.log('📍 LocationPicker: Requesting place details for:', placeId)
 
-      service.getDetails({
-        placeId: placeId,
-        fields: ['geometry', 'formatted_address', 'address_components']
-      }, (place, status) => {
-        console.log('📥 LocationPicker: Place details response:', {
-          status,
-          statusText: google.maps.places.PlacesServiceStatus[status],
-          hasGeometry: !!place?.geometry,
-          hasLocation: !!place?.geometry?.location,
-          address: place?.formatted_address
+        // Create a new Place object with the placeId
+        const place = new window.google.maps.places.Place({
+          id: placeId
         })
 
-        if (status === google.maps.places.PlacesServiceStatus.OK && place?.geometry?.location) {
-          const lat = place.geometry.location.lat()
-          const lng = place.geometry.location.lng()
+        // Fetch place details with required fields
+        await place.fetchFields({
+          fields: ['location', 'formattedAddress', 'addressComponents']
+        })
+
+        console.log('📥 LocationPicker: Place details response:', {
+          hasLocation: !!place.location,
+          address: place.formattedAddress
+        })
+
+        if (place.location) {
+          const lat = place.location.lat()
+          const lng = place.location.lng()
 
           // Extract city and state from address components
           let city = ''
           let state = ''
 
-          if (place.address_components) {
-            for (const component of place.address_components) {
+          if (place.addressComponents) {
+            for (const component of place.addressComponents) {
               const types = component.types
               if (types.includes('locality') || types.includes('sublocality')) {
-                city = component.long_name
+                city = component.longText || ''
               } else if (types.includes('administrative_area_level_1')) {
-                state = component.short_name
+                state = component.shortText || ''
               }
             }
           }
 
           const locationData = {
-            address: place.formatted_address || description,
+            address: place.formattedAddress || description,
             latitude: lat,
             longitude: lng,
             city,
@@ -524,15 +464,16 @@ export default function LocationPicker({ value, onChange, error, apiKey }: Locat
           setUserSelectedAddress(locationData.address) // Update tracked address
           setBaseLocation(locationData) // Save base location for manual editing
           setManualAddress(locationData.address) // Initialize manual address
+          setOriginalCenter({ lat, lng }) // Save original position for 30-meter limit
           onChange(locationData)
         } else {
-          console.error('❌ LocationPicker: Failed to get place details:', {
-            status,
-            statusText: google.maps.places.PlacesServiceStatus[status],
-            place
-          })
+          console.error('❌ LocationPicker: No location data in place response')
         }
-      })
+      } catch (error) {
+        console.error('❌ LocationPicker: Failed to get place details:', error)
+      }
+    } else {
+      console.error('❌ LocationPicker: Place API not available')
     }
   }, [onChange])
 
@@ -697,28 +638,6 @@ export default function LocationPicker({ value, onChange, error, apiKey }: Locat
             </div>
           )}
 
-          {/* Location permission status indicator */}
-          <div className="mt-2">
-            {requestingPermission && (
-              <div className="flex items-center text-xs text-blue-600">
-                <div className="animate-spin w-3 h-3 border border-blue-600 border-t-transparent rounded-full mr-1"></div>
-                {t('location.requestingPermission', 'Requesting location access...')}
-              </div>
-            )}
-            {!requestingPermission && locationPermissionDenied && (
-              <div className="flex items-center text-xs text-amber-600">
-                <ExclamationTriangleIcon className="h-3 w-3 mr-1" />
-                {t('location.permissionDenied', 'Location access denied. Enable in browser settings for better address suggestions.')}
-              </div>
-            )}
-            {!requestingPermission && !locationPermissionDenied && locationSessionManager.isPermissionGranted() && (
-              <div className="flex items-center text-xs text-green-600">
-                <MapPinIcon className="h-3 w-3 mr-1" />
-                {t('location.permissionGranted', 'Location access enabled - better address suggestions available')}
-              </div>
-            )}
-          </div>
-
           {error && <p className="form-error">{error}</p>}
 
           {/* Selected Address Display */}
@@ -742,7 +661,40 @@ export default function LocationPicker({ value, onChange, error, apiKey }: Locat
             <p>⚠️ Please select your address from the dropdown suggestions provided by Google. This ensures accurate location data.</p>
           </div>
         </div>
+
+        {/* Map Display - Show after address selection */}
+        {userSelectedAddress && currentLocation.latitude !== 0 && currentLocation.longitude !== 0 && originalCenter && (
+          <div className="mt-4">
+            <label className="label mb-2">Fine-tune Your Location</label>
+            <p className="text-xs text-gray-600 mb-3">
+              Drag the pin to mark your exact business entrance. You can move it up to 30 meters from the selected address.
+            </p>
+            <div className="rounded-3xl overflow-hidden border border-gray-200 shadow-lg h-96">
+              <Map
+                center={{
+                  lat: currentLocation.latitude,
+                  lng: currentLocation.longitude
+                }}
+                zoom={18}
+                onLocationChange={onChange}
+                userSelectedAddress={userSelectedAddress}
+                originalCenter={originalCenter}
+              />
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              💡 Tip: Zoom in for more precision. The marker will bounce back if moved beyond 30 meters.
+            </p>
+          </div>
+        )}
       </div>
     </div>
+  )
+}
+
+export default function LocationPicker(props: LocationPickerProps) {
+  return (
+    <Wrapper apiKey={props.apiKey} render={render} libraries={['places']}>
+      <LocationPickerInner {...props} />
+    </Wrapper>
   )
 }

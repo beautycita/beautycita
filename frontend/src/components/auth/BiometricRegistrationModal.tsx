@@ -194,8 +194,8 @@ export default function BiometricRegistrationModal({
 
         toast.success('Registration successful! Complete your profile...')
 
-        // Redirect to profile completion
-        navigate('/profile/complete', {
+        // Redirect to profile onboarding
+        navigate('/profile/onboarding', {
           state: {
             newUser: true,
             userId: user.id

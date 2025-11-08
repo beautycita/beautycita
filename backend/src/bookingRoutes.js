@@ -612,10 +612,10 @@ router.get('/stylists/:stylistId/availability', async (req, res) => {
       ORDER BY booking_time
     `, [stylistId, date]);
 
-    // Generate all possible time slots (9:00 AM to 6:00 PM in 30-minute intervals)
+    // Generate all possible time slots (9:00 AM to 9:00 PM in 30-minute intervals)
     const allSlots = [];
     const startHour = 9; // 9 AM
-    const endHour = 18; // 6 PM
+    const endHour = 21; // 9 PM
 
     for (let hour = startHour; hour < endHour; hour++) {
       for (let minutes = 0; minutes < 60; minutes += 30) {
@@ -861,10 +861,10 @@ router.get('/stylists/:stylistId/availability/slots', async (req, res) => {
       });
     }
 
-    // Generate all possible time slots (9:00 AM to 6:00 PM in 30-minute intervals)
+    // Generate all possible time slots (9:00 AM to 9:00 PM in 30-minute intervals)
     const allSlots = [];
     const startHour = 9; // 9 AM
-    const endHour = 18; // 6 PM
+    const endHour = 21; // 9 PM
 
     for (let hour = startHour; hour < endHour; hour++) {
       for (let minutes = 0; minutes < 60; minutes += 30) {
@@ -916,8 +916,8 @@ router.get('/stylists/:stylistId/availability/slots', async (req, res) => {
         const currentMinutes = today.getMinutes();
         const currentTotalMinutes = currentHour * 60 + currentMinutes;
 
-        // Must be at least 1 hour in the future
-        if (slotTotalMinutes <= currentTotalMinutes + 60) {
+        // Must be at least 30 minutes in the future
+        if (slotTotalMinutes <= currentTotalMinutes + 30) {
           available = false;
         }
       }

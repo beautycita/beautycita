@@ -1,42 +1,42 @@
 {
   "322": {
     "+52": {
-      "attempts": 64,
-      "successes": 57,
+      "attempts": 40,
+      "successes": 33,
       "failures": 7,
-      "lastUpdated": "2025-10-28T13:59:59.061Z"
+      "lastUpdated": "2025-11-08T10:16:47.395Z"
     }
   },
   "523": {
     "+52": {
-      "attempts": 100,
-      "successes": 34,
-      "failures": 66,
-      "lastUpdated": "2025-10-28T13:59:59.061Z"
+      "attempts": 80,
+      "successes": 15,
+      "failures": 65,
+      "lastUpdated": "2025-11-08T10:16:47.395Z"
     }
   },
   "527": {
     "+52": {
-      "attempts": 34,
-      "successes": 24,
-      "failures": 10,
-      "lastUpdated": "2025-10-28T13:59:59.061Z"
+      "attempts": 27,
+      "successes": 11,
+      "failures": 16,
+      "lastUpdated": "2025-11-08T10:16:47.395Z"
     }
   },
   "555": {
     "+1": {
-      "attempts": 10,
+      "attempts": 7,
       "successes": 0,
-      "failures": 10,
-      "lastUpdated": "2025-10-28T13:59:59.061Z"
+      "failures": 7,
+      "lastUpdated": "2025-11-08T10:16:47.395Z"
     }
   },
   "720": {
     "+52": {
-      "attempts": 42,
-      "successes": 35,
+      "attempts": 25,
+      "successes": 18,
       "failures": 7,
-      "lastUpdated": "2025-10-28T13:59:59.061Z"
+      "lastUpdated": "2025-11-08T10:16:47.395Z"
     }
   }
 }

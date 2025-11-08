@@ -4,7 +4,14 @@
   "webDir": "dist",
   "server": {
     "androidScheme": "https",
-    "cleartext": false
+    "cleartext": false,
+    "overrideUserAgent": "",
+    "allowNavigation": []
+  },
+  "android": {
+    "allowMixedContent": false,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
   },
   "plugins": {
     "SplashScreen": {

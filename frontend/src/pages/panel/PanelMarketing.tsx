@@ -32,6 +32,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { useAuthStore } from '../../store/authStore'
 import toast from 'react-hot-toast'
+import QRCodeGenerator from '../../components/marketing/QRCodeGenerator'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 
@@ -1202,35 +1203,7 @@ export default function PanelMarketing() {
         )
 
       case 'qr-generator':
-        return (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-2">
-                QR Code Studio
-              </h2>
-              <p className="text-gray-600">Create custom QR codes for your business</p>
-            </div>
-
-            <div className="bg-white rounded-3xl shadow-lg p-12 text-center">
-              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center mx-auto mb-6">
-                <QrCodeIcon className="w-12 h-12 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Advanced QR Code Generator</h3>
-              <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                For advanced QR code creation with custom designs, colors, and analytics, use our dedicated QR Code Studio.
-              </p>
-              <a
-                href="/qr-generator"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-full font-semibold hover:from-green-700 hover:to-emerald-700 transition-all gap-2"
-              >
-                Open QR Code Studio
-                <ChevronRightIcon className="w-5 h-5" />
-              </a>
-            </div>
-          </div>
-        )
+        return <QRCodeGenerator />
 
       case 'color-palette':
         return (

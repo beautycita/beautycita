@@ -60,7 +60,7 @@ export default function UnifiedAuthPage({
   const { login, register: registerUser, isLoading } = useAuthStore()
   const navigate = useNavigate()
   const location = useLocation()
-  const { t } = useTranslation('common')
+  const { t } = useTranslation()
 
   const from = location.state?.from?.pathname || '/'
   const isBiometricSupported = biometricCapabilities.isSupported

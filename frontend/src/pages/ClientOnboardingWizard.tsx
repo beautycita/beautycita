@@ -19,7 +19,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { CheckCircleIcon as CheckCircleSolid } from '@heroicons/react/24/solid'
 import { useAuthStore } from '../store/authStore'
-import { useTranslation } from 'react-i18next'
+
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import { getMediaUrl } from '@/config/media'
@@ -66,7 +66,7 @@ const step3Schema = Yup.object({
 export default function ClientOnboardingWizard() {
   const { updateProfile, user } = useAuthStore()
   const navigate = useNavigate()
-  const { t } = useTranslation()
+  
   const [currentStep, setCurrentStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [codeSent, setCodeSent] = useState(false)
@@ -216,12 +216,12 @@ export default function ClientOnboardingWizard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-500 via-purple-600 to-blue-500 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-pink-500 via-purple-600 to-blue-500 py-6 sm:py-12 px-3 sm:px-4 overflow-x-hidden">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="max-w-3xl mx-auto"
+        className="w-full max-w-3xl mx-auto"
       >
         {/* Header */}
         <div className="text-center mb-8">
@@ -238,8 +238,8 @@ export default function ClientOnboardingWizard() {
               BeautyCita
             </span>
           </motion.div>
-          <h1 className="text-3xl font-bold text-white mb-2 drop-shadow-md">{t('clientOnboarding.header')}</h1>
-          <p className="text-white/90 text-lg">{t('clientOnboarding.step', { current: currentStep, total: totalSteps })}</p>
+          <h1 className="text-3xl font-bold text-white mb-2 drop-shadow-md">Welcome to BeautyCita!</h1>
+          <p className="text-white/90 text-lg">Step ${currentStep} of ${totalSteps}</p>
         </div>
 
         {/* Modern Progress Bar */}
@@ -296,7 +296,7 @@ export default function ClientOnboardingWizard() {
 
         {/* Card */}
         <motion.div
-          className="bg-white rounded-3xl shadow-2xl p-8 md:p-12"
+          className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-8 md:p-12 w-full max-w-full overflow-hidden"
           layout
         >
           <Formik
@@ -336,20 +336,20 @@ export default function ClientOnboardingWizard() {
                           <PhoneIcon className="w-14 h-14 text-white" />
                         </motion.div>
                         <h2 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-3">
-                          {t('clientOnboarding.step1.title')}
+                          Verify Your Phone
                         </h2>
-                        <p className="text-gray-600 text-lg">{t('clientOnboarding.step1.description')}</p>
+                        <p className="text-gray-600 text-lg">We'll send you a 6-digit code to verify your number</p>
                       </div>
 
                       <div className="space-y-6">
                         <div>
                           <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">
-                            {t('clientOnboarding.step1.phoneLabel')}
+                            Phone Number
                           </label>
                           <Field
                             name="phone"
                             type="tel"
-                            placeholder={t('clientOnboarding.step1.phonePlaceholder')}
+                            placeholder="Enter your phone number"
                             className="w-full px-6 py-4 text-lg border-2 border-gray-200 rounded-2xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all"
                           />
                           <ErrorMessage name="phone" component="div" className="text-sm text-red-600 mt-2 font-medium" />
@@ -362,14 +362,14 @@ export default function ClientOnboardingWizard() {
                               if (values.phone && values.phone.length >= 10) {
                                 await sendVerificationCode(values.phone)
                               } else {
-                                toast.error(t('clientOnboarding.step1.errors.phoneRequired'))
+                                toast.error('Please enter a valid phone number')
                               }
                             }}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-4 px-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all"
                           >
-                            {t('clientOnboarding.step1.sendCodeButton')}
+                            Send Verification Code
                           </motion.button>
                         )}
 
@@ -377,13 +377,13 @@ export default function ClientOnboardingWizard() {
                           <>
                             <div className="bg-green-50 border-2 border-green-200 rounded-2xl p-4">
                               <p className="text-green-800 text-sm font-medium">
-                                ✓ {t('clientOnboarding.step1.verification.title')}
+                                ✓ Enter Verification Code
                               </p>
                             </div>
 
                             <div>
                               <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">
-                                {t('clientOnboarding.step1.verification.title')}
+                                Enter Verification Code
                               </label>
                               <Field
                                 name="verificationCode"
@@ -413,7 +413,7 @@ export default function ClientOnboardingWizard() {
                                 whileTap={{ scale: 0.98 }}
                                 className="flex-1 px-6 py-4 border-2 border-gray-300 text-gray-700 font-bold rounded-2xl hover:bg-gray-50 transition-all text-lg"
                               >
-                                {t('clientOnboarding.step1.verification.resendButton')}
+                                Resend Code
                               </motion.button>
                               <motion.button
                                 type="button"
@@ -426,7 +426,7 @@ export default function ClientOnboardingWizard() {
                                       setCurrentStep(2)
                                     }
                                   } else {
-                                    toast.error(t('clientOnboarding.step1.verification.errors.codeIncomplete'))
+                                    toast.error('Please enter the complete 6-digit code')
                                   }
                                 }}
                                 disabled={verifyingPhone}
@@ -434,9 +434,9 @@ export default function ClientOnboardingWizard() {
                                 whileTap={{ scale: 0.98 }}
                                 className="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-4 px-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-lg"
                               >
-                                {verifyingPhone ? t('clientOnboarding.step1.verification.verifying') : (
+                                {verifyingPhone ? 'Verifying...' : (
                                   <>
-                                    {t('clientOnboarding.navigation.next')}
+                                    Next
                                     <ArrowRightIcon className="w-5 h-5" />
                                   </>
                                 )}
@@ -467,20 +467,20 @@ export default function ClientOnboardingWizard() {
                           <UserCircleIcon className="w-14 h-14 text-white" />
                         </motion.div>
                         <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-3">
-                          {t('clientOnboarding.step2.title')}
+                          Choose Your Profile
                         </h2>
-                        <p className="text-gray-600 text-lg">{t('clientOnboarding.step2.description')}</p>
+                        <p className="text-gray-600 text-lg">Pick an avatar and tell us your name</p>
                       </div>
 
                       <div className="space-y-6">
                         <div>
                           <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">
-                            {t('clientOnboarding.step2.nameLabel')}
+                            Your Name
                           </label>
                           <Field
                             name="name"
                             type="text"
-                            placeholder={t('clientOnboarding.step2.namePlaceholder')}
+                            placeholder="Enter your full name"
                             className="w-full px-6 py-4 text-lg border-2 border-gray-200 rounded-2xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all"
                           />
                           <ErrorMessage name="name" component="div" className="text-sm text-red-600 mt-2 font-medium" />
@@ -489,7 +489,7 @@ export default function ClientOnboardingWizard() {
                         {/* Upload Custom Avatar */}
                         <div>
                           <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">
-                            {t('clientOnboarding.step2.uploadButton')}
+                            Upload Your Photo
                           </label>
                           <div className="border-2 border-dashed border-gray-300 rounded-2xl p-6 text-center hover:border-blue-500 transition-all cursor-pointer">
                             <input
@@ -560,7 +560,7 @@ export default function ClientOnboardingWizard() {
                             className="flex-1 px-6 py-4 border-2 border-gray-300 text-gray-700 font-bold rounded-2xl hover:bg-gray-50 transition-all flex items-center justify-center gap-2 text-lg"
                           >
                             <ArrowLeftIcon className="w-5 h-5" />
-                            {t('clientOnboarding.navigation.back')}
+                            Back
                           </motion.button>
                           <motion.button
                             type="button"
@@ -568,19 +568,19 @@ export default function ClientOnboardingWizard() {
                               const errors = await validateForm()
                               if (!errors.name) {
                                 if (!uploadedFile && !values.selectedAvatar) {
-                                  toast.error(t('clientOnboarding.step2.errors.avatarRequired'))
+                                  toast.error('Please select an avatar or upload a photo')
                                 } else {
                                   setCurrentStep(3)
                                 }
                               } else {
-                                toast.error(t('clientOnboarding.step2.errors.nameRequired'))
+                                toast.error('Please enter your name')
                               }
                             }}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-600 text-white font-bold py-4 px-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-2 text-lg"
                           >
-                            {t('clientOnboarding.step2.continueButton')}
+                            Continue
                             <ArrowRightIcon className="w-5 h-5" />
                           </motion.button>
                         </div>
@@ -607,26 +607,26 @@ export default function ClientOnboardingWizard() {
                           <CreditCardIcon className="w-14 h-14 text-white" />
                         </motion.div>
                         <h2 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-3">
-                          {t('clientOnboarding.step3.title')}
+                          Add Payment Method
                         </h2>
-                        <p className="text-gray-600 text-lg">{t('clientOnboarding.step3.description')}</p>
+                        <p className="text-gray-600 text-lg">Set up your payment method to book services instantly</p>
                       </div>
 
                       <div className="space-y-6">
                         <div className="bg-blue-50 border-2 border-blue-200 rounded-3xl p-6">
-                          <h3 className="text-lg font-bold text-blue-900 mb-3">{t('clientOnboarding.step3.whyTitle')}</h3>
+                          <h3 className="text-lg font-bold text-blue-900 mb-3">Why add a payment method?</h3>
                           <ul className="space-y-2 text-sm text-blue-800">
                             <li className="flex items-start gap-2">
                               <CheckCircleIcon className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                              <span>{t('clientOnboarding.step3.reasons.faster')}</span>
+                              <span>Faster Bookings</span>
                             </li>
                             <li className="flex items-start gap-2">
                               <CheckCircleIcon className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                              <span>{t('clientOnboarding.step3.reasons.secure')}</span>
+                              <span>Secure Payments</span>
                             </li>
                             <li className="flex items-start gap-2">
                               <CheckCircleIcon className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                              <span>{t('clientOnboarding.step3.reasons.easy')}</span>
+                              <span>Easy Checkout</span>
                             </li>
                           </ul>
                         </div>
@@ -639,7 +639,7 @@ export default function ClientOnboardingWizard() {
                           className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-6 px-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-3 text-lg"
                         >
                           <CreditCardIcon className="w-6 h-6" />
-                          {t('clientOnboarding.step3.addButton')}
+                          Add Payment Method
                         </motion.button>
 
                         <div className="flex gap-3 pt-4">
@@ -651,7 +651,7 @@ export default function ClientOnboardingWizard() {
                             className="flex-1 px-6 py-4 border-2 border-gray-300 text-gray-700 font-bold rounded-2xl hover:bg-gray-50 transition-all flex items-center justify-center gap-2 text-lg"
                           >
                             <ArrowLeftIcon className="w-5 h-5" />
-                            {t('clientOnboarding.navigation.back')}
+                            Back
                           </motion.button>
                           <motion.button
                             type="button"
@@ -660,9 +660,9 @@ export default function ClientOnboardingWizard() {
                             whileTap={{ scale: 0.98 }}
                             className="flex-1 bg-gradient-to-r from-gray-400 to-gray-500 text-white font-bold py-4 px-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all flex flex-col items-center justify-center text-lg"
                           >
-                            <span className="text-xs opacity-90 mb-1">{t('clientOnboarding.step3.skipButton')}</span>
+                            <span className="text-xs opacity-90 mb-1">Skip for now</span>
                             <div className="flex items-center gap-1">
-                              {t('clientOnboarding.navigation.next')}
+                              Next
                               <ArrowRightIcon className="w-4 h-4" />
                             </div>
                           </motion.button>
@@ -690,14 +690,14 @@ export default function ClientOnboardingWizard() {
                           <FireIcon className="w-14 h-14 text-white" />
                         </motion.div>
                         <h2 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-3">
-                          {t('clientOnboarding.step4.title')}
+                          You're All Set!
                         </h2>
-                        <p className="text-gray-600 text-lg">{t('clientOnboarding.step4.welcome', { name: values.name })}</p>
+                        <p className="text-gray-600 text-lg">{values.name}, welcome to BeautyCita!</p>
                       </div>
 
                       <div className="space-y-6">
                         <div className="bg-gradient-to-br from-pink-50 to-purple-50 border-2 border-purple-200 rounded-3xl p-8">
-                          <h3 className="text-2xl font-bold text-purple-900 mb-4 text-center">{t('clientOnboarding.step4.description')}</h3>
+                          <h3 className="text-2xl font-bold text-purple-900 mb-4 text-center">Here's how to get started:</h3>
                           <div className="space-y-4">
                             <div className="flex items-start gap-4">
                               <div className="w-12 h-12 bg-purple-600 text-white rounded-2xl flex items-center justify-center font-bold text-lg flex-shrink-0">
@@ -738,7 +738,7 @@ export default function ClientOnboardingWizard() {
                             className="flex-1 px-6 py-4 border-2 border-gray-300 text-gray-700 font-bold rounded-2xl hover:bg-gray-50 transition-all flex items-center justify-center gap-2 text-lg"
                           >
                             <ArrowLeftIcon className="w-5 h-5" />
-                            {t('clientOnboarding.navigation.back')}
+                            Back
                           </motion.button>
                           <motion.button
                             type="submit"
@@ -754,12 +754,12 @@ export default function ClientOnboardingWizard() {
                                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                                   className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
                                 />
-                                {t('clientOnboarding.paymentModal.processing')}
+                                Redirecting to payment setup...
                               </>
                             ) : (
                               <>
                                 <FireIcon className="w-5 h-5" />
-                                {t('clientOnboarding.step4.startButton')}
+                                Start Booking
                               </>
                             )}
                           </motion.button>
@@ -785,7 +785,7 @@ export default function ClientOnboardingWizard() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50 overflow-y-auto"
               onClick={() => setShowPaymentModal(false)}
             >
               <motion.div
@@ -793,15 +793,15 @@ export default function ClientOnboardingWizard() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl"
+                className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 w-full max-w-[calc(100%-24px)] sm:max-w-md shadow-2xl my-auto"
               >
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-2xl font-bold text-gray-900">{t('clientOnboarding.paymentModal.title')}</h3>
+                <div className="flex items-center justify-between mb-4 sm:mb-6 gap-2">
+                  <h3 className="text-lg sm:text-2xl font-bold text-gray-900 leading-tight">Choose Payment Method</h3>
                   <button
                     onClick={() => setShowPaymentModal(false)}
-                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0"
                   >
-                    <XMarkIcon className="w-6 h-6 text-gray-500" />
+                    <XMarkIcon className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500" />
                   </button>
                 </div>
 
@@ -811,22 +811,22 @@ export default function ClientOnboardingWizard() {
                     type="button"
                     onClick={() => {
                       setShowPaymentModal(false)
-                      toast.success(t('clientOnboarding.paymentModal.processing'))
+                      toast.success('Redirecting to payment setup...')
                       setTimeout(() => {
                         window.location.href = '/settings#payment-methods'
                       }, 1000)
                     }}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full p-6 border-2 border-gray-200 rounded-2xl hover:border-green-500 hover:bg-green-50 transition-all text-left group"
+                    className="w-full p-3 sm:p-6 border-2 border-gray-200 rounded-xl sm:rounded-2xl hover:border-green-500 hover:bg-green-50 transition-all text-left group"
                   >
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <CreditCardIcon className="w-6 h-6 text-white" />
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+                        <CreditCardIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                       </div>
-                      <div className="flex-1">
-                        <h4 className="font-bold text-gray-900 mb-1">{t('clientOnboarding.paymentModal.creditCard.title')}</h4>
-                        <p className="text-sm text-gray-600">{t('clientOnboarding.paymentModal.creditCard.description')}</p>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-bold text-gray-900 mb-1 text-sm sm:text-base">Credit or Debit Card</h4>
+                        <p className="text-xs sm:text-sm text-gray-600 truncate">Visa, Mastercard, American Express</p>
                       </div>
                     </div>
                   </motion.button>
@@ -836,22 +836,22 @@ export default function ClientOnboardingWizard() {
                     type="button"
                     onClick={() => {
                       setShowPaymentModal(false)
-                      toast.success(t('clientOnboarding.paymentModal.processing'))
+                      toast.success('Redirecting to payment setup...')
                       setTimeout(() => {
                         window.location.href = '/settings#payment-methods'
                       }, 1000)
                     }}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full p-6 border-2 border-gray-200 rounded-2xl hover:border-orange-500 hover:bg-orange-50 transition-all text-left group"
+                    className="w-full p-3 sm:p-6 border-2 border-gray-200 rounded-xl sm:rounded-2xl hover:border-orange-500 hover:bg-orange-50 transition-all text-left group"
                   >
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <BuildingStorefrontIcon className="w-6 h-6 text-white" />
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+                        <BuildingStorefrontIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                       </div>
-                      <div className="flex-1">
-                        <h4 className="font-bold text-gray-900 mb-1">{t('clientOnboarding.paymentModal.oxxo.title')}</h4>
-                        <p className="text-sm text-gray-600">{t('clientOnboarding.paymentModal.oxxo.description')}</p>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-bold text-gray-900 mb-1 text-sm sm:text-base">OXXO Cash Payment</h4>
+                        <p className="text-xs sm:text-sm text-gray-600">Pay cash at any OXXO store</p>
                       </div>
                     </div>
                   </motion.button>
@@ -861,22 +861,22 @@ export default function ClientOnboardingWizard() {
                     type="button"
                     onClick={() => {
                       setShowPaymentModal(false)
-                      toast.success(t('clientOnboarding.paymentModal.processing'))
+                      toast.success('Redirecting to payment setup...')
                       setTimeout(() => {
                         window.location.href = '/settings#payment-methods'
                       }, 1000)
                     }}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full p-6 border-2 border-gray-200 rounded-2xl hover:border-blue-500 hover:bg-blue-50 transition-all text-left group"
+                    className="w-full p-3 sm:p-6 border-2 border-gray-200 rounded-xl sm:rounded-2xl hover:border-blue-500 hover:bg-blue-50 transition-all text-left group"
                   >
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <BanknotesIcon className="w-6 h-6 text-white" />
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+                        <BanknotesIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                       </div>
-                      <div className="flex-1">
-                        <h4 className="font-bold text-gray-900 mb-1">{t('clientOnboarding.paymentModal.bankTransfer.title')}</h4>
-                        <p className="text-sm text-gray-600">{t('clientOnboarding.paymentModal.bankTransfer.description')}</p>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-bold text-gray-900 mb-1 text-sm sm:text-base">Bank Transfer (SPEI)</h4>
+                        <p className="text-xs sm:text-sm text-gray-600">Direct transfer from your bank</p>
                       </div>
                     </div>
                   </motion.button>

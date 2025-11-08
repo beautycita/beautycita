@@ -340,6 +340,30 @@ app.use(expressWinston.logger({
   ignoreRoute: function (req, res) { return false; }
 }));
 
+// ==================== SWAGGER API DOCUMENTATION ====================
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('../swagger-config');
+
+// Serve Swagger UI at /api/docs
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customSiteTitle: 'BeautyCita API Documentation',
+  customCss: '.swagger-ui .topbar { display: none }',
+  swaggerOptions: {
+    persistAuthorization: true,
+    displayRequestDuration: true,
+    filter: true,
+    tryItOutEnabled: true
+  }
+}));
+
+// Serve Swagger JSON spec at /api/docs.json
+app.get('/api/docs.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
+
+logger.info('📚 Swagger UI available at /api/docs');
+
 // OAuth debugging middleware
 app.use('/api/auth', (req, res, next) => {
   const requestId = `oauth-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;

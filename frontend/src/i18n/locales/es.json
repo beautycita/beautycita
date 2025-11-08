@@ -167,6 +167,14 @@
       "signUpWithGoogle": "Registrarse con Google",
       "orDivider": "O continuar con correo"
     },
+    "methodSelection": {
+      "loginPrompt": "Elige cómo iniciar sesión",
+      "registerPrompt": "Elige cómo registrarte",
+      "biometricLoginButton": "Iniciar sesión con biometría",
+      "biometricLoginDescription": "Usa tu huella digital o rostro para iniciar sesión de forma segura",
+      "biometricRegisterButton": "Registrarse con biometría",
+      "biometricRegisterDescription": "Crea tu cuenta usando autenticación biométrica"
+    },
     "stylistSteps": {
       "step1": {
         "title": "Información Personal",
@@ -2762,111 +2770,6 @@
         "noServices": "Este estilista no tiene servicios disponibles"
       }
     },
-    "clientOnboarding": {
-      "header": "Completa Tu Perfil",
-      "step": "Paso {{current}} de {{total}}",
-      "step1": {
-        "title": "Verifica Tu Teléfono",
-        "description": "Te enviaremos un código de verificación",
-        "phoneLabel": "Número de Teléfono",
-        "phonePlaceholder": "3221234567",
-        "phoneHelper": "Ingresa tu número de 10 dígitos",
-        "sendCodeButton": "Enviar Código de Verificación",
-        "errors": {
-          "phoneRequired": "El número de teléfono debe tener 10 dígitos",
-          "phoneInvalid": "Por favor ingresa un número de teléfono válido",
-          "sendFailed": "Error al enviar el código de verificación. Por favor inténtalo de nuevo."
-        },
-        "verification": {
-          "title": "Ingresa el Código de 6 Dígitos",
-          "description": "Enviado a {{phone}}",
-          "resendButton": "Reenviar código",
-          "resendAvailableIn": "Reenviar disponible en {{seconds}}s",
-          "changeNumberButton": "Cambiar número",
-          "verifying": "Verificando...",
-          "errors": {
-            "verificationFailed": "Código de verificación inválido. Por favor inténtalo de nuevo.",
-            "codeIncomplete": "Por favor ingresa el código completo de 6 dígitos"
-          },
-          "success": "¡Teléfono verificado exitosamente!"
-        }
-      },
-      "step2": {
-        "title": "Elige Tu Avatar",
-        "description": "Selecciona un avatar o sube tu propia foto",
-        "nameLabel": "Tu Nombre",
-        "namePlaceholder": "Ingresa tu nombre completo",
-        "uploadButton": "Subir Foto Propia",
-        "continueButton": "Continuar",
-        "errors": {
-          "nameRequired": "Por favor ingresa tu nombre",
-          "avatarRequired": "Por favor selecciona un avatar o sube una foto",
-          "uploadFailed": "Error al subir la foto. Por favor inténtalo de nuevo."
-        }
-      },
-      "step3": {
-        "title": "Agrega Método de Pago",
-        "description": "Asegura tus reservas con un método de pago",
-        "whyTitle": "¿Por qué agregar un método de pago?",
-        "reasons": {
-          "faster": "Proceso de reserva más rápido",
-          "secure": "Reserva segura de citas",
-          "easy": "Gestión fácil de pagos"
-        },
-        "addButton": "Agregar Método de Pago",
-        "skipButton": "Omitir por ahora",
-        "skipHelper": "Puedes agregar uno más tarde en configuración",
-        "errors": {
-          "addFailed": "Error al agregar método de pago. Por favor inténtalo de nuevo."
-        }
-      },
-      "step4": {
-        "title": "¡Todo Listo!",
-        "subtitle": "Tu perfil está completo",
-        "welcome": "¡Bienvenido a BeautyCita, {{name}}!",
-        "description": "Estás listo para descubrir increíbles estilistas y reservar tu próxima cita de belleza.",
-        "features": {
-          "search": "Busca estilistas cercanos",
-          "book": "Reserva citas al instante",
-          "track": "Rastrea tus citas",
-          "review": "Deja reseñas"
-        },
-        "startButton": "Comenzar a Explorar",
-        "goToDashboard": "Ir al Panel"
-      },
-      "paymentModal": {
-        "title": "Elige Método de Pago",
-        "description": "Selecciona cómo te gustaría agregar fondos a tu cuenta",
-        "creditCard": {
-          "title": "Tarjeta de Crédito/Débito",
-          "description": "Paga al instante con Visa, Mastercard o American Express"
-        },
-        "oxxo": {
-          "title": "Pago en Efectivo OXXO",
-          "description": "Paga en efectivo en cualquier OXXO, 7-Eleven o tiendas participantes"
-        },
-        "bankTransfer": {
-          "title": "Transferencia Bancaria (SPEI)",
-          "description": "Transferencia bancaria directa usando SPEI o transferencia bancaria"
-        },
-        "crypto": {
-          "title": "Criptomoneda",
-          "description": "Paga con Bitcoin, Ethereum u otras criptomonedas"
-        },
-        "cancelButton": "Cancelar",
-        "processing": "Procesando..."
-      },
-      "navigation": {
-        "next": "Siguiente",
-        "back": "Atrás",
-        "finish": "Finalizar"
-      },
-      "errors": {
-        "genericError": "Ocurrió un error. Por favor inténtalo de nuevo.",
-        "networkError": "Error de conexión. Verifica tu internet.",
-        "sessionExpired": "Tu sesión ha expirado. Por favor inicia sesión de nuevo."
-      }
-    },
     "stylistOnboarding": {
       "header": "Conviértete en un Profesional de BeautyCita",
       "subtitle": "Completa tu perfil para comenzar a aceptar clientes",
@@ -3063,6 +2966,111 @@
         "sessionExpired": "Tu sesión ha expirado. Por favor inicia sesión de nuevo.",
         "saveFailed": "Error al guardar. Por favor inténtalo de nuevo."
       }
+    }
+  },
+  "clientOnboarding": {
+    "header": "Completa Tu Perfil",
+    "step": "Paso {{current}} de {{total}}",
+    "step1": {
+      "title": "Verifica Tu Teléfono",
+      "description": "Te enviaremos un código de verificación",
+      "phoneLabel": "Número de Teléfono",
+      "phonePlaceholder": "3221234567",
+      "phoneHelper": "Ingresa tu número de 10 dígitos",
+      "sendCodeButton": "Enviar Código de Verificación",
+      "errors": {
+        "phoneRequired": "El número de teléfono debe tener 10 dígitos",
+        "phoneInvalid": "Por favor ingresa un número de teléfono válido",
+        "sendFailed": "Error al enviar el código de verificación. Por favor inténtalo de nuevo."
+      },
+      "verification": {
+        "title": "Ingresa el Código de 6 Dígitos",
+        "description": "Enviado a {{phone}}",
+        "resendButton": "Reenviar código",
+        "resendAvailableIn": "Reenviar disponible en {{seconds}}s",
+        "changeNumberButton": "Cambiar número",
+        "verifying": "Verificando...",
+        "errors": {
+          "verificationFailed": "Código de verificación inválido. Por favor inténtalo de nuevo.",
+          "codeIncomplete": "Por favor ingresa el código completo de 6 dígitos"
+        },
+        "success": "¡Teléfono verificado exitosamente!"
+      }
+    },
+    "step2": {
+      "title": "Elige Tu Avatar",
+      "description": "Selecciona un avatar o sube tu propia foto",
+      "nameLabel": "Tu Nombre",
+      "namePlaceholder": "Ingresa tu nombre completo",
+      "uploadButton": "Subir Foto Propia",
+      "continueButton": "Continuar",
+      "errors": {
+        "nameRequired": "Por favor ingresa tu nombre",
+        "avatarRequired": "Por favor selecciona un avatar o sube una foto",
+        "uploadFailed": "Error al subir la foto. Por favor inténtalo de nuevo."
+      }
+    },
+    "step3": {
+      "title": "Agrega Método de Pago",
+      "description": "Asegura tus reservas con un método de pago",
+      "whyTitle": "¿Por qué agregar un método de pago?",
+      "reasons": {
+        "faster": "Proceso de reserva más rápido",
+        "secure": "Reserva segura de citas",
+        "easy": "Gestión fácil de pagos"
+      },
+      "addButton": "Agregar Método de Pago",
+      "skipButton": "Omitir por ahora",
+      "skipHelper": "Puedes agregar uno más tarde en configuración",
+      "errors": {
+        "addFailed": "Error al agregar método de pago. Por favor inténtalo de nuevo."
+      }
+    },
+    "step4": {
+      "title": "¡Todo Listo!",
+      "subtitle": "Tu perfil está completo",
+      "welcome": "¡Bienvenido a BeautyCita, {{name}}!",
+      "description": "Estás listo para descubrir increíbles estilistas y reservar tu próxima cita de belleza.",
+      "features": {
+        "search": "Busca estilistas cercanos",
+        "book": "Reserva citas al instante",
+        "track": "Rastrea tus citas",
+        "review": "Deja reseñas"
+      },
+      "startButton": "Comenzar a Explorar",
+      "goToDashboard": "Ir al Panel"
+    },
+    "paymentModal": {
+      "title": "Elige Método de Pago",
+      "description": "Selecciona cómo te gustaría agregar fondos a tu cuenta",
+      "creditCard": {
+        "title": "Tarjeta de Crédito/Débito",
+        "description": "Paga al instante con Visa, Mastercard o American Express"
+      },
+      "oxxo": {
+        "title": "Pago en Efectivo OXXO",
+        "description": "Paga en efectivo en cualquier OXXO, 7-Eleven o tiendas participantes"
+      },
+      "bankTransfer": {
+        "title": "Transferencia Bancaria (SPEI)",
+        "description": "Transferencia bancaria directa usando SPEI o transferencia bancaria"
+      },
+      "crypto": {
+        "title": "Criptomoneda",
+        "description": "Paga con Bitcoin, Ethereum u otras criptomonedas"
+      },
+      "cancelButton": "Cancelar",
+      "processing": "Procesando..."
+    },
+    "navigation": {
+      "next": "Siguiente",
+      "back": "Atrás",
+      "finish": "Finalizar"
+    },
+    "errors": {
+      "genericError": "Ocurrió un error. Por favor inténtalo de nuevo.",
+      "networkError": "Error de conexión. Verifica tu internet.",
+      "sessionExpired": "Tu sesión ha expirado. Por favor inicia sesión de nuevo."
     }
   }
 }

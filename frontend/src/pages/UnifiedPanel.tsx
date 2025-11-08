@@ -171,7 +171,7 @@ export default function UnifiedPanel() {
       description: stats.applications > 0 ? `${stats.applications} pending review` : 'No pending applications',
       icon: ShieldCheckIcon,
       gradient: 'from-pink-500 to-rose-600',
-      link: '/panel/applications',
+      link: '/panel/stylist-applications',
       roles: ['SUPERADMIN', 'ADMIN'],
       actionType: 'route'
     },

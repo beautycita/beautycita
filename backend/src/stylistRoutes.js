@@ -12,7 +12,7 @@ router.use((req, res, next) => {
 
 // Test route to verify router is working
 router.get('/test', (req, res) => {
-  res.json({ message: 'Stylist routes are working!', timestamp: new Date(), version: 'v2' })
+  res.json({ message: 'Stylist routes are working!', timestamp: new Date(), version: 'v3-fixed' })
 })
 
 // Base route - GET /api/stylists
@@ -55,12 +55,74 @@ function toRadians(degrees) {
   return degrees * (Math.PI / 180)
 }
 
+// ============================================================================
+// SPECIFIC ROUTES (MUST come BEFORE parameterized routes like /:id)
+// ============================================================================
+
+// GET /api/stylists/public - Get all public stylists
+router.get('/public', async (req, res) => {
+  try {
+    const { limit = 20, offset = 0 } = req.query
+
+    const query = `
+      SELECT
+        s.id,
+        s.user_id,
+        u.name,
+        COALESCE(s.profile_picture, u.profile_picture_url) as profile_picture,
+        s.business_name,
+        s.bio,
+        s.specialties,
+        s.experience_years as years_of_experience,
+        s.social_media_links->>'instagram' as instagram_handle,
+        s.rating_average as rating,
+        s.rating_count as total_reviews,
+        s.pricing_tier as price_range,
+        s.location_city as city,
+        s.location_state as state,
+        s.is_verified as verified,
+        COALESCE(
+          (SELECT json_agg(json_build_object(
+            'id', srv.id,
+            'name', srv.name,
+            'category', srv.category,
+            'price', srv.price,
+            'duration', srv.duration_minutes
+          ))
+          FROM services srv
+          WHERE srv.stylist_id = s.id AND srv.is_active = true
+          LIMIT 5
+          ), '[]'::json
+        ) as services
+      FROM stylists s
+      JOIN users u ON s.user_id = u.id
+      WHERE u.is_active = true
+      ORDER BY s.rating_average DESC, s.rating_count DESC, s.id
+      LIMIT $1 OFFSET $2
+    `
+
+    const result = await db.query(query, [parseInt(limit), parseInt(offset)])
+
+    res.json({
+      success: true,
+      data: {
+        total: result.rows.length,
+        stylists: result.rows
+      }
+    })
+
+  } catch (error) {
+    console.error('Error fetching public stylists:', error)
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch public stylists'
+    })
+  }
+})
+
 // GET /api/stylists/nearby
-// Query params: lat, lng, limit (default 5)
-// Returns nearby stylists sorted by distance
 router.get('/nearby', async (req, res) => {
   console.log('Nearby stylists endpoint hit with params:', req.query);
-  console.log('🔍 DEBUG: This is the NEW stylistRoutes.js file!');
 
   try {
     const { lat, lng, limit = 5 } = req.query
@@ -77,7 +139,6 @@ router.get('/nearby', async (req, res) => {
     const userLng = parseFloat(lng)
     const resultLimit = parseInt(limit)
 
-    // Get all active stylists with their location data
     const query = `
       SELECT
         s.id,
@@ -126,9 +187,7 @@ router.get('/nearby', async (req, res) => {
     const result = await db.query(query)
     console.log('Query executed, got', result.rows.length, 'stylists');
 
-    // Calculate distance for each stylist and sort
     const stylistsWithDistance = result.rows.map(stylist => {
-      // If stylist doesn't have coordinates, use default Puerto Vallarta coordinates
       const stylistLat = stylist.latitude || 20.6134
       const stylistLng = stylist.longitude || -105.2298
 
@@ -146,7 +205,6 @@ router.get('/nearby', async (req, res) => {
       }
     })
 
-    // Sort by distance and limit results
     const sortedStylists = stylistsWithDistance
       .sort((a, b) => a.distance - b.distance)
       .slice(0, resultLimit)
@@ -166,7 +224,7 @@ router.get('/nearby', async (req, res) => {
   } catch (error) {
     console.error('Error fetching nearby stylists:', error)
     console.error('Error stack:', error.stack)
-    res.status(500).json({
+    res.json({
       success: false,
       error: 'Failed to fetch nearby stylists',
       message: error.message
@@ -175,13 +233,12 @@ router.get('/nearby', async (req, res) => {
 })
 
 // GET /api/stylists/search
-// Advanced search with filters
 router.get('/search', async (req, res) => {
   try {
     const {
       lat,
       lng,
-      radius = 25, // km
+      radius = 25,
       specialty,
       price_range,
       rating_min,
@@ -220,7 +277,6 @@ router.get('/search', async (req, res) => {
     const params = []
     let paramCount = 0
 
-    // Add filters
     if (specialty) {
       paramCount++
       query += ` AND $${paramCount} = ANY(s.specialties)`
@@ -240,7 +296,6 @@ router.get('/search', async (req, res) => {
     }
 
     if (available_now === 'true') {
-      // For now all stylists are available
       query += ` AND true`
     }
 
@@ -248,7 +303,6 @@ router.get('/search', async (req, res) => {
       query += ` AND s.is_verified = true`
     }
 
-    // Add limit and offset
     paramCount++
     query += ` LIMIT $${paramCount}`
     params.push(parseInt(limit))
@@ -259,7 +313,6 @@ router.get('/search', async (req, res) => {
 
     const result = await db.query(query, params)
 
-    // If location provided, calculate distances and filter by radius
     let stylists = result.rows
     if (lat && lng) {
       const userLat = parseFloat(lat)
@@ -306,7 +359,6 @@ router.get('/search', async (req, res) => {
 })
 
 // GET /api/stylists/featured
-// Get featured stylists for landing page (with profile pictures)
 router.get('/featured', async (req, res) => {
   try {
     const { limit = 8 } = req.query
@@ -354,7 +406,6 @@ router.get('/featured', async (req, res) => {
 })
 
 // GET /api/stylists/popular
-// Get popular/featured stylists
 router.get('/popular', async (req, res) => {
   try {
     const { limit = 10 } = req.query
@@ -402,8 +453,12 @@ router.get('/popular', async (req, res) => {
     })
   }
 })
+
+// ============================================================================
+// PARAMETERIZED ROUTES (MUST come AFTER specific routes)
+// ============================================================================
+
 // GET /api/stylists/:id/services
-// Get services offered by a specific stylist
 router.get('/:id/services', async (req, res) => {
   try {
     const { id } = req.params;
@@ -421,9 +476,7 @@ router.get('/:id/services', async (req, res) => {
   }
 });
 
-
 // GET /api/stylists/:id
-// Get detailed stylist profile
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params

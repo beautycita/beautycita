@@ -166,6 +166,14 @@
       "signUpWithGoogle": "Sign up with Google",
       "orDivider": "Or continue with email"
     },
+    "methodSelection": {
+      "loginPrompt": "Choose how to sign in",
+      "registerPrompt": "Choose how to sign up",
+      "biometricLoginButton": "Sign in with biometrics",
+      "biometricLoginDescription": "Use your fingerprint or face to sign in securely",
+      "biometricRegisterButton": "Register with biometrics",
+      "biometricRegisterDescription": "Create your account using biometric authentication"
+    },
     "sections": {
       "personalInfo": "Personal Information",
       "professionalInfo": "Professional Information",
@@ -2766,103 +2774,6 @@
         "noServices": "This stylist has no available services"
       }
     },
-    "clientOnboarding": {
-      "header": "Complete Your Profile",
-      "step": "Step {{current}} of {{total}}",
-      "footer": "By completing onboarding, you agree to our Terms & Privacy Policy",
-      "step1": {
-        "title": "Verify Your Phone",
-        "description": "We'll send you a verification code",
-        "phoneLabel": "Phone Number",
-        "phonePlaceholder": "5551234567",
-        "phoneHelper": "Enter 10 digits (no country code)",
-        "sendCodeButton": "Send Verification Code",
-        "sending": "Sending...",
-        "codeTitle": "Enter Verification Code",
-        "codeDescription": "We sent a 6-digit code to {{phone}}",
-        "changeNumber": "Change number",
-        "verifyButton": "Verify & Continue",
-        "verifying": "Verifying...",
-        "resendCode": "Resend Code",
-        "resendIn": "Resend in {{seconds}}s",
-        "didntReceive": "Didn't receive the code?",
-        "codeSentMexico": "Code sent to Mexico number!",
-        "codeSentUS": "Code sent to US/Canada number!",
-        "tryingMexico": "Trying Mexico number...",
-        "tryingUS": "Trying US/Canada number...",
-        "phoneVerified": "Phone Verified!",
-        "verifiedMessage": "Your phone number has been successfully verified.",
-        "errors": {
-          "phoneRequired": "Phone number must be 10 digits",
-          "codeRequired": "Please enter the complete 6-digit code",
-          "sendFailed": "Failed to send verification code",
-          "verifyFailed": "Failed to verify code",
-          "invalidCode": "Invalid verification code"
-        }
-      },
-      "step2": {
-        "title": "Choose Your Avatar",
-        "description": "Pick a profile picture or upload your own",
-        "nameLabel": "Your Name",
-        "namePlaceholder": "Enter your name",
-        "uploadPhoto": "Upload Custom Photo",
-        "chooseAvatar": "Or choose a preset avatar",
-        "backButton": "Back",
-        "continueButton": "Continue",
-        "errors": {
-          "nameRequired": "Please enter your name",
-          "avatarRequired": "Please select or upload an avatar"
-        }
-      },
-      "step3": {
-        "title": "Add Payment Method",
-        "description": "Secure and easy checkout for your bookings",
-        "whyTitle": "Why add a payment method?",
-        "benefit1": "Skip payment steps during checkout",
-        "benefit2": "Secure payment processing with Stripe",
-        "benefit3": "Faster booking confirmations",
-        "addButton": "Add Payment Method",
-        "skipText": "skip for now",
-        "skipButton": "Continue",
-        "backButton": "Back"
-      },
-      "step4": {
-        "title": "You're All Set!",
-        "welcome": "Welcome to BeautyCita, {{name}}!",
-        "subtitle": "Start discovering amazing beauty professionals",
-        "whatsNext": "What's Next?",
-        "nextStep1": "Find Your Perfect Stylist",
-        "nextStep1Desc": "Browse profiles and reviews",
-        "nextStep2": "Book Your First Appointment",
-        "nextStep2Desc": "Choose date, time & services",
-        "nextStep3": "Enjoy Your Service",
-        "nextStep3Desc": "Relax and look amazing",
-        "startButton": "Start Booking!",
-        "submitting": "Setting up..."
-      },
-      "paymentModal": {
-        "title": "Choose Payment Method",
-        "creditCard": {
-          "title": "Credit/Debit Card",
-          "description": "Pay instantly with Visa, Mastercard, or American Express"
-        },
-        "oxxo": {
-          "title": "OXXO Cash Payment",
-          "description": "Pay in cash at any OXXO, 7-Eleven, or participating stores"
-        },
-        "bankTransfer": {
-          "title": "Bank Transfer (SPEI)",
-          "description": "Direct bank transfer using SPEI or wire transfer"
-        },
-        "security": "🔒 All payments are processed securely through Stripe"
-      },
-      "success": {
-        "title": "Welcome to BeautyCita!",
-        "phoneVerified": "Phone verified successfully!",
-        "profileComplete": "Profile completed!",
-        "redirecting": "Redirecting to dashboard..."
-      }
-    },
     "stylistOnboarding": {
       "header": "Become a BeautyCita Professional",
       "step": "Step {{current}} of {{total}}",
@@ -3037,6 +2948,103 @@
         "message": "Thank you for applying to join BeautyCita as a professional. We'll review your application and get back to you within 48 hours.",
         "dashboardButton": "Go to Dashboard"
       }
+    }
+  },
+  "clientOnboarding": {
+    "header": "Complete Your Profile",
+    "step": "Step {{current}} of {{total}}",
+    "footer": "By completing onboarding, you agree to our Terms & Privacy Policy",
+    "step1": {
+      "title": "Verify Your Phone",
+      "description": "We'll send you a verification code",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "5551234567",
+      "phoneHelper": "Enter 10 digits (no country code)",
+      "sendCodeButton": "Send Verification Code",
+      "sending": "Sending...",
+      "codeTitle": "Enter Verification Code",
+      "codeDescription": "We sent a 6-digit code to {{phone}}",
+      "changeNumber": "Change number",
+      "verifyButton": "Verify & Continue",
+      "verifying": "Verifying...",
+      "resendCode": "Resend Code",
+      "resendIn": "Resend in {{seconds}}s",
+      "didntReceive": "Didn't receive the code?",
+      "codeSentMexico": "Code sent to Mexico number!",
+      "codeSentUS": "Code sent to US/Canada number!",
+      "tryingMexico": "Trying Mexico number...",
+      "tryingUS": "Trying US/Canada number...",
+      "phoneVerified": "Phone Verified!",
+      "verifiedMessage": "Your phone number has been successfully verified.",
+      "errors": {
+        "phoneRequired": "Phone number must be 10 digits",
+        "codeRequired": "Please enter the complete 6-digit code",
+        "sendFailed": "Failed to send verification code",
+        "verifyFailed": "Failed to verify code",
+        "invalidCode": "Invalid verification code"
+      }
+    },
+    "step2": {
+      "title": "Choose Your Avatar",
+      "description": "Pick a profile picture or upload your own",
+      "nameLabel": "Your Name",
+      "namePlaceholder": "Enter your name",
+      "uploadPhoto": "Upload Custom Photo",
+      "chooseAvatar": "Or choose a preset avatar",
+      "backButton": "Back",
+      "continueButton": "Continue",
+      "errors": {
+        "nameRequired": "Please enter your name",
+        "avatarRequired": "Please select or upload an avatar"
+      }
+    },
+    "step3": {
+      "title": "Add Payment Method",
+      "description": "Secure and easy checkout for your bookings",
+      "whyTitle": "Why add a payment method?",
+      "benefit1": "Skip payment steps during checkout",
+      "benefit2": "Secure payment processing with Stripe",
+      "benefit3": "Faster booking confirmations",
+      "addButton": "Add Payment Method",
+      "skipText": "skip for now",
+      "skipButton": "Continue",
+      "backButton": "Back"
+    },
+    "step4": {
+      "title": "You're All Set!",
+      "welcome": "Welcome to BeautyCita, {{name}}!",
+      "subtitle": "Start discovering amazing beauty professionals",
+      "whatsNext": "What's Next?",
+      "nextStep1": "Find Your Perfect Stylist",
+      "nextStep1Desc": "Browse profiles and reviews",
+      "nextStep2": "Book Your First Appointment",
+      "nextStep2Desc": "Choose date, time & services",
+      "nextStep3": "Enjoy Your Service",
+      "nextStep3Desc": "Relax and look amazing",
+      "startButton": "Start Booking!",
+      "submitting": "Setting up..."
+    },
+    "paymentModal": {
+      "title": "Choose Payment Method",
+      "creditCard": {
+        "title": "Credit/Debit Card",
+        "description": "Pay instantly with Visa, Mastercard, or American Express"
+      },
+      "oxxo": {
+        "title": "OXXO Cash Payment",
+        "description": "Pay in cash at any OXXO, 7-Eleven, or participating stores"
+      },
+      "bankTransfer": {
+        "title": "Bank Transfer (SPEI)",
+        "description": "Direct bank transfer using SPEI or wire transfer"
+      },
+      "security": "🔒 All payments are processed securely through Stripe"
+    },
+    "success": {
+      "title": "Welcome to BeautyCita!",
+      "phoneVerified": "Phone verified successfully!",
+      "profileComplete": "Profile completed!",
+      "redirecting": "Redirecting to dashboard..."
     }
   }
 }

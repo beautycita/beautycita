@@ -40,11 +40,15 @@ export default function ProtectedRoute({
   // Check if user needs to complete profile onboarding
   // Support both camelCase and snake_case from API
   const profileComplete = user.profileComplete ?? user.profile_complete ?? false
-  const isOnOnboardingPage = location.pathname === '/profile/onboarding'
+  const isOnClientOnboardingPage = location.pathname === '/client/onboarding'
+  const isOnStylistOnboardingPage = location.pathname === '/profile/onboarding'
+  const isOnAnyOnboardingPage = isOnClientOnboardingPage || isOnStylistOnboardingPage
 
-  // Redirect to onboarding if profile is incomplete (except when already on onboarding page)
-  if (!profileComplete && !isOnOnboardingPage) {
-    return <Navigate to="/profile/onboarding" state={{ from: location }} replace />
+  // Redirect to role-specific onboarding if profile is incomplete
+  if (!profileComplete && !isOnAnyOnboardingPage) {
+    // Route based on user role
+    const onboardingPath = user.role === 'STYLIST' ? '/profile/onboarding' : '/client/onboarding'
+    return <Navigate to={onboardingPath} state={{ from: location }} replace />
   }
 
   // Check email verification if required

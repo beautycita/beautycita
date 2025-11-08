@@ -6,6 +6,7 @@ import AphroditeChat, { AphroditeFloatingButton } from './components/ai/Aphrodit
 import { Permission } from './lib/permissions'
 import { BCLoading } from './components/beautycita'
 import migrateToSecureStorage from './utils/storageMigration'
+import { Capacitor } from '@capacitor/core'
 
 // Layout components (always loaded - needed everywhere)
 import Navbar from './components/layout/Navbar'
@@ -159,8 +160,8 @@ function AppLayout() {
   const [isAphroditeOpen, setIsAphroditeOpen] = useState(false)
   const { t } = useTranslation()
 
-  // Don't show navbar/footer on homepage (it has its own)
-  const hideLayout = false
+  // Hide navbar/footer in native mobile app (Capacitor)
+  const hideLayout = Capacitor.isNativePlatform()
 
   // Hide Aphrodite on panel pages and auth pages (login/register)
   const hideAphrodite = location.pathname.startsWith('/panel') ||
@@ -595,9 +596,13 @@ function AppLayout() {
           />
         </>
       )}
-      {/* PWA Install Prompt - shows automatically */}
-      <InstallPrompt />
-      <CookieConsentBanner />
+      {/* PWA Install Prompt and Cookie Consent - web only, not needed in native app */}
+      {!hideLayout && (
+        <>
+          <InstallPrompt />
+          <CookieConsentBanner />
+        </>
+      )}
     </>
   )
 }

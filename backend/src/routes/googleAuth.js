@@ -330,4 +330,153 @@ router.get('/google/callback', async (req, res) => {
   }
 });
 
+/**
+ * Mobile Google Sign-In - Verify ID token
+ * POST /api/auth/google/mobile
+ * Body: { idToken: string, role?: 'CLIENT' | 'STYLIST' }
+ */
+router.post('/google/mobile', async (req, res) => {
+  try {
+    const { idToken, role } = req.body;
+
+    if (!idToken) {
+      return res.status(400).json({
+        success: false,
+        message: 'ID token is required'
+      });
+    }
+
+    logger.info('Mobile Google Sign-In initiated', { role });
+
+    // Verify the ID token
+    const ticket = await oauth2Client.verifyIdToken({
+      idToken: idToken,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+
+    const payload = ticket.getPayload();
+    const { email, email_verified, name, picture, sub: googleId } = payload;
+
+    if (!email_verified) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email not verified by Google'
+      });
+    }
+
+    logger.info('Google ID token verified', { email });
+
+    // Check if user exists
+    const existingUser = await query(
+      'SELECT * FROM users WHERE email = $1',
+      [email]
+    );
+
+    let user;
+    let isNewUser = false;
+
+    if (existingUser.rows.length > 0) {
+      // Existing user - update Google ID if not set
+      user = existingUser.rows[0];
+
+      if (!user.google_id) {
+        await query(
+          'UPDATE users SET google_id = $1, google_picture = $2 WHERE id = $3',
+          [googleId, picture, user.id]
+        );
+      }
+
+      logger.info('Existing Google user logged in', { userId: user.id });
+    } else {
+      // New user - create account
+      isNewUser = true;
+      const userRole = (role && role.toUpperCase() === 'STYLIST') ? 'STYLIST' : 'CLIENT';
+
+      // Split name
+      const nameParts = (name || email.split('@')[0]).split(' ');
+      const firstName = nameParts[0] || 'User';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
+      // Generate username
+      const username = await generateUsernameFromEmail(email);
+
+      const result = await query(
+        `INSERT INTO users
+        (email, first_name, last_name, username, role, google_id, google_picture, email_verified, email_verified_at, is_active)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, true, NOW(), true)
+        RETURNING *`,
+        [email, firstName, lastName, username, userRole, googleId, picture]
+      );
+
+      user = result.rows[0];
+      logger.info('New Google user created', { userId: user.id, role: userRole });
+
+      // Create stylist record if role is STYLIST
+      if (userRole === 'STYLIST') {
+        await query(
+          'INSERT INTO stylists (user_id) VALUES ($1)',
+          [user.id]
+        );
+        logger.info('Stylist record created', { userId: user.id });
+      } else {
+        // Create client record
+        await query(
+          'INSERT INTO clients (user_id) VALUES ($1)',
+          [user.id]
+        );
+        logger.info('Client record created', { userId: user.id });
+      }
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        email: user.email,
+        role: user.role
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    // Create session
+    await createSession(user.id, req);
+
+    logger.info('JWT token generated for Google mobile user', {
+      userId: user.id,
+      isNewUser
+    });
+
+    // Return success with token and user data
+    res.json({
+      success: true,
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        phone: user.phone,
+        phoneVerified: user.phone_verified,
+        picture: user.google_picture
+      },
+      isNewUser,
+      requiresPhoneVerification: !user.phone_verified
+    });
+
+  } catch (error) {
+    logger.error('Mobile Google Sign-In error', {
+      error: error.message,
+      stack: error.stack
+    });
+
+    res.status(500).json({
+      success: false,
+      message: 'Google Sign-In failed',
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;
