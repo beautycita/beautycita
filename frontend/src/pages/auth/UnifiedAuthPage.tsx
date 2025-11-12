@@ -235,9 +235,12 @@ export default function UnifiedAuthPage({
         useAuthStore.getState().setUser(user)
         useAuthStore.getState().setToken(token)
 
-        // Redirect to dashboard
-        const redirectUrl = role === 'STYLIST' ? '/dashboard/stylist' : '/dashboard/client'
-        navigate(redirectUrl, { replace: true })
+        // Redirect based on onboarding status
+        if (!user.onboardingCompleted) {
+          navigate('/onboarding/client', { replace: true })
+        } else {
+          navigate('/panel', { replace: true })
+        }
       }
     } catch (error: any) {
       console.error('Biometric registration error:', error)
@@ -316,8 +319,8 @@ export default function UnifiedAuthPage({
       // Auto-login after registration
       const loginResult = await login({ email: data.email, password: data.password })
       if (loginResult.success) {
-        const redirectUrl = role === 'STYLIST' ? '/dashboard/stylist' : '/dashboard/client'
-        navigate(redirectUrl, { replace: true })
+        // Always redirect to client onboarding for new registrations
+        navigate('/onboarding/client', { replace: true })
       }
     }
   }
@@ -342,12 +345,10 @@ export default function UnifiedAuthPage({
   // Google One Tap success handler
   const handleGoogleOneTapSuccess = (userData: any) => {
     // User is already logged in via One Tap, redirect appropriately
-    if (!userData.phoneVerified) {
-      navigate(`/verify-phone?email=${encodeURIComponent(userData.email)}&role=${role.toLowerCase()}`)
-    } else if (userData.role === 'STYLIST') {
-      navigate('/dashboard/stylist')
-    } else {
+    if (!userData.onboardingCompleted) {
       navigate('/onboarding/client')
+    } else {
+      navigate('/panel')
     }
   }
 
