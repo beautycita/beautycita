@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-**Last Updated:** October 30, 2025
+**Last Updated:** November 12, 2025
 **Project:** BeautyCita - Beauty Services Booking Platform
 **Status:** Active Production
 
@@ -16,6 +16,72 @@ BeautyCita is a beauty services booking platform connecting clients with profess
 - **Clients:** Book beauty services, manage appointments, real-time communication
 - **Stylists:** Manage bookings, services, portfolios, revenue via Stripe Connect
 - **Admins:** Platform management, analytics, dispute resolution
+
+---
+
+## 🚨 CRITICAL: Authentication & User Flow Rules
+
+### Client-Only Signup (NO STYLIST SIGNUP)
+
+**IMPORTANT:** Everyone signs up as a CLIENT. There is NO direct stylist registration.
+
+**Reason:** Stylists are clients too. Users should not need two accounts to use the platform.
+
+**Correct User Journey:**
+1. **Sign up as CLIENT** (only option available)
+   - Google One Tap (primary method)
+   - Email/Password (fallback)
+   - No "Join as Stylist" link anywhere in auth flow
+
+2. **Complete Client Onboarding** (3 steps)
+   - Location (city, state, ZIP)
+   - Service preferences (12 services)
+   - Profile picture (optional)
+
+3. **OnboardingProgressBanner Appears** (after client onboarding complete)
+   - Shows in UnifiedPanel at top
+   - CTA: "Want to offer services? Become a Stylist"
+
+4. **Stylist Application** (/stylist-application)
+   - User fills out application form
+   - Submits application
+   - Banner changes to "Application Under Review"
+
+5. **Admin Review & Approval**
+   - Admin reviews application in /panel/applications
+   - Can approve, deny, or message applicant
+   - On approval: User role upgraded to STYLIST
+
+6. **Full Stylist Access**
+   - User gains access to stylist panel features
+   - Can manage services, bookings, revenue, etc.
+
+### Files That Enforce This Flow
+
+**Frontend:**
+- `frontend/src/components/auth/AuthModal.tsx` - No "Join as Stylist" link
+- `frontend/src/components/onboarding/OnboardingProgressBanner.tsx` - Shows become stylist CTA
+- `frontend/src/pages/UnifiedPanel.tsx` - Displays banner after client onboarding
+- `frontend/src/pages/OptimizedClientOnboarding.tsx` - 3-step client onboarding
+
+**Backend:**
+- `backend/src/routes/user-profile.js` - GET /api/user/onboarding-status endpoint
+- `backend/src/routes/onboarding.js` - POST /api/onboarding/complete-client endpoint
+- `backend/src/routes/googleAuth.js` - POST /api/auth/google/one-tap (creates CLIENT users only)
+
+### Never Do This:
+- ❌ Add "Join as Stylist" or "Sign up as Stylist" links to auth pages
+- ❌ Allow role selection during signup
+- ❌ Create separate stylist registration flow
+- ❌ Let users choose CLIENT or STYLIST role at signup
+- ❌ Show stylist-specific options before application approval
+
+### Always Do This:
+- ✅ Default all new signups to CLIENT role
+- ✅ Show OnboardingProgressBanner after client onboarding complete
+- ✅ Direct users to /stylist-application for becoming a stylist
+- ✅ Require admin approval before granting STYLIST role
+- ✅ Keep authentication simple: everyone is a client first
 
 ---
 
@@ -218,10 +284,27 @@ npx cap sync ios
 ### Authentication System
 
 Four authentication methods:
-1. **Email/Password** - bcrypt hashed, JWT tokens (7-day expiration)
-2. **Google OAuth** - Passport.js integration
-3. **WebAuthn/Passkeys** - Biometric (Touch ID, Face ID, Windows Hello)
-4. **SMS Verification** - Twilio Verify for phone verification
+1. **Google One Tap** - PRIMARY METHOD (automatic account detection, like Figma)
+2. **Email/Password** - bcrypt hashed, JWT tokens (7-day expiration)
+3. **Google OAuth** - Passport.js integration (fallback for One Tap)
+4. **WebAuthn/Passkeys** - Biometric (Touch ID, Face ID, Windows Hello)
+5. **SMS Verification** - Twilio Verify for phone verification
+
+**Google One Tap Implementation:**
+- **Frontend Component:** `frontend/src/components/auth/GoogleOneTap.tsx`
+- **Backend Endpoint:** `POST /api/auth/google/one-tap`
+- **JWT Verification:** Uses `google-auth-library` to verify Google's JWT token
+- **Auto-Popup:** Appears 3 seconds after homepage load for new visitors
+- **Session Storage:** Tracks if user has seen popup (doesn't spam)
+- **Integration:** Added to HomePage, AuthModal, UnifiedAuthPage
+
+**One Tap Flow:**
+1. User visits beautycita.com
+2. Google One Tap popup appears (if signed into Google)
+3. User clicks account → 1-click signup
+4. Backend verifies JWT, creates CLIENT user
+5. Redirects to /onboarding/client
+6. Tracks login with method: `GOOGLE_ONE_TAP` in login_history table
 
 **WebAuthn Flow:**
 - Backend: `@simplewebauthn/server` v13.2.1
