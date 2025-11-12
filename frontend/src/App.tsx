@@ -20,8 +20,7 @@ import InstallPrompt from './components/pwa/InstallPrompt'
 // ALWAYS LOADED: Critical pages for initial render (~100 KB)
 // ============================================================================
 import HomePage from './pages/HomePage'
-import UnifiedAuthPage from './pages/auth/UnifiedAuthPage'
-import SimpleRegisterPage from './pages/auth/SimpleRegisterPage'
+import CleanAuthPage from './pages/auth/CleanAuthPage'
 import NotFoundPage from './pages/NotFoundPage'
 import UnauthorizedPage from './pages/UnauthorizedPage'
 
@@ -177,27 +176,23 @@ function AppLayout() {
         <Suspense fallback={<BCLoading size="xl" fullScreen text={t('common.loading')} />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
-                  {/* Unified Auth Pages - Biometric + Google OAuth */}
-                  <Route path="/auth" element={<UnifiedAuthPage mode="login" role="CLIENT" />} />
-                  <Route path="/login" element={<UnifiedAuthPage mode="login" role="CLIENT" />} />
-                  <Route path="/register" element={<SimpleRegisterPage />} />
-                  <Route path="/stylist/auth" element={<UnifiedAuthPage mode="login" role="STYLIST" />} />
-                  <Route path="/stylist/login" element={<UnifiedAuthPage mode="login" role="STYLIST" />} />
-                  <Route path="/stylist/register" element={<SimpleRegisterPage />} />
+                  {/* Clean Auth - Email/Password only */}
+                  <Route path="/login" element={<CleanAuthPage mode="login" />} />
+                  <Route path="/register" element={<CleanAuthPage mode="register" />} />
+                  <Route path="/auth" element={<CleanAuthPage mode="login" />} />
 
-                  {/* Client routes (matching stylist pattern) */}
-                  <Route path="/client/auth" element={<UnifiedAuthPage mode="login" role="CLIENT" />} />
-                  <Route path="/client/login" element={<UnifiedAuthPage mode="login" role="CLIENT" />} />
-                  <Route path="/client/register" element={<SimpleRegisterPage />} />
+                  {/* All login/register routes now use same clean auth */}
+                  <Route path="/stylist/login" element={<CleanAuthPage mode="login" />} />
+                  <Route path="/stylist/register" element={<CleanAuthPage mode="register" />} />
+                  <Route path="/client/login" element={<CleanAuthPage mode="login" />} />
+                  <Route path="/client/register" element={<CleanAuthPage mode="register" />} />
+                  <Route path="/admin/login" element={<CleanAuthPage mode="login" />} />
 
-                  {/* Admin routes */}
-                  <Route path="/admin/login" element={<UnifiedAuthPage mode="login" role="ADMIN" />} />
-                  <Route path="/login/admin" element={<UnifiedAuthPage mode="login" role="ADMIN" />} />
-
-                  {/* Legacy routes for backward compatibility - redirect to new auth system */}
-                  <Route path="/login/client" element={<UnifiedAuthPage mode="login" role="CLIENT" />} />
-                  <Route path="/login/stylist" element={<UnifiedAuthPage mode="login" role="STYLIST" />} />
-                  <Route path="/register/client" element={<UnifiedAuthPage mode="register" role="CLIENT" />} />
+                  {/* Legacy redirects */}
+                  <Route path="/login/client" element={<CleanAuthPage mode="login" />} />
+                  <Route path="/login/stylist" element={<CleanAuthPage mode="login" />} />
+                  <Route path="/login/admin" element={<CleanAuthPage mode="login" />} />
+                  <Route path="/register/client" element={<CleanAuthPage mode="register" />} />
 
                   {/* Password recovery and verification */}
                   <Route path="/forgot-password" element={<ForgotPasswordPage />} />
