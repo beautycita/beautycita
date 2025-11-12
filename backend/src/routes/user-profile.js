@@ -42,6 +42,53 @@ const upload = multer({
 });
 
 /**
+ * GET /api/user/onboarding-status
+ * Get user's onboarding and stylist application status
+ */
+router.get('/onboarding-status', async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Get user data
+    const userResult = await query('SELECT * FROM users WHERE id = $1', [userId]);
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const user = userResult.rows[0];
+
+    // Check if stylist application exists
+    let stylistApplicationStatus = null;
+    let stylistApplicationSubmitted = false;
+
+    const applicationResult = await query(
+      'SELECT status FROM stylist_applications WHERE user_id = $1 ORDER BY created_at DESC LIMIT 1',
+      [userId]
+    );
+
+    if (applicationResult.rows.length > 0) {
+      stylistApplicationSubmitted = true;
+      stylistApplicationStatus = applicationResult.rows[0].status; // 'pending', 'approved', 'rejected'
+    }
+
+    res.json({
+      success: true,
+      status: {
+        clientOnboardingComplete: user.onboarding_completed || false,
+        stylistApplicationSubmitted,
+        stylistApplicationStatus
+      }
+    });
+  } catch (error) {
+    console.error('Get onboarding status error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get onboarding status'
+    });
+  }
+});
+
+/**
  * GET /api/user/profile
  * Get current user's profile
  */

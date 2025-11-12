@@ -530,7 +530,7 @@ export default function HomePage() {
         </div>
       </VideoSection>
 
-      {/* Auth Modal for New Visitors */}
+      {/* Auth Modal for New Visitors - ALWAYS CLIENT ONLY */}
       <AuthModal
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}

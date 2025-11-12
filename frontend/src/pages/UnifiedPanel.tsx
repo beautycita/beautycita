@@ -34,6 +34,7 @@ import { useTranslation } from 'react-i18next'
 import WorkStatusCard from '../components/stylist/WorkStatusCard'
 import BookingRequestsList from '../components/stylist/BookingRequestsList'
 import LateClientAlerts from '../components/stylist/LateClientAlerts'
+import OnboardingProgressBanner from '../components/onboarding/OnboardingProgressBanner'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 
@@ -368,6 +369,9 @@ export default function UnifiedPanel() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
+      {/* Onboarding Progress Banner (shows after client onboarding complete) */}
+      <OnboardingProgressBanner />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-8">
         <div className="space-y-8">
           {/* Header */}

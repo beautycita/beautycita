@@ -395,19 +395,6 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register', r
                       )}
                     </Formik>
                   )}
-
-                  {/* Role Switch */}
-                  <div className="mt-6 pt-6 border-t border-gray-800 text-center">
-                    <p className="text-xs text-gray-500">
-                      {role === 'client' ? 'Are you a beauty professional? ' : 'Looking for beauty services? '}
-                      <a
-                        href={role === 'client' ? '/stylist/auth' : '/auth'}
-                        className="text-purple-400 hover:text-purple-300 font-semibold"
-                      >
-                        {role === 'client' ? 'Join as Stylist' : 'Sign in as Client'}
-                      </a>
-                    </p>
-                  </div>
                 </Dialog.Panel>
               </Transition.Child>
             </div>
