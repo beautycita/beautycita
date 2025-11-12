@@ -140,7 +140,14 @@ export default function CleanAuthPage({ mode = 'login' }: { mode?: 'login' | 're
       const endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/register'
       const payload = mode === 'login'
         ? { email, password }
-        : { email, password, role: 'CLIENT' }
+        : {
+            email,
+            password,
+            role: 'CLIENT',
+            firstName: email.split('@')[0], // Use email prefix as default first name
+            lastName: '',
+            acceptTerms: true
+          }
 
       console.log(`Calling ${endpoint}...`)
       const response = await axios.post(`${API_URL}${endpoint}`, payload)
