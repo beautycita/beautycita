@@ -1,5 +1,6 @@
 import { useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuthStore } from '../../store/authStore'
 
 interface GoogleOneTapProps {
   role?: 'client' | 'stylist'
@@ -29,6 +30,7 @@ export default function GoogleOneTap({
   autoSelect = true
 }: GoogleOneTapProps) {
   const navigate = useNavigate()
+  const { setUser, setToken } = useAuthStore()
 
   const handleCredentialResponse = useCallback(async (response: any) => {
     try {
@@ -51,9 +53,13 @@ export default function GoogleOneTap({
       if (data.success) {
         console.log('Google One Tap authentication successful')
 
-        // Store token
+        // Store token in localStorage
         localStorage.setItem('token', data.token)
         localStorage.setItem('user', JSON.stringify(data.user))
+
+        // Update auth store (CRITICAL for ProtectedRoute to work)
+        setToken(data.token)
+        setUser(data.user)
 
         // Call success callback if provided
         if (onSuccess) {
