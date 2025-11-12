@@ -71,11 +71,22 @@ router.post('/auth/login',
         ]
       );
 
+      // Check if user has completed onboarding
+      const onboardingResult = await db.query(
+        'SELECT onboarding_completed FROM users WHERE id = $1',
+        [result.user.id]
+      );
+      const hasCompletedOnboarding = onboardingResult.rows[0]?.onboarding_completed || false;
+
       res.json({
         success: true,
         accessToken: result.accessToken,
         expiresIn: result.expiresIn,
-        user: result.user,
+        user: {
+          ...result.user,
+          onboardingCompleted: hasCompletedOnboarding
+        },
+        requiresOnboarding: !hasCompletedOnboarding
       });
     } catch (error) {
       console.error('Login error:', error);
@@ -189,15 +200,23 @@ router.post('/auth/register',
       const bcrypt = require('bcrypt');
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Create user
+      // Create user (always as CLIENT - no stylist signup)
+      const userRole = 'CLIENT';
       const result = await db.query(
         `INSERT INTO users (email, password, full_name, phone, role, created_at)
          VALUES ($1, $2, $3, $4, $5, NOW())
          RETURNING id, email, role`,
-        [email, hashedPassword, fullName, phone, role || 'CLIENT']
+        [email, hashedPassword, fullName, phone, userRole]
       );
 
       const user = result.rows[0];
+
+      // Create client profile
+      await db.query(
+        `INSERT INTO clients (user_id, total_bookings, average_rating, created_at, updated_at)
+         VALUES ($1, 0, 0.00, NOW(), NOW())`,
+        [user.id]
+      );
 
       // Generate tokens
       const accessToken = generateAccessToken(user);
@@ -210,12 +229,17 @@ router.post('/auth/register',
         [user.id, req.ip, req.headers['user-agent'], JSON.stringify({ email })]
       );
 
+      // New users always need onboarding
       res.status(201).json({
         success: true,
         accessToken,
         refreshToken,
         expiresIn: 900,
-        user,
+        user: {
+          ...user,
+          onboardingCompleted: false
+        },
+        requiresOnboarding: true
       });
     } catch (error) {
       console.error('Registration error:', error);

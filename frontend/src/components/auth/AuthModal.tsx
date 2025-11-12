@@ -82,24 +82,24 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register', r
       })
 
       if (response.data.success) {
-        const { token, user } = response.data
+        const { accessToken, user, requiresOnboarding } = response.data
 
         // Store auth data
-        localStorage.setItem('token', token)
+        localStorage.setItem('token', accessToken)
         localStorage.setItem('user', JSON.stringify(user))
 
-        toast.success(`Welcome back, ${user.name}!`)
+        toast.success(`Welcome back, ${user.name || user.email}!`)
         onClose()
 
-        // Redirect based on role
-        if (user.role === 'STYLIST') {
-          navigate('/dashboard/stylist')
+        // Redirect based on onboarding status
+        if (requiresOnboarding) {
+          navigate('/onboarding/client')
         } else {
-          navigate('/dashboard')
+          navigate('/panel')
         }
       }
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Login failed'
+      const message = error.response?.data?.message || error.response?.data?.error || 'Login failed'
       setFieldError('email', message)
       toast.error(message)
     } finally {
@@ -110,41 +110,27 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register', r
   const handleRegister = async (values: any, { setSubmitting, setFieldError }: any) => {
     try {
       const response = await axios.post(`${API_URL}/api/auth/register`, {
-        firstName: values.firstName,
-        lastName: values.lastName,
+        fullName: `${values.firstName} ${values.lastName}`,
         email: values.email,
         password: values.password,
-        role: role.toUpperCase(),
+        // Always register as CLIENT - no role selection
       })
 
       if (response.data.success) {
-        toast.success('Account created! Please login.')
+        const { accessToken, user } = response.data
 
-        // Auto-login after registration
-        const loginResponse = await axios.post(`${API_URL}/api/auth/login`, {
-          email: values.email,
-          password: values.password,
-          role: role.toUpperCase(),
-        })
+        // Store auth data
+        localStorage.setItem('token', accessToken)
+        localStorage.setItem('user', JSON.stringify(user))
 
-        if (loginResponse.data.success) {
-          const { token, user } = loginResponse.data
-          localStorage.setItem('token', token)
-          localStorage.setItem('user', JSON.stringify(user))
+        toast.success(`Welcome to BeautyCita, ${values.firstName}!`)
+        onClose()
 
-          toast.success(`Welcome to BeautyCita, ${user.name}!`)
-          onClose()
-
-          // Redirect to onboarding
-          if (role === 'client') {
-            navigate('/onboarding/client')
-          } else {
-            navigate('/onboarding/stylist')
-          }
-        }
+        // Always redirect new users to client onboarding
+        navigate('/onboarding/client')
       }
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Registration failed'
+      const message = error.response?.data?.message || error.response?.data?.error || 'Registration failed'
       setFieldError('email', message)
       toast.error(message)
     } finally {
