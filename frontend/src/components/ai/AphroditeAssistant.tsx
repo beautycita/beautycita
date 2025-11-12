@@ -6,7 +6,7 @@ import {
   XMarkIcon,
   PaperAirplaneIcon,
   LightBulbIcon,
-  TrendingUpIcon,
+  ArrowTrendingUpIcon,
   CurrencyDollarIcon,
   UserGroupIcon,
   CameraIcon,
@@ -73,7 +73,7 @@ const AphroditeAssistant: React.FC<AphroditeAssistantProps> = ({
       category: 'Tendencias',
       title: '¿Qué tendencias están en auge?',
       description: 'Tendencias de belleza en tu área',
-      icon: TrendingUpIcon,
+      icon: ArrowTrendingUpIcon,
       color: 'text-purple-600'
     },
     {
