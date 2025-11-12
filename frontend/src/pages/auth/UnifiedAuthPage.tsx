@@ -339,8 +339,27 @@ export default function UnifiedAuthPage({
     ? (isClient ? t('auth.loginTitle') : 'Stylist Login')
     : (isClient ? t('auth.registerTitle') : 'Join as Beauty Professional')
 
+  // Google One Tap success handler
+  const handleGoogleOneTapSuccess = (userData: any) => {
+    // User is already logged in via One Tap, redirect appropriately
+    if (!userData.phoneVerified) {
+      navigate(`/verify-phone?email=${encodeURIComponent(userData.email)}&role=${role.toLowerCase()}`)
+    } else if (userData.role === 'STYLIST') {
+      navigate('/dashboard/stylist')
+    } else {
+      navigate('/onboarding/client')
+    }
+  }
+
   return (
     <div className={`min-h-screen flex ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+      {/* Google One Tap (invisible component) */}
+      <GoogleOneTap
+        role={role.toLowerCase() as 'client' | 'stylist'}
+        onSuccess={handleGoogleOneTapSuccess}
+        onError={(error) => console.log('One Tap not available:', error)}
+        autoSelect={true}
+      />
       {/* Left Side - Branding (Desktop only) */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500">
         <div className="absolute top-20 left-20 w-72 h-72 bg-white/20 rounded-3xl blur-3xl animate-pulse"></div>

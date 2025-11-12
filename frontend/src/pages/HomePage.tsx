@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useAuthStore } from '../store/authStore'
+import AuthModal from '../components/auth/AuthModal'
 import {
   ArrowRightIcon,
   ShieldCheckIcon,
@@ -113,7 +115,9 @@ const AnimatedTitle: React.FC<{ text: string; className?: string }> = ({ text, c
 
 export default function HomePage() {
   const { t } = useTranslation()
+  const { user } = useAuthStore()
   const [isDarkMode, setIsDarkMode] = useState(false)
+  const [showAuthModal, setShowAuthModal] = useState(false)
 
   // Load dark mode preference and listen for changes
   useEffect(() => {
@@ -140,6 +144,21 @@ export default function HomePage() {
     window.addEventListener('storage', handleStorageChange)
     return () => window.removeEventListener('storage', handleStorageChange)
   }, [])
+
+  // Show auth modal for new visitors after 3 seconds
+  useEffect(() => {
+    if (!user) {
+      const hasSeenAuthModal = sessionStorage.getItem('hasSeenAuthModal')
+      if (!hasSeenAuthModal) {
+        const timer = setTimeout(() => {
+          setShowAuthModal(true)
+          sessionStorage.setItem('hasSeenAuthModal', 'true')
+        }, 3000) // 3 seconds delay
+
+        return () => clearTimeout(timer)
+      }
+    }
+  }, [user])
 
   // Data
   const avatars = Array.from({ length: 13 }, (_, i) => `/media/img/avatar/A${i}.png`)
@@ -510,6 +529,14 @@ export default function HomePage() {
           </div>
         </div>
       </VideoSection>
+
+      {/* Auth Modal for New Visitors */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        initialMode="register"
+        role="client"
+      />
     </div>
   )
 }

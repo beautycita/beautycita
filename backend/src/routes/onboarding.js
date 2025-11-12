@@ -462,4 +462,116 @@ router.put('/checklist/payment', validateJWT, async (req, res) => {
   }
 });
 
+/**
+ * POST /api/onboarding/complete-client
+ * Complete client onboarding with location and preferences
+ */
+router.post('/complete-client', validateJWT, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { location, servicePreferences, profilePicture, completed, completedAt } = req.body;
+
+    // Get user
+    const userResult = await query('SELECT * FROM users WHERE id = $1', [userId]);
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const user = userResult.rows[0];
+
+    // Only clients
+    if (user.role !== 'CLIENT') {
+      return res.status(400).json({
+        success: false,
+        message: 'This endpoint is only for clients'
+      });
+    }
+
+    // Get client profile
+    const clientResult = await query('SELECT * FROM clients WHERE user_id = $1', [userId]);
+    let clientId;
+
+    if (clientResult.rows.length === 0) {
+      // Create client profile if doesn't exist
+      const newClient = await query(`
+        INSERT INTO clients (user_id, total_bookings, average_rating, created_at, updated_at)
+        VALUES ($1, 0, 0.00, NOW(), NOW())
+        RETURNING id
+      `, [userId]);
+      clientId = newClient.rows[0].id;
+    } else {
+      clientId = clientResult.rows[0].id;
+    }
+
+    // Update client preferences in database
+    if (location) {
+      await query(`
+        UPDATE clients
+        SET
+          location_city = $1,
+          location_state = $2,
+          location_zip = $3,
+          updated_at = NOW()
+        WHERE id = $4
+      `, [location.city, location.state, location.zip, clientId]);
+    }
+
+    // Store service preferences as JSON
+    if (servicePreferences) {
+      await query(`
+        UPDATE clients
+        SET
+          service_preferences = $1,
+          updated_at = NOW()
+        WHERE id = $2
+      `, [JSON.stringify(servicePreferences), clientId]);
+    }
+
+    // Update profile picture if provided
+    if (profilePicture) {
+      await query(`
+        UPDATE users
+        SET profile_picture_url = $1, updated_at = NOW()
+        WHERE id = $2
+      `, [profilePicture, userId]);
+    }
+
+    // Mark onboarding as completed
+    if (completed) {
+      await query(`
+        UPDATE users
+        SET
+          onboarding_completed = true,
+          onboarding_completed_at = $1,
+          updated_at = NOW()
+        WHERE id = $2
+      `, [completedAt || new Date(), userId]);
+    }
+
+    logger.info('Client onboarding completed', {
+      userId,
+      clientId,
+      location: location?.city,
+      servicesCount: servicePreferences?.length || 0
+    });
+
+    res.json({
+      success: true,
+      message: 'Onboarding completed successfully!',
+      client: {
+        id: clientId,
+        location,
+        servicePreferences
+      }
+    });
+
+  } catch (error) {
+    logger.error('Complete client onboarding error', { error: error.message });
+    res.status(500).json({
+      success: false,
+      message: 'Failed to complete onboarding'
+    });
+  }
+});
+
 module.exports = router;

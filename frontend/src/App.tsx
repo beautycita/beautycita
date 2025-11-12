@@ -48,6 +48,7 @@ const ProfilePage = lazy(() => import('./pages/ProfilePage'))
 const ProfileEditPage = lazy(() => import('./pages/profile/ProfileEditPage'))
 const ProfileOnboardingPage = lazy(() => import('./pages/profile/FormikOnboardingPage'))
 const ClientOnboardingPage = lazy(() => import("./pages/ClientOnboardingPage"))
+const OptimizedClientOnboarding = lazy(() => import('./pages/OptimizedClientOnboarding'))
 const BecomeStylistPage = lazy(() => import('./pages/profile/BecomeStylistPage'))
 const SettingsPage = lazy(() => import('./pages/SettingsPage'))
 const NotificationsPage = lazy(() => import('./pages/NotificationsPage'))
@@ -75,6 +76,10 @@ const VideoConsultationPage = lazy(() => import('./pages/VideoConsultationPage')
 const PaymentMethodsPage = lazy(() => import('./pages/PaymentMethodsPage'))
 
 // Development showcases - REMOVED (AnimationShowcase, LogoShowcase)
+
+// Component Testing Page
+const ComponentTestPage = lazy(() => import('./pages/ComponentTestPage'))
+const OnboardingTestPage = lazy(() => import('./pages/OnboardingTestPage'))
 
 // Unified Panel (single dashboard for all users)
 const UnifiedPanel = lazy(() => import('./pages/UnifiedPanel'))
@@ -200,6 +205,10 @@ function AppLayout() {
                   <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
                   <Route path="/auth/callback" element={<AuthCallback />} />
 
+                  {/* Component Testing Pages */}
+                  <Route path="/component-test" element={<ComponentTestPage />} />
+                  <Route path="/onboard-test" element={<OnboardingTestPage />} />
+
                   <Route path="/services" element={<ServicesPage />} />
                   <Route path="/stylists" element={<StylistsPage />} />
                   <Route path="/stylist/:id" element={<StylistProfilePage />} />
@@ -260,11 +269,20 @@ function AppLayout() {
                       </ProtectedRoute>
                     }
                   />
+                  {/* Optimized Onboarding Routes */}
+                  <Route
+                    path="/onboarding/client"
+                    element={
+                      <ProtectedRoute>
+                        <OptimizedClientOnboarding />
+                      </ProtectedRoute>
+                    }
+                  />
                   <Route
                     path="/client/onboarding"
                     element={
                       <ProtectedRoute>
-                        <ClientOnboardingPage />
+                        <OptimizedClientOnboarding />
                       </ProtectedRoute>
                     }
                   />

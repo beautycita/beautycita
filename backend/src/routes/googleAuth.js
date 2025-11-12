@@ -79,6 +79,170 @@ const SCOPES = [
 ];
 
 /**
+ * Google One Tap Sign-In (JWT verification)
+ * POST /api/auth/google/one-tap
+ * Body: { credential: 'JWT_TOKEN', role: 'client|stylist' }
+ */
+router.post('/google/one-tap', async (req, res) => {
+  const { OAuth2Client } = require('google-auth-library');
+  const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+  try {
+    const { credential, role = 'client' } = req.body;
+
+    if (!credential) {
+      return res.status(400).json({ error: 'Missing credential' });
+    }
+
+    // Verify the Google JWT token
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const userRole = role.toUpperCase() === 'STYLIST' ? 'STYLIST' : 'CLIENT';
+
+    logger.info('Google One Tap credential verified', {
+      email: payload.email,
+      role: userRole,
+      sub: payload.sub
+    });
+
+    // Check if user exists
+    let user;
+    const existingUser = await query(
+      'SELECT * FROM users WHERE provider_id = $1 AND provider = $2',
+      [payload.sub, 'google']
+    );
+
+    if (existingUser.rows.length > 0) {
+      user = existingUser.rows[0];
+      logger.info('Existing Google One Tap user found', {
+        userId: user.id,
+        email: user.email,
+        role: user.role
+      });
+
+      // Update last login
+      await query(
+        'UPDATE users SET last_login_at = NOW() WHERE id = $1',
+        [user.id]
+      );
+    } else {
+      // Create new user
+      logger.info('Creating new Google One Tap user', {
+        email: payload.email,
+        name: payload.name,
+        role: userRole
+      });
+
+      const autoUsername = await generateUsernameFromEmail(payload.email);
+
+      const newUserResult = await query(`
+        INSERT INTO users (
+          email, name, first_name, last_name, profile_picture_url, username,
+          role, provider, provider_id, email_verified, is_active, user_status,
+          created_at, updated_at
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW(), NOW())
+        RETURNING *
+      `, [
+        payload.email,
+        payload.name || payload.email.split('@')[0],
+        payload.given_name || '',
+        payload.family_name || '',
+        payload.picture || null,
+        autoUsername,
+        userRole,
+        'google',
+        payload.sub,
+        payload.email_verified || true,
+        true,
+        userRole === 'STYLIST' ? 'PENDING_ONBOARDING' : null
+      ]);
+
+      user = newUserResult.rows[0];
+
+      // Create role-specific profile
+      if (userRole === 'CLIENT') {
+        await query(`
+          INSERT INTO clients (user_id, total_bookings, average_rating, created_at, updated_at)
+          VALUES ($1, 0, 0.00, NOW(), NOW())
+        `, [user.id]);
+      } else if (userRole === 'STYLIST') {
+        await query(`
+          INSERT INTO stylists (
+            user_id, business_name, bio, specialties, experience_years,
+            location_address, location_city, location_state, created_at, updated_at
+          )
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())
+        `, [
+          user.id,
+          payload.name || 'My Business',
+          '',
+          [],
+          0,
+          'Address to be updated',
+          'City to be updated',
+          ''
+        ]);
+      }
+    }
+
+    // Track successful login
+    const ipAddress = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || req.connection.remoteAddress;
+    const userAgent = req.headers['user-agent'];
+    await query(`
+      INSERT INTO login_history (user_id, login_method, ip_address, user_agent, success, created_at)
+      VALUES ($1, $2, $3, $4, true, NOW())
+    `, [user.id, 'GOOGLE_ONE_TAP', ipAddress, userAgent]);
+
+    // Create session
+    await createSession(req, user);
+
+    // Generate JWT token
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        name: user.name
+      },
+      process.env.JWT_SECRET || 'beautycita-secret',
+      { expiresIn: '7d' }
+    );
+
+    logger.info('Google One Tap authentication successful', {
+      userId: user.id,
+      sessionId: req.sessionID
+    });
+
+    // Return success with token and user data
+    res.json({
+      success: true,
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        phoneVerified: user.phone_verified,
+        profilePicture: user.profile_picture_url
+      },
+      requiresPhoneVerification: !user.phone_verified
+    });
+
+  } catch (error) {
+    logger.error('Google One Tap verification error', {
+      error: error.message,
+      stack: error.stack
+    });
+    res.status(401).json({ error: 'Invalid credential' });
+  }
+});
+
+/**
  * Initiate Google OAuth flow
  * GET /api/auth/google?role=client|stylist
  */
