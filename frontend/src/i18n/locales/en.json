@@ -166,6 +166,14 @@
       "signUpWithGoogle": "Sign up with Google",
       "orDivider": "Or continue with email"
     },
+    "methodSelection": {
+      "loginPrompt": "Choose how to sign in",
+      "registerPrompt": "Choose how to sign up",
+      "biometricLoginButton": "Sign in with biometrics",
+      "biometricLoginDescription": "Use your fingerprint or face to sign in securely",
+      "biometricRegisterButton": "Register with biometrics",
+      "biometricRegisterDescription": "Create your account using biometric authentication"
+    },
     "sections": {
       "personalInfo": "Personal Information",
       "professionalInfo": "Professional Information",
@@ -2765,6 +2773,278 @@
         "signInRequired": "Please sign in to book an appointment",
         "noServices": "This stylist has no available services"
       }
+    },
+    "stylistOnboarding": {
+      "header": "Become a BeautyCita Professional",
+      "step": "Step {{current}} of {{total}}",
+      "footer": "By submitting your application, you agree to our Terms, Code of Conduct & Privacy Policy",
+      "step1": {
+        "title": "Choose Your Username",
+        "description": "This is how clients will find you",
+        "usernameLabel": "Username",
+        "usernamePlaceholder": "yourusername",
+        "usernameHelper": "Letters, numbers, and underscores only",
+        "checkingAvailability": "Checking availability...",
+        "available": "✓ Available",
+        "taken": "✗ Username taken",
+        "invalid": "✗ Invalid format",
+        "continueButton": "Continue",
+        "errors": {
+          "required": "Username is required",
+          "invalid": "Only letters, numbers, and underscores allowed",
+          "taken": "This username is already taken",
+          "checkFailed": "Failed to check username availability"
+        }
+      },
+      "step2": {
+        "title": "Verify Your Email",
+        "description": "We'll send you a verification code",
+        "emailLabel": "Email Address",
+        "emailPlaceholder": "your@email.com",
+        "sendCodeButton": "Send Verification Code",
+        "sending": "Sending...",
+        "codeTitle": "Enter Verification Code",
+        "codeDescription": "We sent a 6-digit code to {{email}}",
+        "changeEmail": "Change email",
+        "verifyButton": "Verify & Continue",
+        "verifying": "Verifying...",
+        "resendCode": "Resend Code",
+        "resendIn": "Resend in {{seconds}}s",
+        "didntReceive": "Didn't receive the code?",
+        "emailVerified": "Email Verified!",
+        "verifiedMessage": "Your email has been successfully verified.",
+        "backButton": "Back",
+        "errors": {
+          "emailRequired": "Valid email address is required",
+          "codeRequired": "Please enter the complete 6-digit code",
+          "sendFailed": "Failed to send verification code",
+          "verifyFailed": "Failed to verify code",
+          "invalidCode": "Invalid verification code"
+        }
+      },
+      "step3": {
+        "title": "Tell Us About Your Business",
+        "description": "Help clients learn about your expertise",
+        "businessNameLabel": "Business Name",
+        "businessNamePlaceholder": "Your Salon or Business Name",
+        "bioLabel": "Professional Bio",
+        "bioPlaceholder": "Tell clients about your background, specialties, and passion for beauty...",
+        "bioHelper": "{{current}}/500 characters",
+        "bioMin": "Minimum 50 characters",
+        "specialtiesLabel": "Specialties",
+        "specialtiesPlaceholder": "e.g., Hair Color, Bridal Makeup, Extensions",
+        "specialtiesHelper": "Separate with commas",
+        "experienceLabel": "Years of Experience",
+        "experiencePlaceholder": "5",
+        "backButton": "Back",
+        "continueButton": "Continue",
+        "errors": {
+          "businessNameRequired": "Business name is required",
+          "bioRequired": "Bio must be between 50-500 characters",
+          "bioTooShort": "Bio must be at least 50 characters",
+          "bioTooLong": "Bio cannot exceed 500 characters",
+          "specialtiesRequired": "Please add at least one specialty",
+          "experienceRequired": "Years of experience is required",
+          "experienceInvalid": "Must be a number between 0 and 50"
+        }
+      },
+      "step4": {
+        "title": "Your Location",
+        "description": "Where do you provide your services?",
+        "addressLabel": "Street Address",
+        "addressPlaceholder": "123 Main Street",
+        "cityLabel": "City",
+        "cityPlaceholder": "Los Angeles",
+        "stateLabel": "State",
+        "statePlaceholder": "California",
+        "zipLabel": "ZIP Code",
+        "zipPlaceholder": "90001",
+        "backButton": "Back",
+        "continueButton": "Continue",
+        "errors": {
+          "addressRequired": "Street address is required",
+          "cityRequired": "City is required",
+          "stateRequired": "State is required",
+          "zipRequired": "ZIP code is required",
+          "zipInvalid": "Invalid ZIP code format"
+        }
+      },
+      "step5": {
+        "title": "Add Your First Service",
+        "description": "Start with at least one service you offer",
+        "serviceNameLabel": "Service Name",
+        "serviceNamePlaceholder": "e.g., Women's Haircut",
+        "categoryLabel": "Category",
+        "categoryPlaceholder": "Select a category",
+        "durationLabel": "Duration (minutes)",
+        "durationPlaceholder": "60",
+        "priceLabel": "Price (USD)",
+        "pricePlaceholder": "50",
+        "descriptionLabel": "Service Description (Optional)",
+        "descriptionPlaceholder": "Describe what's included in this service...",
+        "categories": {
+          "haircut": "Haircut",
+          "hairColor": "Hair Color",
+          "styling": "Styling",
+          "makeup": "Makeup",
+          "nails": "Nails",
+          "skincare": "Skincare",
+          "waxing": "Waxing",
+          "massage": "Massage",
+          "other": "Other"
+        },
+        "backButton": "Back",
+        "continueButton": "Continue",
+        "errors": {
+          "serviceNameRequired": "Service name is required",
+          "categoryRequired": "Please select a category",
+          "durationRequired": "Duration is required",
+          "durationInvalid": "Duration must be between 15 and 480 minutes",
+          "priceRequired": "Price is required",
+          "priceInvalid": "Price must be between $5 and $1000"
+        }
+      },
+      "step6": {
+        "title": "Stripe Payment Setup",
+        "description": "Connect your account to receive payments",
+        "whyTitle": "Why Stripe?",
+        "benefit1": "Secure payment processing",
+        "benefit2": "Fast deposits to your bank account",
+        "benefit3": "Professional dashboard to track earnings",
+        "setupButton": "Set Up Stripe Account",
+        "setupInProgress": "Setting up...",
+        "completeSetup": "Complete setup in the popup window",
+        "accountConnected": "✓ Stripe account connected!",
+        "backButton": "Back",
+        "continueButton": "Continue",
+        "errors": {
+          "setupRequired": "Stripe account setup is required",
+          "setupFailed": "Failed to set up Stripe account"
+        }
+      },
+      "step7": {
+        "title": "Platform Agreement",
+        "description": "Review and accept our terms",
+        "reviewTitle": "Please review and agree to:",
+        "term1": "BeautyCita Terms of Service",
+        "term2": "Code of Conduct for Professionals",
+        "term3": "Privacy Policy & Data Protection",
+        "term4": "Commission: BeautyCita charges a 3% service fee on completed bookings",
+        "agreementLabel": "I have read and agree to all terms and conditions",
+        "reviewProcess": "Application Review Process",
+        "reviewNote1": "Our team will review your application within 48 hours",
+        "reviewNote2": "You'll receive an email notification when your profile is approved",
+        "reviewNote3": "Once approved, you can start accepting bookings immediately",
+        "backButton": "Back",
+        "submitButton": "Submit Application",
+        "submitting": "Submitting...",
+        "errors": {
+          "agreementRequired": "You must agree to the terms to continue",
+          "submitFailed": "Failed to submit application"
+        }
+      },
+      "success": {
+        "title": "Application Submitted!",
+        "message": "Thank you for applying to join BeautyCita as a professional. We'll review your application and get back to you within 48 hours.",
+        "dashboardButton": "Go to Dashboard"
+      }
+    }
+  },
+  "clientOnboarding": {
+    "header": "Complete Your Profile",
+    "step": "Step {{current}} of {{total}}",
+    "footer": "By completing onboarding, you agree to our Terms & Privacy Policy",
+    "step1": {
+      "title": "Verify Your Phone",
+      "description": "We'll send you a verification code",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "5551234567",
+      "phoneHelper": "Enter 10 digits (no country code)",
+      "sendCodeButton": "Send Verification Code",
+      "sending": "Sending...",
+      "codeTitle": "Enter Verification Code",
+      "codeDescription": "We sent a 6-digit code to {{phone}}",
+      "changeNumber": "Change number",
+      "verifyButton": "Verify & Continue",
+      "verifying": "Verifying...",
+      "resendCode": "Resend Code",
+      "resendIn": "Resend in {{seconds}}s",
+      "didntReceive": "Didn't receive the code?",
+      "codeSentMexico": "Code sent to Mexico number!",
+      "codeSentUS": "Code sent to US/Canada number!",
+      "tryingMexico": "Trying Mexico number...",
+      "tryingUS": "Trying US/Canada number...",
+      "phoneVerified": "Phone Verified!",
+      "verifiedMessage": "Your phone number has been successfully verified.",
+      "errors": {
+        "phoneRequired": "Phone number must be 10 digits",
+        "codeRequired": "Please enter the complete 6-digit code",
+        "sendFailed": "Failed to send verification code",
+        "verifyFailed": "Failed to verify code",
+        "invalidCode": "Invalid verification code"
+      }
+    },
+    "step2": {
+      "title": "Choose Your Avatar",
+      "description": "Pick a profile picture or upload your own",
+      "nameLabel": "Your Name",
+      "namePlaceholder": "Enter your name",
+      "uploadPhoto": "Upload Custom Photo",
+      "chooseAvatar": "Or choose a preset avatar",
+      "backButton": "Back",
+      "continueButton": "Continue",
+      "errors": {
+        "nameRequired": "Please enter your name",
+        "avatarRequired": "Please select or upload an avatar"
+      }
+    },
+    "step3": {
+      "title": "Add Payment Method",
+      "description": "Secure and easy checkout for your bookings",
+      "whyTitle": "Why add a payment method?",
+      "benefit1": "Skip payment steps during checkout",
+      "benefit2": "Secure payment processing with Stripe",
+      "benefit3": "Faster booking confirmations",
+      "addButton": "Add Payment Method",
+      "skipText": "skip for now",
+      "skipButton": "Continue",
+      "backButton": "Back"
+    },
+    "step4": {
+      "title": "You're All Set!",
+      "welcome": "Welcome to BeautyCita, {{name}}!",
+      "subtitle": "Start discovering amazing beauty professionals",
+      "whatsNext": "What's Next?",
+      "nextStep1": "Find Your Perfect Stylist",
+      "nextStep1Desc": "Browse profiles and reviews",
+      "nextStep2": "Book Your First Appointment",
+      "nextStep2Desc": "Choose date, time & services",
+      "nextStep3": "Enjoy Your Service",
+      "nextStep3Desc": "Relax and look amazing",
+      "startButton": "Start Booking!",
+      "submitting": "Setting up..."
+    },
+    "paymentModal": {
+      "title": "Choose Payment Method",
+      "creditCard": {
+        "title": "Credit/Debit Card",
+        "description": "Pay instantly with Visa, Mastercard, or American Express"
+      },
+      "oxxo": {
+        "title": "OXXO Cash Payment",
+        "description": "Pay in cash at any OXXO, 7-Eleven, or participating stores"
+      },
+      "bankTransfer": {
+        "title": "Bank Transfer (SPEI)",
+        "description": "Direct bank transfer using SPEI or wire transfer"
+      },
+      "security": "🔒 All payments are processed securely through Stripe"
+    },
+    "success": {
+      "title": "Welcome to BeautyCita!",
+      "phoneVerified": "Phone verified successfully!",
+      "profileComplete": "Profile completed!",
+      "redirecting": "Redirecting to dashboard..."
     }
   }
 }

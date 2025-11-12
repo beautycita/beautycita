@@ -18,11 +18,17 @@
     scroll-behavior: auto;
     min-height: 100vh;
     background: linear-gradient(to bottom right, #1f2937, #581c87, #831843);
+    /* Disable pull-to-refresh and pinch zoom in mobile apps */
+    overscroll-behavior: none;
+    touch-action: pan-x pan-y;
   }
 
   body {
     @apply bg-gray-50 text-gray-900 antialiased;
     min-height: 100vh;
+    /* Disable pull-to-refresh */
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
   }
 
   /* iPad/Mobile performance optimizations */
@@ -85,21 +91,25 @@
     @apply font-semibold;
   }
 
-  /* Custom scrollbar */
+  /* Custom scrollbar with gradient shimmer */
   ::-webkit-scrollbar {
     width: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-gray-100;
+    background: transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 rounded-full;
+    background: linear-gradient(180deg, #ec4899, #9333ea, #3b82f6);
+    background-size: 100% 200%;
+    animation: scrollbarShimmer 3s ease-in-out infinite;
+    @apply rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-400;
+    background: linear-gradient(180deg, #ec4899, #9333ea, #3b82f6);
+    animation: scrollbarShimmer 1.5s ease-in-out infinite;
   }
 }
 
@@ -491,6 +501,18 @@
   }
   100% {
     background-position: -100% 50%;
+  }
+}
+
+@keyframes scrollbarShimmer {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
   }
 }
 
@@ -910,17 +932,21 @@
   transition: none !important;
 }
 
-/* Custom scrollbar for dark mode */
+/* Custom scrollbar for dark mode with gradient shimmer */
 .dark ::-webkit-scrollbar-track {
-  @apply bg-gray-800;
+  background: transparent;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  @apply bg-gray-600;
+  background: linear-gradient(180deg, #ec4899, #9333ea, #3b82f6);
+  background-size: 100% 200%;
+  animation: scrollbarShimmer 3s ease-in-out infinite;
+  @apply rounded-full;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-500;
+  background: linear-gradient(180deg, #ec4899, #9333ea, #3b82f6);
+  animation: scrollbarShimmer 1.5s ease-in-out infinite;
 }
 
 /* Enhanced focus states for accessibility */

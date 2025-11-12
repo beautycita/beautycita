@@ -24,7 +24,9 @@
       "Bash(ss:*)",
       "Read(//etc/nginx/sites-enabled/**)",
       "Read(//etc/prometheus/**)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(xargs:*)",
+      "WebFetch(domain:beautycita.com)"
     ],
     "deny": [],
     "ask": []

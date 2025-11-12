@@ -96,22 +96,23 @@ class CacheService {
       SELECT
         u.id,
         u.full_name,
-        u.business_name,
+        st.business_name,
         u.profile_picture_url,
-        u.location_city,
-        u.location_state,
-        u.location_lat,
-        u.location_lng,
+        st.location_city,
+        st.location_state,
+        MIN((st.location_coordinates)[0]) as location_lat,
+        MIN((st.location_coordinates)[1]) as location_lng,
         COALESCE(AVG(r.rating), 0) as average_rating,
         COUNT(DISTINCT r.id) as total_reviews,
         COUNT(DISTINCT b.id) as total_bookings,
         MIN(s.price) as min_price,
         MAX(s.price) as max_price
       FROM users u
+      INNER JOIN stylists st ON u.id = st.user_id
       LEFT JOIN reviews r ON u.id = r.stylist_id
       LEFT JOIN bookings b ON u.id = b.stylist_id AND b.status = 'COMPLETED'
       LEFT JOIN services s ON u.id = s.stylist_id
-      WHERE u.user_type = 'stylist'
+      WHERE u.role = 'STYLIST'
         AND u.is_active = true
     `;
 
@@ -119,11 +120,11 @@ class CacheService {
 
     if (location) {
       params.push(location);
-      query += ` AND (u.location_city ILIKE $${params.length} OR u.location_state ILIKE $${params.length})`;
+      query += ` AND (st.location_city ILIKE $${params.length} OR st.location_state ILIKE $${params.length})`;
     }
 
     query += `
-      GROUP BY u.id
+      GROUP BY u.id, u.full_name, st.business_name, u.profile_picture_url, st.location_city, st.location_state
       ORDER BY total_bookings DESC, average_rating DESC
       LIMIT $${params.length + 1}
     `;
@@ -235,24 +236,25 @@ class CacheService {
     console.log('❌ Cache MISS: Stylist search - fetching from DB');
 
     let query = `
-      SELECT DISTINCT
+      SELECT
         u.id,
         u.full_name,
-        u.business_name,
+        st.business_name,
         u.profile_picture_url,
-        u.location_city,
-        u.location_state,
-        u.location_lat,
-        u.location_lng,
-        u.location_address,
+        st.location_city,
+        st.location_state,
+        MIN((st.location_coordinates)[0]) as location_lat,
+        MIN((st.location_coordinates)[1]) as location_lng,
+        st.location_address,
         COALESCE(AVG(r.rating), 0) as average_rating,
         COUNT(DISTINCT r.id) as total_reviews,
         MIN(s.price) as min_price,
         MAX(s.price) as max_price
       FROM users u
+      INNER JOIN stylists st ON u.id = st.user_id
       LEFT JOIN reviews r ON u.id = r.stylist_id
       LEFT JOIN services s ON u.id = s.stylist_id
-      WHERE u.user_type = 'stylist'
+      WHERE u.role = 'STYLIST'
         AND u.is_active = true
     `;
 
@@ -260,12 +262,12 @@ class CacheService {
 
     if (city) {
       params.push(city);
-      query += ` AND u.location_city ILIKE $${params.length}`;
+      query += ` AND st.location_city ILIKE $${params.length}`;
     }
 
     if (state) {
       params.push(state);
-      query += ` AND u.location_state ILIKE $${params.length}`;
+      query += ` AND st.location_state ILIKE $${params.length}`;
     }
 
     if (service) {
@@ -278,7 +280,7 @@ class CacheService {
     }
 
     query += `
-      GROUP BY u.id
+      GROUP BY u.id, u.full_name, st.business_name, u.profile_picture_url, st.location_city, st.location_state, st.location_address
       HAVING COALESCE(AVG(r.rating), 0) >= $${params.length + 1}
     `;
     params.push(minRating);

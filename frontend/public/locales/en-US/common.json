@@ -512,7 +512,15 @@
     "firstName": "First Name",
     "lastName": "Last Name",
     "email": "Email",
-    "phone": "Phone"
+    "phone": "Phone",
+    "methodSelection": {
+      "registerPrompt": "Choose your preferred signup method",
+      "loginPrompt": "Choose your preferred login method",
+      "biometricRegisterButton": "Register with Biometric",
+      "biometricLoginButton": "Login with Biometric",
+      "biometricRegisterDescription": "Secure, passwordless registration with biometrics",
+      "biometricLoginDescription": "Quick and secure login with your fingerprint or face"
+    }
   },
   "services": {
     "title": "Beauty Services",
@@ -2296,5 +2304,84 @@
   "": {
     "": "•"
   },
-  "2d": "2D"
+  "2d": "2D",
+  "stylistOnboarding": {
+    "title": "Become a Stylist",
+    "subtitle": "Step {{step}} of {{total}}",
+    "continue": "Continue",
+    "back": "Back",
+    "fixErrors": "Please fix the errors before continuing",
+    "step1": {
+      "title": "Professional Identity",
+      "subtitle": "Tell us about your beauty business",
+      "businessName": "Business Name",
+      "businessNamePlaceholder": "e.g., Sofia's Beauty Studio",
+      "experience": "Years of Experience",
+      "selectExperience": "Select experience",
+      "exp1": "Less than 1 year",
+      "exp2": "1-2 years",
+      "exp3": "3-5 years",
+      "exp5": "5-10 years",
+      "exp10": "10+ years",
+      "specialties": "Specialties (Select all that apply)",
+      "bio": "Professional Bio",
+      "bioPlaceholder": "Tell potential clients about your expertise, style, and what makes you unique..."
+    },
+    "step2": {
+      "title": "Location & Service Area",
+      "subtitle": "Where do you provide services?",
+      "address": "Business Address",
+      "addressPlaceholder": "Search for your business address...",
+      "radius": "Service Radius (km)",
+      "radiusHelp": "How far are you willing to travel for appointments?",
+      "mobileServices": "I offer mobile services",
+      "mobileServicesHelp": "I can travel to clients' locations"
+    },
+    "step3": {
+      "title": "Working Hours",
+      "subtitle": "Set your base working hours",
+      "templates": "Quick Templates",
+      "templateApplied": "Applied {{name}} schedule!",
+      "closed": "Closed"
+    },
+    "step4": {
+      "title": "Services & Pricing",
+      "subtitle": "Select services you'll offer",
+      "all": "All",
+      "selected": "Selected Services ({{count}})",
+      "priceMin": "Minimum Price (MXN)",
+      "priceMax": "Maximum Price (MXN)",
+      "duration": "Duration (min)",
+      "minimum": "Select at least 3 services to continue",
+      "errorLoading": "Failed to load service templates"
+    },
+    "step5": {
+      "title": "Portfolio & Social Proof",
+      "subtitle": "Showcase your best work",
+      "images": "Portfolio Images (3-6 images)",
+      "uploadText": "Click to upload or drag and drop",
+      "uploadHelp": "PNG, JPG up to 5MB each",
+      "maxImages": "Maximum 6 portfolio images allowed",
+      "fileTooLarge": "{{name}} is too large. Maximum 5MB per file.",
+      "imagesAdded": "{{count}} image(s) added!",
+      "imageRemoved": "Image removed",
+      "imagesUploaded": "images uploaded",
+      "needMinimum": "Need at least 3 images",
+      "instagram": "Instagram Profile (optional)",
+      "tiktok": "TikTok Profile (optional)",
+      "nextSteps": "What's Next?",
+      "paymentSetup": "After completing this onboarding, you'll need to set up your payment methods:",
+      "paymentStep1": "Stripe Connect for credit card payments",
+      "paymentStep2": "Bitcoin wallet for cryptocurrency payments (optional)",
+      "paymentStep3": "Your profile will be reviewed and approved within 24-48 hours"
+    },
+    "services": {
+      "errorLoading": "Failed to load services"
+    },
+    "complete": {
+      "button": "Complete Setup",
+      "success": "Profile submitted for approval! You'll receive an email once approved.",
+      "error": "Failed to submit profile. Please try again."
+    }
+  }
 }

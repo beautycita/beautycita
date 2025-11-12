@@ -20,10 +20,9 @@ services:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./monitoring/rules:/etc/prometheus/rules
       - prometheus_data:/prometheus
-    ports:
-      - "9090:9090"
-    networks:
-      - beautycita-network
+    network_mode: host  # Use host networking to access localhost services
+    # ports:
+      # - "9090:9090"  # Not needed with host networking
     profiles:
       - monitoring
 
@@ -47,6 +46,8 @@ services:
       - "3000:3000"
     networks:
       - beautycita-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - prometheus
     profiles:
@@ -70,6 +71,8 @@ services:
       - "9100:9100"
     networks:
       - beautycita-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     profiles:
       - monitoring
 
@@ -125,6 +128,8 @@ services:
       - "8080:8080"
     networks:
       - beautycita-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     profiles:
       - monitoring
     devices:
@@ -143,6 +148,8 @@ services:
       - "9115:9115"
     networks:
       - beautycita-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     profiles:
       - monitoring
 
@@ -162,6 +169,8 @@ services:
       - "9093:9093"
     networks:
       - beautycita-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     profiles:
       - monitoring
 
@@ -179,6 +188,8 @@ services:
       - ./monitoring/loki-config.yaml:/etc/loki/local-config.yaml
     networks:
       - beautycita-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     profiles:
       - monitoring
 
@@ -194,6 +205,8 @@ services:
     command: -config.file=/etc/promtail/config.yml
     networks:
       - beautycita-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - loki
     profiles:

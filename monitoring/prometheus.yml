@@ -25,7 +25,7 @@ scrape_configs:
   # ==================== PROMETHEUS SELF-MONITORING ====================
   - job_name: 'prometheus'
     static_configs:
-      - targets: ['localhost:9090']
+      - targets: ['127.0.0.1:9090']
     scrape_interval: 30s
     metrics_path: /metrics
 
@@ -39,7 +39,7 @@ scrape_configs:
   # ==================== BEAUTYCITA BACKEND ====================
   - job_name: 'beautycita-backend'
     static_configs:
-      - targets: ['172.17.0.1:4000']
+      - targets: ['127.0.0.1:4000']
     scrape_interval: 15s
     metrics_path: /api/metrics
     scrape_timeout: 10s
@@ -47,21 +47,21 @@ scrape_configs:
   # ==================== NGINX EXPORTER ====================
   - job_name: 'nginx-exporter'
     static_configs:
-      - targets: ['172.17.0.1:9113']
+      - targets: ['127.0.0.1:9113']
     scrape_interval: 15s
     metrics_path: /metrics
 
   # ==================== POSTGRES EXPORTER ====================
   - job_name: 'postgres-exporter'
     static_configs:
-      - targets: ['172.17.0.1:9187']
+      - targets: ['127.0.0.1:9187']
     scrape_interval: 30s
     metrics_path: /metrics
 
   # ==================== REDIS EXPORTER ====================
   - job_name: 'redis-exporter'
     static_configs:
-      - targets: ['172.17.0.1:9121']
+      - targets: ['127.0.0.1:9121']
     scrape_interval: 15s
     metrics_path: /metrics
 
@@ -111,7 +111,7 @@ scrape_configs:
   # ==================== CUSTOM APPLICATION METRICS ====================
   - job_name: 'beautycita-custom-metrics'
     static_configs:
-      - targets: ['172.17.0.1:4000']
+      - targets: ['127.0.0.1:4000']
     scrape_interval: 30s
     metrics_path: /api/metrics
     honor_labels: true
@@ -121,7 +121,7 @@ scrape_configs:
   # ==================== BUSINESS METRICS ====================
   - job_name: 'beautycita-business-metrics'
     static_configs:
-      - targets: ['172.17.0.1:4000']
+      - targets: ['127.0.0.1:4000']
     scrape_interval: 60s
     metrics_path: /api/metrics/business
     honor_labels: true

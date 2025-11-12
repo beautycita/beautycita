@@ -3,6 +3,106 @@ const { query } = require('../db');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const router = express.Router();
 
+// Combined endpoint: Create account and generate onboarding link (used during onboarding)
+router.post('/create-connect-account', async (req, res) => {
+  try {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication required'
+      });
+    }
+
+    // Get user email
+    const userResult = await query('SELECT email FROM users WHERE id = $1', [userId]);
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    const userEmail = userResult.rows[0].email;
+
+    // Get or find stylist profile
+    const stylistResult = await query(
+      'SELECT id, stripe_account_id FROM stylists WHERE user_id = $1',
+      [userId]
+    );
+
+    if (stylistResult.rows.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please complete your stylist profile first (steps 1-5)',
+        requiresProfileCompletion: true
+      });
+    }
+
+    const stylist = stylistResult.rows[0];
+    const stylistId = stylist.id;
+    let stripeAccountId = stylist.stripe_account_id;
+
+    // Create Stripe account if doesn't exist
+    if (!stripeAccountId) {
+      const account = await stripe.accounts.create({
+        type: 'express',
+        email: userEmail,
+        capabilities: {
+          card_payments: { requested: true },
+          transfers: { requested: true }
+        },
+        business_type: 'individual',
+        metadata: {
+          stylist_id: stylistId.toString(),
+          user_id: userId.toString(),
+          platform: 'beautycita'
+        }
+      });
+
+      stripeAccountId = account.id;
+
+      // Save to database
+      await query(`
+        UPDATE stylists
+        SET stripe_account_id = $1,
+            stripe_account_status = 'pending',
+            stripe_account_created_at = CURRENT_TIMESTAMP,
+            stripe_account_updated_at = CURRENT_TIMESTAMP
+        WHERE id = $2
+      `, [stripeAccountId, stylistId]);
+
+      console.log(`[STRIPE] Created Connect account ${stripeAccountId} for stylist ${stylistId}`);
+    }
+
+    // Generate onboarding link
+    const accountLink = await stripe.accountLinks.create({
+      account: stripeAccountId,
+      refresh_url: `${process.env.FRONTEND_URL || 'https://beautycita.com'}/onboarding/stylist?step=6&stripe_refresh=true`,
+      return_url: `${process.env.FRONTEND_URL || 'https://beautycita.com'}/onboarding/stylist?step=6&stripe_complete=true`,
+      type: 'account_onboarding'
+    });
+
+    console.log(`[STRIPE] Generated onboarding link for account ${stripeAccountId}`);
+
+    res.json({
+      success: true,
+      url: accountLink.url,
+      accountId: stripeAccountId,
+      message: 'Stripe onboarding link generated'
+    });
+
+  } catch (error) {
+    console.error('[STRIPE] Create connect account error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to create Stripe Connect account',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+    });
+  }
+});
+
 // Create Stripe Connect account for stylist
 router.post('/create-account', async (req, res) => {
   try {

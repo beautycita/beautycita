@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { authService } from '../services/authService'
 import toast from 'react-hot-toast'
 // import StylistRegistrationFlow from './StylistRegistrationFlow' // Temporarily commented out
@@ -10,6 +11,7 @@ interface AuthModalProps {
 }
 
 const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
+  const { t } = useTranslation()
   const [isLogin, setIsLogin] = useState(true)
   const [showStylistFlow, setShowStylistFlow] = useState(false)
   const [formData, setFormData] = useState({
@@ -170,20 +172,20 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
       const errors: {[key: string]: string} = {}
 
       // Common required fields
-      if (!formData.firstName?.trim()) errors.firstName = 'First name is required'
-      if (!formData.lastName?.trim()) errors.lastName = 'Last name is required'
-      if (!formData.email?.trim()) errors.email = 'Email is required'
-      if (!formData.phone?.trim()) errors.phone = 'Phone number is required for booking notifications'
-      if (!formData.password) errors.password = 'Password is required'
-      if (!formData.agreeToTerms) errors.agreeToTerms = 'You must agree to the Terms of Service to continue'
+      if (!formData.firstName?.trim()) errors.firstName = t('auth.validation.firstNameRequired')
+      if (!formData.lastName?.trim()) errors.lastName = t('auth.validation.lastNameRequired')
+      if (!formData.email?.trim()) errors.email = t('auth.validation.emailRequired')
+      if (!formData.phone?.trim()) errors.phone = t('auth.validation.phoneRequired')
+      if (!formData.password) errors.password = t('auth.validation.passwordRequired')
+      if (!formData.agreeToTerms) errors.agreeToTerms = t('auth.validation.termsRequired')
 
       // Stylist-specific required fields
       if (mode === 'stylist') {
-        if (!formData.businessName?.trim()) errors.businessName = 'Business name is required'
-        if (!formData.experienceYears || formData.experienceYears === 0) errors.experienceYears = 'Please select your years of experience'
-        if (!formData.biography?.trim()) errors.biography = 'Biography is required'
-        if (!formData.city?.trim()) errors.city = 'City is required'
-        if (!formData.state?.trim()) errors.state = 'State is required'
+        if (!formData.businessName?.trim()) errors.businessName = t('auth.validation.businessNameRequired')
+        if (!formData.experienceYears || formData.experienceYears === 0) errors.experienceYears = t('auth.validation.experienceRequired')
+        if (!formData.biography?.trim()) errors.biography = t('auth.biographyRequired', 'Biography is required')
+        if (!formData.city?.trim()) errors.city = t('auth.validation.cityRequired')
+        if (!formData.state?.trim()) errors.state = t('auth.validation.stateRequired')
       }
 
       if (Object.keys(errors).length > 0) {
@@ -207,7 +209,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
             authService.setAuthToken(response.data.token)
           }
 
-          toast.success('Login successful!')
+          toast.success(t('auth.messages.loginSuccess'))
           onClose()
 
           // Redirect based on role
@@ -215,9 +217,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
         } else {
           // Handle login errors
           if (response.data?.field) {
-            setFieldErrors({ [response.data.field]: response.error || 'Invalid input' })
+            setFieldErrors({ [response.data.field]: response.error || t('auth.invalidInput', 'Invalid input') })
           } else {
-            setFormError(response.error || 'Login failed')
+            setFormError(response.error || t('auth.messages.loginError'))
           }
         }
       } else {
@@ -253,14 +255,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
           : await authService.register(registrationData)
 
         if (response.success) {
-          toast.success('Registration successful!')
+          toast.success(t('auth.messages.registerSuccess'))
 
           // Check if we need phone verification
           if (response.message?.includes('verify')) {
             window.location.href = `/verify-phone?email=${encodeURIComponent(formData.email)}&role=${mode}`
           } else {
             // Switch to login form
-            setFormError('Registration successful! Please log in to continue.')
+            setFormError(t('auth.registerSuccessLogin', 'Registration successful! Please log in to continue.'))
             setIsLogin(true)
           }
         } else {
@@ -268,15 +270,15 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
           if (response.data?.errors) {
             setFieldErrors(response.data.errors)
           } else if (response.data?.field) {
-            setFieldErrors({ [response.data.field]: response.error || 'Invalid input' })
+            setFieldErrors({ [response.data.field]: response.error || t('auth.invalidInput', 'Invalid input') })
           } else {
-            setFormError(response.error || 'Registration failed')
+            setFormError(response.error || t('auth.messages.registerError'))
           }
         }
       }
     } catch (error) {
       console.error('Authentication error:', error)
-      setFormError('Network error. Please check your connection and try again.')
+      setFormError(t('auth.messages.networkError'))
     } finally {
       setLoading(false)
     }
@@ -297,11 +299,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
       const response = await authService.registerStylist(data)
 
       if (response.success) {
-        toast.success('Registration successful!')
+        toast.success(t('auth.messages.registerSuccess'))
         if (response.message?.includes('verify')) {
           window.location.href = `/verify-phone?email=${encodeURIComponent(data.email)}&role=stylist`
         } else {
-          setFormError('Registration successful! Please log in to continue.')
+          setFormError(t('auth.registerSuccessLogin', 'Registration successful! Please log in to continue.'))
           setShowStylistFlow(false)
           setIsLogin(true)
         }
@@ -309,14 +311,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
         if (response.data?.errors) {
           setFieldErrors(response.data.errors)
         } else if (response.data?.field) {
-          setFieldErrors({ [response.data.field]: response.error || 'Invalid input' })
+          setFieldErrors({ [response.data.field]: response.error || t('auth.invalidInput', 'Invalid input') })
         } else {
-          setFormError(response.error || 'Registration failed')
+          setFormError(response.error || t('auth.messages.registerError'))
         }
       }
     } catch (error) {
       console.error('Stylist registration error:', error)
-      setFormError('Network error. Please check your connection and try again.')
+      setFormError(t('auth.messages.networkError'))
     } finally {
       setLoading(false)
     }
@@ -359,18 +361,28 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
           {/* Header */}
           <div className="text-center mb-8 pt-4">
             <h2 id="modal-title" className="text-2xl md:text-3xl font-bold mb-2 bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
-              {mode === 'stylist' ? 'Stylist' : 'Client'} {isLogin ? 'Login' : 'Registration'}
+              {mode === 'stylist'
+                ? (isLogin ? t('auth.stylistLoginTitle', 'Stylist Login') : t('auth.stylistRegisterTitle'))
+                : (isLogin ? t('auth.loginTitle') : t('auth.registerTitle'))
+              }
             </h2>
             <p className="text-gray-600 text-sm">
               {mode === 'stylist'
                 ? isLogin
-                  ? 'Access your stylist dashboard'
-                  : 'Join our platform as a beauty professional'
+                  ? t('auth.stylistLoginSubtitle', 'Access your stylist dashboard')
+                  : t('auth.stylistRegisterSubtitle')
                 : isLogin
-                  ? 'Book your beauty appointments'
-                  : 'Create your client account'
+                  ? t('auth.loginSubtitle')
+                  : t('auth.registerSubtitle')
               }
             </p>
+            {/* Warning for stylist registration attempt */}
+            {mode === 'stylist' && !isLogin && (
+              <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-2xl text-sm text-amber-800">
+                <p className="font-medium">⚠️ {t('auth.stylistWarningTitle', 'Stylist registration is not available here')}</p>
+                <p className="mt-1 text-xs">{t('auth.stylistWarningMessage', 'Please register as a client first, then upgrade to stylist after completing onboarding.')}</p>
+              </div>
+            )}
           </div>
 
           {/* Google Auth Button */}
@@ -391,7 +403,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
               <span className="font-medium">
-                {isLogin ? 'Sign in with Google' : 'Sign up with Google'}
+                {isLogin ? t('auth.social.signInWithGoogle') : t('auth.social.signUpWithGoogle')}
               </span>
             </div>
           </motion.button>
@@ -399,18 +411,44 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
           {/* Divider */}
           <div className="flex items-center mb-6">
             <div className="flex-1 h-px bg-gray-200"></div>
-            <span className="px-4 text-gray-500 text-sm">or</span>
+            <span className="px-4 text-gray-500 text-sm">{t('common.or')}</span>
             <div className="flex-1 h-px bg-gray-200"></div>
           </div>
 
           {/* Email Form */}
           <form onSubmit={handleEmailAuth} className="space-y-5">
+            {/* Block form if trying to register as stylist */}
+            {mode === 'stylist' && !isLogin && (
+              <div className="text-center py-8">
+                <p className="text-gray-700 mb-4">{t('auth.stylistBlockMessage', 'Stylist accounts cannot be created directly.')}</p>
+                <button
+                  type="button"
+                  onClick={() => setIsLogin(true)}
+                  className="px-6 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-medium rounded-full hover:shadow-lg transition-all"
+                >
+                  {t('auth.goToStylistLogin', 'Go to Stylist Login')}
+                </button>
+                <p className="text-sm text-gray-600 mt-4">
+                  {t('auth.newToBeautyCita', 'New to BeautyCita?')}{' '}
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="text-pink-600 hover:underline font-medium"
+                  >
+                    {t('auth.registerClientFirst', 'Register as a client first')}
+                  </button>
+                </p>
+              </div>
+            )}
+            {/* Show form only if not attempting stylist registration */}
+            {!(mode === 'stylist' && !isLogin) && (
+              <>
             {!isLogin && (
               <>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      First Name <span className="text-pink-600">*</span>
+                      {t('auth.fields.firstName')} <span className="text-pink-600">*</span>
                     </label>
                     <input
                       type="text"
@@ -424,7 +462,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
                           ? 'border-red-300 bg-red-50'
                           : 'border-gray-300'
                       } ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
-                      placeholder="First name"
+                      placeholder={t('auth.placeholders.firstName')}
                     />
                     {fieldErrors.firstName && (
                       <p className="text-red-600 text-sm mt-1">{fieldErrors.firstName}</p>
@@ -432,7 +470,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Last Name <span className="text-pink-600">*</span>
+                      {t('auth.fields.lastName')} <span className="text-pink-600">*</span>
                     </label>
                     <input
                       type="text"
@@ -446,7 +484,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
                           ? 'border-red-300 bg-red-50'
                           : 'border-gray-300'
                       } ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
-                      placeholder="Last name"
+                      placeholder={t('auth.placeholders.lastName')}
                     />
                     {fieldErrors.lastName && (
                       <p className="text-red-600 text-sm mt-1">{fieldErrors.lastName}</p>
@@ -458,7 +496,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
+                {t('auth.fields.email')}
               </label>
               <input
                 ref={firstInputRef}
@@ -473,7 +511,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
                     ? 'border-red-300 bg-red-50'
                     : 'border-gray-300'
                 } ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
-                placeholder="Enter your email"
+                placeholder={t('auth.placeholders.email')}
               />
               {fieldErrors.email && (
                 <p className="text-red-600 text-sm mt-1">{fieldErrors.email}</p>
@@ -483,7 +521,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
             {!isLogin && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Mobile Phone <span className="text-pink-600">*</span>
+                  {t('auth.fields.phone')} <span className="text-pink-600">*</span>
                 </label>
                 <input
                   type="tel"
@@ -497,13 +535,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
                       ? 'border-red-300 bg-red-50'
                       : 'border-gray-300'
                   } ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
-                  placeholder="Enter your phone number"
+                  placeholder={t('auth.placeholders.phone')}
                 />
                 {fieldErrors.phone ? (
                   <p className="text-red-600 text-sm mt-1">{fieldErrors.phone}</p>
                 ) : (
                   <p className="text-xs text-gray-500 mt-1">
-                    Required for time-sensitive booking notifications
+                    {t('auth.phoneHint', 'Required for time-sensitive booking notifications')}
                   </p>
                 )}
               </div>
@@ -511,7 +549,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Password
+                {t('auth.fields.password')}
               </label>
               <input
                 type="password"
@@ -525,7 +563,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
                     ? 'border-red-300 bg-red-50'
                     : 'border-gray-300'
                 } ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
-                placeholder="Enter your password"
+                placeholder={t('auth.placeholders.password')}
               />
               {fieldErrors.password && (
                 <p className="text-red-600 text-sm mt-1">{fieldErrors.password}</p>
@@ -537,7 +575,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
               <>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Business Name <span className="text-pink-600">*</span>
+                    {t('auth.fields.businessName')} <span className="text-pink-600">*</span>
                   </label>
                   <input
                     type="text"
@@ -551,7 +589,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
                         ? 'border-red-300 bg-red-50'
                         : 'border-gray-300'
                     } ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
-                    placeholder="Your business or professional name"
+                    placeholder={t('auth.placeholders.businessName')}
                   />
                   {fieldErrors.businessName && (
                     <p className="text-red-600 text-sm mt-1">{fieldErrors.businessName}</p>
@@ -560,7 +598,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Years of Experience <span className="text-pink-600">*</span>
+                    {t('auth.fields.experience')} <span className="text-pink-600">*</span>
                   </label>
                   <select
                     name="experienceYears"
@@ -574,13 +612,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
                         : 'border-gray-300'
                     } ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
                   >
-                    <option value={0}>Select years of experience</option>
-                    <option value={1}>1 year</option>
-                    <option value={2}>2 years</option>
-                    <option value={3}>3 years</option>
-                    <option value={5}>5 years</option>
-                    <option value={7}>7+ years</option>
-                    <option value={10}>10+ years</option>
+                    <option value={0}>{t('auth.options.selectExp')}</option>
+                    <option value={1}>{t('auth.options.1year')}</option>
+                    <option value={2}>{t('auth.options.2years')}</option>
+                    <option value={3}>{t('auth.options.3years')}</option>
+                    <option value={5}>{t('auth.options.5years')}</option>
+                    <option value={7}>7+ {t('auth.yearsLabel', 'years')}</option>
+                    <option value={10}>{t('auth.options.10years')}</option>
                   </select>
                   {fieldErrors.experienceYears && (
                     <p className="text-red-600 text-sm mt-1">{fieldErrors.experienceYears}</p>
@@ -589,7 +627,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Biography <span className="text-pink-600">*</span>
+                    {t('auth.biographyLabel', 'Biography')} <span className="text-pink-600">*</span>
                   </label>
                   <textarea
                     name="biography"
@@ -603,7 +641,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
                         ? 'border-red-300 bg-red-50'
                         : 'border-gray-300'
                     } ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
-                    placeholder="Tell clients about yourself, your experience, and your style..."
+                    placeholder={t('auth.placeholders.bio')}
                   />
                   {fieldErrors.biography && (
                     <p className="text-red-600 text-sm mt-1">{fieldErrors.biography}</p>
@@ -613,7 +651,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      City <span className="text-pink-600">*</span>
+                      {t('auth.fields.locationCity')} <span className="text-pink-600">*</span>
                     </label>
                     <input
                       type="text"
@@ -627,7 +665,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
                           ? 'border-red-300 bg-red-50'
                           : 'border-gray-300'
                       } ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
-                      placeholder="Your city"
+                      placeholder={t('auth.cityPlaceholder', 'Your city')}
                     />
                     {fieldErrors.city && (
                       <p className="text-red-600 text-sm mt-1">{fieldErrors.city}</p>
@@ -635,7 +673,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      State <span className="text-pink-600">*</span>
+                      {t('auth.fields.locationState')} <span className="text-pink-600">*</span>
                     </label>
                     <select
                       name="state"
@@ -649,7 +687,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
                           : 'border-gray-300'
                       } ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
                     >
-                      <option value="">Select state</option>
+                      <option value="">{t('auth.selectState', 'Select state')}</option>
                       <option value="CDMX">Ciudad de México</option>
                       <option value="JAL">Jalisco</option>
                       <option value="NLE">Nuevo León</option>
@@ -682,23 +720,23 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
                   className="mt-1 h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded"
                 />
                 <label className="text-sm text-gray-700">
-                  I agree to the{' '}
+                  {t('auth.agreeToTermsPrefix', 'I agree to the')}{' '}
                   <a
                     href={mode === 'stylist' ? '/terms/stylist' : '/terms/client'}
                     target="_blank"
                     className="text-pink-600 hover:text-pink-700 hover:underline font-medium"
                   >
-                    Terms of Service
+                    {t('auth.links.termsOfService')}
                   </a>
                   {mode === 'stylist' && (
                     <>
-                      {' '}and{' '}
+                      {' '}{t('common.and')}{' '}
                       <a
                         href="/terms/client"
                         target="_blank"
                         className="text-pink-600 hover:text-pink-700 hover:underline font-medium"
                       >
-                        Client Terms
+                        {t('auth.clientTermsLabel', 'Client Terms')}
                       </a>
                     </>
                   )}
@@ -730,10 +768,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
               whileTap={!loading ? { scale: 0.98 } : {}}
             >
               {loading
-                ? 'Please wait...'
+                ? t('common.loading')
                 : isLogin
-                  ? `Sign In as ${mode === 'stylist' ? 'Stylist' : 'Client'}`
-                  : `Create ${mode === 'stylist' ? 'Stylist' : 'Client'} Account`
+                  ? `${t('auth.actions.signIn')} ${t('auth.asLabel', 'as')} ${mode === 'stylist' ? t('auth.stylistRole', 'Stylist') : t('auth.clientRole', 'Client')}`
+                  : `${t('auth.actions.signUp')} ${mode === 'stylist' ? t('auth.stylistRole', 'Stylist') : t('auth.clientRole', 'Client')} ${t('auth.accountLabel', 'Account')}`
               }
             </motion.button>
 
@@ -744,8 +782,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
                 type="button"
                 onClick={() => {
                   if (isLogin) {
+                    // Don't allow switching to registration for stylists
                     if (mode === 'stylist') {
-                      setShowStylistFlow(true)
+                      toast.error(t('auth.stylistRegNotAvailable', 'Stylist registration is not available. Please register as a client first.'))
                     } else {
                       setIsLogin(false)
                     }
@@ -759,11 +798,15 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
                 }`}
               >
                 {isLogin
-                  ? `Need a ${mode} account? Sign up`
-                  : 'sign in instead'
+                  ? mode === 'stylist'
+                    ? t('auth.newStylistRegisterClient', 'New stylist? Register as client first')
+                    : `${t('auth.links.noAccount')} ${t('auth.links.signUpHere')}`
+                  : t('auth.signInInstead', 'Sign in instead')
                 }
               </button>
             </div>
+            </>
+            )}
           </form>
         </motion.div>
       </motion.div>
@@ -772,13 +815,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose }) => {
       {showStylistFlow && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-full p-6 max-w-md w-full">
-            <h3 className="text-lg font-semibold mb-4">Stylist Registration</h3>
-            <p className="mb-4">Stylist registration form is temporarily unavailable. Please try again later.</p>
+            <h3 className="text-lg font-semibold mb-4">{t('auth.stylistRegisterTitle')}</h3>
+            <p className="mb-4">{t('auth.stylistFlowUnavailable', 'Stylist registration form is temporarily unavailable. Please try again later.')}</p>
             <button
               onClick={() => setShowStylistFlow(false)}
               className="btn btn-primary rounded-full"
             >
-              Close
+              {t('common.close')}
             </button>
           </div>
         </div>

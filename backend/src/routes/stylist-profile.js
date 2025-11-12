@@ -134,6 +134,7 @@ router.post('/profile', requireStylist, async (req, res) => {
       location_address,
       location_city,
       location_state,
+      location_zip,
       service_radius,
       mobile_services,
       instagram_url,
@@ -188,6 +189,11 @@ router.post('/profile', requireStylist, async (req, res) => {
         updateParams.push(location_state);
         paramCounter++;
       }
+      if (location_zip !== undefined) {
+        updateFields.push(`location_zip = $${paramCounter}`);
+        updateParams.push(location_zip);
+        paramCounter++;
+      }
       if (service_radius !== undefined) {
         updateFields.push(`service_radius = $${paramCounter}`);
         updateParams.push(service_radius);
@@ -231,10 +237,10 @@ router.post('/profile', requireStylist, async (req, res) => {
       await query(`
         INSERT INTO stylists (
           user_id, business_name, bio, specialties, experience_years,
-          location_address, location_city, location_state, service_radius,
+          location_address, location_city, location_state, location_zip, service_radius,
           mobile_services, social_media_links, working_hours,
           is_active, is_verified, created_at, updated_at
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, true, false, NOW(), NOW())
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, true, false, NOW(), NOW())
       `, [
         user.id,
         business_name || '',
@@ -244,6 +250,7 @@ router.post('/profile', requireStylist, async (req, res) => {
         location_address || '',
         location_city || '',
         location_state || '',
+        location_zip || '',
         service_radius || 10,
         mobile_services || false,
         JSON.stringify(socialLinks),

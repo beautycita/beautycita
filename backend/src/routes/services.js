@@ -17,6 +17,11 @@ const logger = winston.createLogger({
 // Middleware to ensure user is a stylist
 const requireStylist = async (req, res, next) => {
   try {
+    // NULL CHECK: Ensure req.user exists before accessing properties
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: 'Authentication required' });
+    }
+
     if (req.user.role !== 'STYLIST' && req.user.role !== 'ADMIN' && req.user.role !== 'SUPERADMIN') {
       return res.status(403).json({ success: false, message: 'Stylist access required' });
     }
@@ -38,6 +43,10 @@ const requireStylist = async (req, res, next) => {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
+
+// ============================================================================
+// PUBLIC ROUTES (NO AUTH REQUIRED) - Must come BEFORE parameterized routes
+// ============================================================================
 
 /**
  * GET /api/services
@@ -107,6 +116,108 @@ router.get('/', async (req, res) => {
 });
 
 /**
+ * GET /api/services/categories/list
+ * Get all service categories with localized names (PUBLIC)
+ */
+router.get('/categories/list', async (req, res) => {
+  try {
+    const result = await query(
+      `SELECT id, name, name_es, description, description_es, icon, sort_order as display_order, is_active
+       FROM service_categories
+       WHERE is_active = true
+       ORDER BY sort_order, name`
+    );
+
+    res.json({
+      success: true,
+      data: result.rows
+    });
+
+    logger.info('Service categories fetched', { count: result.rows.length });
+  } catch (error) {
+    logger.error('Error fetching service categories:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch service categories' });
+  }
+});
+
+/**
+ * GET /api/services/categories
+ * Alias for /categories/list for backwards compatibility (PUBLIC)
+ */
+router.get('/categories', async (req, res) => {
+  try {
+    const result = await query(
+      `SELECT id, name, name_es, description, description_es, icon, sort_order as display_order, is_active
+       FROM service_categories
+       WHERE is_active = true
+       ORDER BY sort_order, name`
+    );
+
+    res.json({
+      success: true,
+      data: result.rows
+    });
+
+    logger.info('Service categories fetched (via /categories)', { count: result.rows.length });
+  } catch (error) {
+    logger.error('Error fetching service categories:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch service categories' });
+  }
+});
+
+/**
+ * GET /api/services/templates/browse
+ * Get service templates (popular services to avoid duplication) (PUBLIC)
+ */
+router.get('/templates/browse', async (req, res) => {
+  try {
+    const { category, popular_only } = req.query;
+
+    let queryText = `
+      SELECT
+        id, category, name, name_es, description, description_es,
+        typical_duration_min, typical_duration_max,
+        typical_price_min, typical_price_max,
+        is_popular, usage_count
+      FROM service_templates
+      WHERE 1=1
+    `;
+    const params = [];
+    let paramCount = 1;
+
+    if (category) {
+      queryText += ` AND category = $${paramCount++}`;
+      params.push(category);
+    }
+
+    if (popular_only === 'true') {
+      queryText += ` AND is_popular = true`;
+    }
+
+    queryText += ` ORDER BY is_popular DESC, usage_count DESC, name_es`;
+
+    const result = await query(queryText, params);
+
+    res.json({
+      success: true,
+      data: result.rows
+    });
+
+    logger.info('Service templates fetched', {
+      count: result.rows.length,
+      category: category || 'all'
+    });
+  } catch (error) {
+    logger.error('Error fetching service templates:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch service templates' });
+  }
+});
+
+// ============================================================================
+// AUTHENTICATED ROUTES (REQUIRE STYLIST AUTH)
+// ============================================================================
+
+/**
  * GET /api/services/my-services
  * Get all services for the authenticated stylist
  */
@@ -133,34 +244,6 @@ router.get('/my-services', requireStylist, async (req, res) => {
   } catch (error) {
     logger.error('Error fetching services:', error);
     res.status(500).json({ success: false, message: 'Failed to fetch services' });
-  }
-});
-
-/**
- * GET /api/services/:id
- * Get a specific service by ID
- */
-router.get('/:id', requireStylist, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const stylistId = req.stylistId;
-
-    const result = await query(
-      `SELECT * FROM services WHERE id = $1 AND stylist_id = $2`,
-      [id, stylistId]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ success: false, message: 'Service not found' });
-    }
-
-    res.json({
-      success: true,
-      data: result.rows[0]
-    });
-  } catch (error) {
-    logger.error('Error fetching service:', error);
-    res.status(500).json({ success: false, message: 'Failed to fetch service' });
   }
 });
 
@@ -274,6 +357,72 @@ router.post('/', requireStylist, async (req, res) => {
   } catch (error) {
     logger.error('Error creating service:', error);
     res.status(500).json({ success: false, message: 'Failed to create service' });
+  }
+});
+
+/**
+ * POST /api/services/from-template/:templateId
+ * Create a service from a template
+ */
+router.post('/from-template/:templateId', requireStylist, async (req, res) => {
+  try {
+    const stylistId = req.stylistId;
+    const { templateId } = req.params;
+    const { price_min, price_max, duration_minutes, custom_description } = req.body;
+
+    // Get template
+    const templateResult = await query(
+      'SELECT * FROM service_templates WHERE id = $1',
+      [templateId]
+    );
+
+    if (templateResult.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Template not found' });
+    }
+
+    const template = templateResult.rows[0];
+
+    // Use template values or custom values
+    const finalPriceMin = price_min || template.typical_price_min;
+    const finalPriceMax = price_max || template.typical_price_max;
+    const finalDuration = duration_minutes || template.typical_duration_min;
+    const finalDescription = custom_description || template.description_es;
+
+    // Determine price type
+    const priceType = finalPriceMin === finalPriceMax ? 'fixed' : 'range';
+    const price = priceType === 'fixed' ? finalPriceMin : null;
+
+    // Create service
+    const result = await query(
+      `INSERT INTO services
+        (stylist_id, name, description, price, price_min, price_max, price_type,
+         duration_minutes, category, is_active, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, true, NOW(), NOW())
+       RETURNING *`,
+      [stylistId, template.name_es, finalDescription, price, finalPriceMin,
+       finalPriceMax, priceType, finalDuration, template.category]
+    );
+
+    // Increment usage count on template
+    await query(
+      'UPDATE service_templates SET usage_count = usage_count + 1 WHERE id = $1',
+      [templateId]
+    );
+
+    res.status(201).json({
+      success: true,
+      message: 'Service created from template successfully',
+      data: result.rows[0]
+    });
+
+    logger.info('Service created from template', {
+      stylistId,
+      templateId,
+      serviceId: result.rows[0].id
+    });
+  } catch (error) {
+    logger.error('Error creating service from template:', error);
+    res.status(500).json({ success: false, message: 'Failed to create service from template' });
   }
 });
 
@@ -554,142 +703,35 @@ router.delete('/:id', requireStylist, async (req, res) => {
   }
 });
 
-/**
- * GET /api/services/categories
- * Get all service categories with localized names
- */
-router.get('/categories/list', async (req, res) => {
-  try {
-    const result = await query(
-      `SELECT id, name, name_es, description, description_es, icon, sort_order as display_order, is_active
-       FROM service_categories
-       WHERE is_active = true
-       ORDER BY sort_order, name`
-    );
-
-    res.json({
-      success: true,
-      data: result.rows
-    });
-
-    logger.info('Service categories fetched', { count: result.rows.length });
-  } catch (error) {
-    logger.error('Error fetching service categories:', error);
-    res.status(500).json({ success: false, message: 'Failed to fetch service categories' });
-  }
-});
+// ============================================================================
+// PARAMETERIZED ROUTES (MUST come LAST - catches /:id as last resort)
+// ============================================================================
 
 /**
- * GET /api/services/templates
- * Get service templates (popular services to avoid duplication)
+ * GET /api/services/:id
+ * Get a specific service by ID (requires auth)
  */
-router.get('/templates/browse', async (req, res) => {
+router.get('/:id', requireStylist, async (req, res) => {
   try {
-    const { category, popular_only } = req.query;
-
-    let queryText = `
-      SELECT
-        id, category, name, name_es, description, description_es,
-        typical_duration_min, typical_duration_max,
-        typical_price_min, typical_price_max,
-        is_popular, usage_count
-      FROM service_templates
-      WHERE 1=1
-    `;
-    const params = [];
-    let paramCount = 1;
-
-    if (category) {
-      queryText += ` AND category = $${paramCount++}`;
-      params.push(category);
-    }
-
-    if (popular_only === 'true') {
-      queryText += ` AND is_popular = true`;
-    }
-
-    queryText += ` ORDER BY is_popular DESC, usage_count DESC, name_es`;
-
-    const result = await query(queryText, params);
-
-    res.json({
-      success: true,
-      data: result.rows
-    });
-
-    logger.info('Service templates fetched', {
-      count: result.rows.length,
-      category: category || 'all'
-    });
-  } catch (error) {
-    logger.error('Error fetching service templates:', error);
-    res.status(500).json({ success: false, message: 'Failed to fetch service templates' });
-  }
-});
-
-/**
- * POST /api/services/from-template/:templateId
- * Create a service from a template
- */
-router.post('/from-template/:templateId', requireStylist, async (req, res) => {
-  try {
+    const { id } = req.params;
     const stylistId = req.stylistId;
-    const { templateId } = req.params;
-    const { price_min, price_max, duration_minutes, custom_description } = req.body;
 
-    // Get template
-    const templateResult = await query(
-      'SELECT * FROM service_templates WHERE id = $1',
-      [templateId]
+    const result = await query(
+      `SELECT * FROM services WHERE id = $1 AND stylist_id = $2`,
+      [id, stylistId]
     );
 
-    if (templateResult.rows.length === 0) {
-      return res.status(404).json({ success: false, message: 'Template not found' });
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Service not found' });
     }
 
-    const template = templateResult.rows[0];
-
-    // Use template values or custom values
-    const finalPriceMin = price_min || template.typical_price_min;
-    const finalPriceMax = price_max || template.typical_price_max;
-    const finalDuration = duration_minutes || template.typical_duration_min;
-    const finalDescription = custom_description || template.description_es;
-
-    // Determine price type
-    const priceType = finalPriceMin === finalPriceMax ? 'fixed' : 'range';
-    const price = priceType === 'fixed' ? finalPriceMin : null;
-
-    // Create service
-    const result = await query(
-      `INSERT INTO services
-        (stylist_id, name, description, price, price_min, price_max, price_type,
-         duration_minutes, category, is_active, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, true, NOW(), NOW())
-       RETURNING *`,
-      [stylistId, template.name_es, finalDescription, price, finalPriceMin,
-       finalPriceMax, priceType, finalDuration, template.category]
-    );
-
-    // Increment usage count on template
-    await query(
-      'UPDATE service_templates SET usage_count = usage_count + 1 WHERE id = $1',
-      [templateId]
-    );
-
-    res.status(201).json({
+    res.json({
       success: true,
-      message: 'Service created from template successfully',
       data: result.rows[0]
     });
-
-    logger.info('Service created from template', {
-      stylistId,
-      templateId,
-      serviceId: result.rows[0].id
-    });
   } catch (error) {
-    logger.error('Error creating service from template:', error);
-    res.status(500).json({ success: false, message: 'Failed to create service from template' });
+    logger.error('Error fetching service:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch service' });
   }
 });
 

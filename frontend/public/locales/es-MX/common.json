@@ -512,7 +512,15 @@
     "firstName": "Nombre",
     "lastName": "Apellido",
     "email": "Correo Electrónico",
-    "phone": "Teléfono"
+    "phone": "Teléfono",
+    "methodSelection": {
+      "registerPrompt": "Elige tu método de registro preferido",
+      "loginPrompt": "Elige tu método de inicio de sesión preferido",
+      "biometricRegisterButton": "Registrarse con Biométrico",
+      "biometricLoginButton": "Iniciar sesión con Biométrico",
+      "biometricRegisterDescription": "Registro seguro y sin contraseña con biometría",
+      "biometricLoginDescription": "Inicio de sesión rápido y seguro con tu huella dactilar o rostro"
+    }
   },
   "services": {
     "title": "Servicios de Belleza",
@@ -2289,5 +2297,84 @@
   "": {
     "": "•"
   },
-  "2d": "2D"
+  "2d": "2D",
+  "stylistOnboarding": {
+    "title": "Conviértete en Estilista",
+    "subtitle": "Paso {{step}} de {{total}}",
+    "continue": "Continuar",
+    "back": "Atrás",
+    "fixErrors": "Por favor corrige los errores antes de continuar",
+    "step1": {
+      "title": "Identidad Profesional",
+      "subtitle": "Cuéntanos sobre tu negocio de belleza",
+      "businessName": "Nombre del Negocio",
+      "businessNamePlaceholder": "ej., Estudio de Belleza de Sofía",
+      "experience": "Años de Experiencia",
+      "selectExperience": "Selecciona experiencia",
+      "exp1": "Menos de 1 año",
+      "exp2": "1-2 años",
+      "exp3": "3-5 años",
+      "exp5": "5-10 años",
+      "exp10": "10+ años",
+      "specialties": "Especialidades (Selecciona todas las que apliquen)",
+      "bio": "Biografía Profesional",
+      "bioPlaceholder": "Cuéntales a los clientes potenciales sobre tu experiencia, estilo y qué te hace único..."
+    },
+    "step2": {
+      "title": "Ubicación y Área de Servicio",
+      "subtitle": "¿Dónde proporcionas tus servicios?",
+      "address": "Dirección del Negocio",
+      "addressPlaceholder": "Busca la dirección de tu negocio...",
+      "radius": "Radio de Servicio (km)",
+      "radiusHelp": "¿Qué tan lejos estás dispuesto a viajar para citas?",
+      "mobileServices": "Ofrezco servicios móviles",
+      "mobileServicesHelp": "Puedo viajar a las ubicaciones de los clientes"
+    },
+    "step3": {
+      "title": "Horario de Trabajo",
+      "subtitle": "Establece tus horarios base de trabajo",
+      "templates": "Plantillas Rápidas",
+      "templateApplied": "¡Plantilla {{name}} aplicada!",
+      "closed": "Cerrado"
+    },
+    "step4": {
+      "title": "Servicios y Precios",
+      "subtitle": "Selecciona los servicios que ofrecerás",
+      "all": "Todos",
+      "selected": "Servicios Seleccionados ({{count}})",
+      "priceMin": "Precio Mínimo (MXN)",
+      "priceMax": "Precio Máximo (MXN)",
+      "duration": "Duración (min)",
+      "minimum": "Selecciona al menos 3 servicios para continuar",
+      "errorLoading": "Error al cargar plantillas de servicios"
+    },
+    "step5": {
+      "title": "Portafolio y Prueba Social",
+      "subtitle": "Muestra tu mejor trabajo",
+      "images": "Imágenes de Portafolio (3-6 imágenes)",
+      "uploadText": "Haz clic para subir o arrastra y suelta",
+      "uploadHelp": "PNG, JPG hasta 5MB cada una",
+      "maxImages": "Máximo 6 imágenes de portafolio permitidas",
+      "fileTooLarge": "{{name}} es demasiado grande. Máximo 5MB por archivo.",
+      "imagesAdded": "¡{{count}} imagen(es) agregada(s)!",
+      "imageRemoved": "Imagen eliminada",
+      "imagesUploaded": "imágenes subidas",
+      "needMinimum": "Necesitas al menos 3 imágenes",
+      "instagram": "Perfil de Instagram (opcional)",
+      "tiktok": "Perfil de TikTok (opcional)",
+      "nextSteps": "¿Qué Sigue?",
+      "paymentSetup": "Después de completar este registro, necesitarás configurar tus métodos de pago:",
+      "paymentStep1": "Stripe Connect para pagos con tarjeta de crédito",
+      "paymentStep2": "Billetera Bitcoin para pagos con criptomonedas (opcional)",
+      "paymentStep3": "Tu perfil será revisado y aprobado en 24-48 horas"
+    },
+    "services": {
+      "errorLoading": "Error al cargar servicios"
+    },
+    "complete": {
+      "button": "Completar Configuración",
+      "success": "¡Perfil enviado para aprobación! Recibirás un correo una vez aprobado.",
+      "error": "Error al enviar perfil. Por favor intenta de nuevo."
+    }
+  }
 }
