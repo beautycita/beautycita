@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { SparklesIcon, EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline'
@@ -8,6 +8,21 @@ import axios from 'axios'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 
+// Google One Tap types
+declare global {
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (config: any) => void
+          prompt: (momentListener?: (notification: any) => void) => void
+          cancel: () => void
+        }
+      }
+    }
+  }
+}
+
 export default function CleanAuthPage({ mode = 'login' }: { mode?: 'login' | 'register' }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -15,6 +30,91 @@ export default function CleanAuthPage({ mode = 'login' }: { mode?: 'login' | 're
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const { setUser, setToken } = useAuthStore()
+
+  // Google One Tap handler
+  const handleGoogleOneTap = useCallback(async (response: any) => {
+    try {
+      console.log('Google One Tap credential received')
+
+      const res = await axios.post(`${API_URL}/api/auth/google/one-tap`, {
+        credential: response.credential,
+        role: 'CLIENT'
+      })
+
+      if (res.data.success) {
+        console.log('Google One Tap authentication successful')
+
+        // Store in localStorage
+        localStorage.setItem('token', res.data.token)
+        localStorage.setItem('user', JSON.stringify(res.data.user))
+
+        // Update auth store
+        setToken(res.data.token)
+        setUser(res.data.user)
+
+        toast.success('Welcome to BeautyCita!')
+
+        // Redirect based on onboarding status
+        if (res.data.requiresOnboarding) {
+          navigate('/onboarding/client')
+        } else {
+          navigate('/panel')
+        }
+      }
+    } catch (error: any) {
+      console.error('Google One Tap error:', error)
+      toast.error(error.response?.data?.error || 'Authentication failed')
+    }
+  }, [navigate, setToken, setUser])
+
+  // Initialize Google One Tap
+  useEffect(() => {
+    const script = document.createElement('script')
+    script.src = 'https://accounts.google.com/gsi/client'
+    script.async = true
+    script.defer = true
+
+    script.onload = () => {
+      if (window.google) {
+        const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+
+        if (!clientId) {
+          console.error('Google Client ID not configured')
+          return
+        }
+
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: handleGoogleOneTap,
+          auto_select: false,
+          cancel_on_tap_outside: false,
+          context: mode === 'register' ? 'signup' : 'signin'
+        })
+
+        // Display the One Tap prompt
+        window.google.accounts.id.prompt((notification: any) => {
+          if (notification.isNotDisplayed()) {
+            console.log('Google One Tap not displayed:', notification.getNotDisplayedReason())
+          } else if (notification.isSkippedMoment()) {
+            console.log('Google One Tap skipped:', notification.getSkippedReason())
+          } else if (notification.isDismissedMoment()) {
+            console.log('Google One Tap dismissed:', notification.getDismissedReason())
+          }
+        })
+      }
+    }
+
+    document.head.appendChild(script)
+
+    return () => {
+      if (window.google?.accounts?.id) {
+        window.google.accounts.id.cancel()
+      }
+      if (document.head.contains(script)) {
+        document.head.removeChild(script)
+      }
+    }
+  }, [handleGoogleOneTap, mode])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -102,6 +202,20 @@ export default function CleanAuthPage({ mode = 'login' }: { mode?: 'login' | 're
 
         {/* Auth Card */}
         <div className="bg-white rounded-3xl shadow-xl p-8">
+          {/* Google One Tap appears automatically as popup */}
+
+          {/* Divider */}
+          <div className="mb-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-gray-500">Or continue with email</span>
+              </div>
+            </div>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email */}
             <div>
