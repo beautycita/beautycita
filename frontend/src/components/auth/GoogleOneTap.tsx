@@ -60,16 +60,12 @@ export default function GoogleOneTap({
           onSuccess(data.user)
         }
 
-        // Redirect based on phone verification status
-        if (data.requiresPhoneVerification) {
-          navigate(`/verify-phone?email=${encodeURIComponent(data.user.email)}&role=${role}`)
+        // Redirect based on onboarding status
+        if (data.requiresOnboarding) {
+          navigate('/onboarding/client')
         } else {
-          // Redirect to appropriate dashboard
-          if (data.user.role === 'STYLIST') {
-            navigate('/stylist/dashboard')
-          } else {
-            navigate('/client/dashboard')
-          }
+          // Redirect to panel (onboarding already completed)
+          navigate('/panel')
         }
       } else {
         throw new Error(data.error || 'Authentication failed')

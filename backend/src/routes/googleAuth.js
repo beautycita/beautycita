@@ -218,6 +218,9 @@ router.post('/google/one-tap', async (req, res) => {
       sessionId: req.sessionID
     });
 
+    // Check if user has completed onboarding
+    const hasCompletedOnboarding = user.onboarding_completed || false;
+
     // Return success with token and user data
     res.json({
       success: true,
@@ -228,9 +231,10 @@ router.post('/google/one-tap', async (req, res) => {
         name: user.name,
         role: user.role,
         phoneVerified: user.phone_verified,
-        profilePicture: user.profile_picture_url
+        profilePicture: user.profile_picture_url,
+        onboardingCompleted: hasCompletedOnboarding
       },
-      requiresPhoneVerification: !user.phone_verified
+      requiresOnboarding: !hasCompletedOnboarding
     });
 
   } catch (error) {
@@ -470,18 +474,20 @@ router.get('/google/callback', async (req, res) => {
       executionTime: Date.now() - callbackStartTime
     });
 
-    // Check if phone is verified
-    if (!user.phone_verified) {
-      // Redirect to phone verification with token
+    // Check if user has completed onboarding
+    const hasCompletedOnboarding = user.onboarding_completed || false;
+
+    if (!hasCompletedOnboarding) {
+      // Redirect to client onboarding
       return res.redirect(
-        `${process.env.FRONTEND_URL}/verify-phone?email=${encodeURIComponent(user.email)}&role=${user.role.toLowerCase()}&token=${token}`
+        `${process.env.FRONTEND_URL}/onboarding/client?token=${token}`
       );
     }
 
-    // Redirect to auth callback with success (session cookie will be sent automatically)
+    // Redirect to panel (session cookie will be sent automatically)
     // Include token for backward compatibility
     res.redirect(
-      `${process.env.FRONTEND_URL}/auth/callback?auth=success&role=${user.role.toLowerCase()}&token=${token}`
+      `${process.env.FRONTEND_URL}/panel?token=${token}`
     );
 
   } catch (error) {
