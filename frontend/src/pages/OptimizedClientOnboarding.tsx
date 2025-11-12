@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import axios from 'axios'
+import { useAuthStore } from '../store/authStore'
+import { jwtDecode } from 'jwt-decode'
 import {
   MapPinIcon,
   HeartIcon,
@@ -56,10 +58,50 @@ const onboardingSchema = Yup.object().shape({
 export default function OptimizedClientOnboarding() {
   const [currentStep, setCurrentStep] = useState(1)
   const [isDetectingLocation, setIsDetectingLocation] = useState(false)
+  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
+  const { setToken, setUser } = useAuthStore()
 
   const totalSteps = 3
   const progress = (currentStep / totalSteps) * 100
+
+  // Extract token from URL and set in auth store (OAuth callback flow)
+  useEffect(() => {
+    const token = searchParams.get('token')
+    if (token) {
+      try {
+        // Decode JWT to get user data
+        const decoded: any = jwtDecode(token)
+
+        // Set token and user in auth store
+        setToken(token)
+        setUser({
+          id: decoded.id,
+          email: decoded.email,
+          name: decoded.name,
+          role: decoded.role || 'CLIENT',
+          isActive: true,
+          emailVerified: true
+        })
+
+        // Store in localStorage as well
+        localStorage.setItem('token', token)
+        localStorage.setItem('user', JSON.stringify({
+          id: decoded.id,
+          email: decoded.email,
+          name: decoded.name,
+          role: decoded.role || 'CLIENT'
+        }))
+
+        // Remove token from URL
+        searchParams.delete('token')
+        navigate({ search: searchParams.toString() }, { replace: true })
+      } catch (error) {
+        console.error('Error decoding token:', error)
+        toast.error('Invalid authentication token')
+      }
+    }
+  }, [searchParams, setToken, setUser, navigate])
 
   const initialValues: OnboardingValues = {
     location: { city: '', state: '', zip: '' },
