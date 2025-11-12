@@ -15,6 +15,7 @@ import {
 import { useAuthStore } from '../../store/authStore'
 import { getPostLoginRedirect } from '../../utils/routing'
 import GoogleSignInButton from '../../components/auth/GoogleSignInButton'
+import GoogleOneTap from '../../components/auth/GoogleOneTap'
 import { GradientCard } from '../../components/ui'
 import BiometricRegistrationModal from '../../components/auth/BiometricRegistrationModal'
 import type { LoginForm, RegisterForm } from '../../types'
