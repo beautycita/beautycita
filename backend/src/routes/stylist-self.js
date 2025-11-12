@@ -436,4 +436,154 @@ router.get('/status', async (req, res) => {
   }
 });
 
+/**
+ * POST /api/stylist/complete-onboarding
+ * Complete stylist onboarding wizard - saves all data
+ */
+router.post('/complete-onboarding', requireStylist, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const {
+      businessName,
+      bio,
+      specialties,
+      experienceYears,
+      certifications,
+      locations,
+      services,
+      portfolioImages,
+      workingHours,
+      pricingStrategy,
+      acceptsDeposits,
+      depositAmount,
+      cancellationPolicy
+    } = req.body;
+
+    // Start transaction
+    await query('BEGIN');
+
+    // 1. Update stylist profile
+    await query(`
+      UPDATE stylists
+      SET
+        business_name = $1,
+        bio = $2,
+        specialties = $3,
+        experience_years = $4,
+        certifications = $5,
+        pricing_strategy = $6,
+        accepts_deposits = $7,
+        deposit_amount = $8,
+        cancellation_policy = $9,
+        working_hours = $10,
+        updated_at = NOW()
+      WHERE user_id = $11
+    `, [
+      businessName,
+      bio,
+      specialties,
+      experienceYears,
+      certifications || [],
+      pricingStrategy,
+      acceptsDeposits,
+      depositAmount,
+      cancellationPolicy,
+      JSON.stringify(workingHours),
+      userId
+    ]);
+
+    // Get stylist_id for foreign keys
+    const stylistResult = await query(
+      'SELECT id FROM stylists WHERE user_id = $1',
+      [userId]
+    );
+
+    if (stylistResult.rows.length === 0) {
+      throw new Error('Stylist profile not found');
+    }
+
+    const stylistId = stylistResult.rows[0].id;
+
+    // 2. Add locations
+    for (const location of locations) {
+      await query(`
+        INSERT INTO stylist_locations (
+          stylist_id, location_name, location_type, address, city, state, zip,
+          country, latitude, longitude, is_primary, is_active, accepts_walkins,
+          parking_available, wheelchair_accessible, created_at, updated_at
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, 'Mexico', $8, $9, $10, true, $11, $12, $13, NOW(), NOW())
+      `, [
+        stylistId,
+        location.name,
+        location.type,
+        location.address,
+        location.city,
+        location.state,
+        location.zip,
+        location.latitude,
+        location.longitude,
+        location.isPrimary,
+        location.acceptsWalkins,
+        location.parkingAvailable,
+        location.wheelchairAccessible
+      ]);
+    }
+
+    // 3. Add services
+    for (const service of services) {
+      await query(`
+        INSERT INTO services (
+          stylist_id, name, description, category, custom_category_name,
+          duration_minutes, price, price_type, is_active, created_at, updated_at
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, true, NOW(), NOW())
+      `, [
+        stylistId,
+        service.name,
+        service.description,
+        service.category,
+        service.customCategoryName || null,
+        service.durationMinutes,
+        service.price,
+        service.priceType
+      ]);
+    }
+
+    // 4. Mark user as onboarding complete
+    await query(`
+      UPDATE users
+      SET
+        onboarding_completed = true,
+        onboarding_completed_at = NOW(),
+        user_status = 'APPROVED',
+        updated_at = NOW()
+      WHERE id = $1
+    `, [userId]);
+
+    // Commit transaction
+    await query('COMMIT');
+
+    return res.json({
+      success: true,
+      message: 'Onboarding completed successfully! Your profile is now live.',
+      data: {
+        stylistId,
+        locationsCreated: locations.length,
+        servicesCreated: services.length
+      }
+    });
+
+  } catch (error) {
+    // Rollback on error
+    await query('ROLLBACK');
+    console.error('Error completing stylist onboarding:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to complete onboarding',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+});
+
 module.exports = router;

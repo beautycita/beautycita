@@ -49,6 +49,7 @@ const ProfileEditPage = lazy(() => import('./pages/profile/ProfileEditPage'))
 const ProfileOnboardingPage = lazy(() => import('./pages/profile/FormikOnboardingPage'))
 const ClientOnboardingPage = lazy(() => import("./pages/ClientOnboardingPage"))
 const OptimizedClientOnboarding = lazy(() => import('./pages/OptimizedClientOnboarding'))
+const StylistOnboardingWizard = lazy(() => import('./pages/onboarding/StylistOnboardingWizard'))
 const BecomeStylistPage = lazy(() => import('./pages/profile/BecomeStylistPage'))
 const SettingsPage = lazy(() => import('./pages/SettingsPage'))
 const NotificationsPage = lazy(() => import('./pages/NotificationsPage'))
@@ -283,6 +284,22 @@ function AppLayout() {
                     element={
                       <ProtectedRoute>
                         <OptimizedClientOnboarding />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/onboarding/stylist"
+                    element={
+                      <ProtectedRoute>
+                        <StylistOnboardingWizard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/stylist/onboarding"
+                    element={
+                      <ProtectedRoute>
+                        <StylistOnboardingWizard />
                       </ProtectedRoute>
                     }
                   />
