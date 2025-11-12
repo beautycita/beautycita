@@ -14,7 +14,9 @@ import {
   CheckIcon,
   ChevronRightIcon,
   ChevronLeftIcon,
+  FingerPrintIcon,
 } from '@heroicons/react/24/outline'
+import { startRegistration, browserSupportsWebAuthn } from '@simplewebauthn/browser'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 
@@ -57,7 +59,10 @@ const onboardingSchema = Yup.object().shape({
 export default function OptimizedClientOnboarding() {
   const [currentStep, setCurrentStep] = useState(1)
   const [isDetectingLocation, setIsDetectingLocation] = useState(false)
+  const [showBiometricModal, setShowBiometricModal] = useState(false)
+  const [isBiometricLoading, setIsBiometricLoading] = useState(false)
   const navigate = useNavigate()
+  const { user } = useAuthStore()
 
   const totalSteps = 3
   const progress = (currentStep / totalSteps) * 100
@@ -150,12 +155,89 @@ export default function OptimizedClientOnboarding() {
       )
 
       toast.success('Welcome to BeautyCita! 🎉')
-      setTimeout(() => {
-        navigate('/dashboard')
-      }, 1000)
+
+      // Check if device supports biometric
+      if (browserSupportsWebAuthn()) {
+        // Show biometric setup modal
+        setShowBiometricModal(true)
+      } else {
+        // No biometric support, go directly to panel
+        setTimeout(() => {
+          navigate('/panel')
+        }, 1000)
+      }
     } catch (error) {
       toast.error('Failed to complete onboarding')
     }
+  }
+
+  const getDefaultDeviceName = (): string => {
+    const ua = navigator.userAgent
+    if (/iPhone/.test(ua)) return 'iPhone'
+    if (/iPad/.test(ua)) return 'iPad'
+    if (/Android/.test(ua)) return 'Android Device'
+    if (/Mac/.test(ua)) return 'Mac'
+    if (/Windows/.test(ua)) return 'Windows PC'
+    return 'My Device'
+  }
+
+  const handleSetupBiometric = async () => {
+    try {
+      setIsBiometricLoading(true)
+      const token = localStorage.getItem('token')
+
+      // Get registration options from backend
+      const optionsResponse = await axios.post(
+        `${API_URL}/api/webauthn/register/options`,
+        {
+          email: user?.email,
+          role: user?.role || 'CLIENT'
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      )
+
+      console.log('WebAuthn options received')
+
+      // Start WebAuthn registration
+      const credential = await startRegistration(optionsResponse.data.options)
+
+      // Verify registration with backend
+      await axios.post(
+        `${API_URL}/api/webauthn/register/verify-minimal`,
+        {
+          email: user?.email,
+          role: user?.role || 'CLIENT',
+          credential,
+          deviceName: getDefaultDeviceName()
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      )
+
+      toast.success('Biometric login enabled! 🎉')
+      setShowBiometricModal(false)
+      setTimeout(() => {
+        navigate('/panel')
+      }, 500)
+    } catch (error: any) {
+      console.error('Biometric registration error:', error)
+      toast.error('Failed to setup biometric login')
+      // Still go to panel even if biometric fails
+      setShowBiometricModal(false)
+      setTimeout(() => {
+        navigate('/panel')
+      }, 500)
+    } finally {
+      setIsBiometricLoading(false)
+    }
+  }
+
+  const handleSkipBiometric = () => {
+    setShowBiometricModal(false)
+    navigate('/panel')
   }
 
   const renderStepIndicator = () => (
@@ -474,6 +556,64 @@ export default function OptimizedClientOnboarding() {
           )}
         </Formik>
       </motion.div>
+
+      {/* Biometric Setup Modal */}
+      <AnimatePresence>
+        {showBiometricModal && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-gray-900 rounded-3xl shadow-2xl p-8 max-w-md w-full border border-gray-800"
+            >
+              <div className="text-center mb-6">
+                <div className="w-20 h-20 bg-gradient-to-r from-pink-500 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-4">
+                  <FingerPrintIcon className="w-12 h-12 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-white mb-2">
+                  Enable Quick Login
+                </h2>
+                <p className="text-gray-400">
+                  Use Face ID, Touch ID, or Windows Hello for instant access to your account
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <button
+                  onClick={handleSetupBiometric}
+                  disabled={isBiometricLoading}
+                  className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold py-4 px-6 rounded-3xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                >
+                  {isBiometricLoading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Setting up...</span>
+                    </>
+                  ) : (
+                    <>
+                      <FingerPrintIcon className="w-5 h-5" />
+                      <span>Enable Biometric Login</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  onClick={handleSkipBiometric}
+                  disabled={isBiometricLoading}
+                  className="w-full text-gray-400 hover:text-white font-medium py-3 px-6 rounded-3xl transition-colors duration-200"
+                >
+                  Skip for now
+                </button>
+              </div>
+
+              <p className="text-xs text-gray-500 text-center mt-4">
+                You can always enable this later in your account settings
+              </p>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
