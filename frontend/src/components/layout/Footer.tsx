@@ -55,7 +55,7 @@ export default function Footer() {
       { name: t('footer.legal.licenses'), href: '/licenses' },
     ],
     stylists: [
-      { name: t('footer.stylists.joinStylist'), href: '/stylist/register' },
+      { name: t('footer.stylists.joinStylist'), href: '/stylist-application' },
       { name: t('footer.stylists.resources'), href: '/resources' },
       { name: t('footer.stylists.policies'), href: '/policies' },
       { name: t('footer.stylists.commissions'), href: '/commissions' },

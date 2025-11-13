@@ -12,15 +12,13 @@ import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import ScrollToTop from './components/layout/ScrollToTop'
 
-import CookieConsentBanner from "./components/CookieConsentBanner"
-// PWA components
-import InstallPrompt from './components/pwa/InstallPrompt'
+// Popup Manager - controls GDPR, Google One Tap, and PWA prompts
+import PopupManager from './components/PopupManager'
 
 // ============================================================================
 // ALWAYS LOADED: Critical pages for initial render (~100 KB)
 // ============================================================================
 import HomePage from './pages/HomePage'
-import CleanAuthPage from './pages/auth/CleanAuthPage'
 import NotFoundPage from './pages/NotFoundPage'
 import UnauthorizedPage from './pages/UnauthorizedPage'
 
@@ -29,6 +27,8 @@ import UnauthorizedPage from './pages/UnauthorizedPage'
 // ============================================================================
 
 // Auth & Recovery pages
+const LoginPage = lazy(() => import('./pages/auth/LoginPage'))
+const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'))
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('./pages/auth/ResetPasswordPage'))
 const VerifyPhonePage = lazy(() => import('./pages/auth/VerifyPhonePage'))
@@ -176,23 +176,17 @@ function AppLayout() {
         <Suspense fallback={<BCLoading size="xl" fullScreen text={t('common.loading')} />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
-                  {/* Clean Auth - Email/Password only */}
-                  <Route path="/login" element={<CleanAuthPage mode="login" />} />
-                  <Route path="/register" element={<CleanAuthPage mode="register" />} />
-                  <Route path="/auth" element={<CleanAuthPage mode="login" />} />
+                  {/* Auth - Modal-based only (CLIENT ONLY SIGNUP - no stylist registration) */}
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/auth" element={<LoginPage />} />
 
-                  {/* All login/register routes now use same clean auth */}
-                  <Route path="/stylist/login" element={<CleanAuthPage mode="login" />} />
-                  <Route path="/stylist/register" element={<CleanAuthPage mode="register" />} />
-                  <Route path="/client/login" element={<CleanAuthPage mode="login" />} />
-                  <Route path="/client/register" element={<CleanAuthPage mode="register" />} />
-                  <Route path="/admin/login" element={<CleanAuthPage mode="login" />} />
-
-                  {/* Legacy redirects */}
-                  <Route path="/login/client" element={<CleanAuthPage mode="login" />} />
-                  <Route path="/login/stylist" element={<CleanAuthPage mode="login" />} />
-                  <Route path="/login/admin" element={<CleanAuthPage mode="login" />} />
-                  <Route path="/register/client" element={<CleanAuthPage mode="register" />} />
+                  {/* Legacy login redirects (all roles can login, but only CLIENT can register) */}
+                  <Route path="/client/login" element={<LoginPage />} />
+                  <Route path="/admin/login" element={<LoginPage />} />
+                  <Route path="/login/client" element={<LoginPage />} />
+                  <Route path="/login/stylist" element={<LoginPage />} />
+                  <Route path="/login/admin" element={<LoginPage />} />
 
                   {/* Password recovery and verification */}
                   <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -605,9 +599,8 @@ function AppLayout() {
           />
         </>
       )}
-      {/* PWA Install Prompt - shows automatically */}
-      <InstallPrompt />
-      <CookieConsentBanner />
+      {/* Popup Manager - controls all popups in correct sequence */}
+      <PopupManager />
     </>
   )
 }

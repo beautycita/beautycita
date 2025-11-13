@@ -181,8 +181,8 @@ export default function AboutPage() {
             to: '/stylists'
           }}
           secondaryAction={{
-            label: 'Join as Stylist',
-            to: '/register/stylist'
+            label: 'Become a Stylist',
+            to: '/stylist-application'
           }}
           gradient="from-pink-600 via-purple-600 to-blue-600"
           icon={<SparklesIcon className="h-16 w-16" />}

@@ -33,9 +33,6 @@ const registerSchema = Yup.object().shape({
     .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
     .matches(/[0-9]/, 'Password must contain at least one number')
     .required('Password is required'),
-  passwordConfirm: Yup.string()
-    .oneOf([Yup.ref('password')], 'Passwords must match')
-    .required('Please confirm your password'),
   acceptTerms: Yup.boolean().oneOf([true], 'You must accept the terms and conditions'),
 })
 
@@ -253,7 +250,6 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register', r
                         lastName: '',
                         email: '',
                         password: '',
-                        passwordConfirm: '',
                         acceptTerms: false,
                       }}
                       validationSchema={mode === 'login' ? loginSchema : registerSchema}
@@ -328,19 +324,6 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register', r
 
                           {mode === 'register' && (
                             <>
-                              <div>
-                                <label htmlFor="passwordConfirm" className="block text-sm font-medium text-gray-300 mb-2">
-                                  Confirm Password
-                                </label>
-                                <Field
-                                  name="passwordConfirm"
-                                  type={showPassword ? 'text' : 'password'}
-                                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-pink-500"
-                                  placeholder="••••••••"
-                                />
-                                <ErrorMessage name="passwordConfirm" component="p" className="mt-1 text-sm text-red-400" />
-                              </div>
-
                               <div className="flex items-start gap-3">
                                 <Field
                                   name="acceptTerms"

@@ -211,10 +211,10 @@ export default function VideoHero({ isDarkMode }: VideoHeroProps) {
             </Link>
 
             <Link
-              to="/register/stylist"
+              to="/stylist-application"
               className="px-8 py-4 bg-white/10 backdrop-blur-md text-white font-semibold text-lg rounded-3xl border-2 border-white/30 hover:bg-white/20 hover:border-white/50 transition-all transform hover:scale-105"
             >
-              Join as Stylist
+              Become a Stylist
             </Link>
           </motion.div>
 

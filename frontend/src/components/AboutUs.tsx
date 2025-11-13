@@ -273,10 +273,10 @@ const AboutUs: React.FC = () => {
             </div>
             <div className="mt-8">
               <Link
-                to="/register/stylist"
+                to="/stylist-application"
                 className="inline-block bg-white text-blue-600 px-8 py-3 rounded-3xl font-bold hover:bg-gray-100 transition-colors"
               >
-                Join Our Network
+                Become a Stylist
               </Link>
             </div>
           </div>
@@ -299,7 +299,7 @@ const AboutUs: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                to="/register/client"
+                to="/register"
                 className="bg-blue-600 text-white px-8 py-3 rounded-3xl font-medium hover:bg-blue-700 transition-colors"
               >
                 Book Services

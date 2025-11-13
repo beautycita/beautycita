@@ -50,10 +50,10 @@ const CommissionsPage: React.FC = () => {
       >
         <div className="flex flex-wrap justify-center gap-4 mt-8">
           <Link
-            to="/register/stylist"
+            to="/stylist-application"
             className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-8 py-4 rounded-3xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
           >
-            Comenzar como Estilista
+            Aplicar como Estilista
           </Link>
           <button
             onClick={() => document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth' })}
@@ -398,10 +398,10 @@ const CommissionsPage: React.FC = () => {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
-              to="/register/stylist"
+              to="/stylist-application"
               className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-8 py-4 rounded-3xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
             >
-              Registrarme como Estilista
+              Aplicar como Estilista
             </Link>
             <Link
               to="/contact"

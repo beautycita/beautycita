@@ -81,27 +81,44 @@ const SCOPES = [
 /**
  * Google One Tap Sign-In (JWT verification)
  * POST /api/auth/google/one-tap
- * Body: { credential: 'JWT_TOKEN', role: 'client|stylist' }
+ * Body: { credential: 'JWT_TOKEN' }
+ *
+ * CLIENT-ONLY SIGNUP: All new users are created as CLIENT role.
+ * Stylists must apply via /stylist-application after client onboarding.
  */
 router.post('/google/one-tap', async (req, res) => {
   const { OAuth2Client } = require('google-auth-library');
   const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
   try {
-    const { credential, role = 'client' } = req.body;
+    const { credential } = req.body;
 
     if (!credential) {
-      return res.status(400).json({ error: 'Missing credential' });
+      return res.status(400).json({
+        success: false,
+        error: 'Missing credential'
+      });
     }
 
-    // Verify the Google JWT token
+    // Verify the Google JWT token using google-auth-library (2025 best practice)
     const ticket = await client.verifyIdToken({
       idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
     const payload = ticket.getPayload();
-    const userRole = role.toUpperCase() === 'STYLIST' ? 'STYLIST' : 'CLIENT';
+
+    // Validate required fields from Google
+    if (!payload.email || !payload.sub) {
+      logger.error('Invalid Google payload - missing required fields', { payload });
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid Google response - missing required fields'
+      });
+    }
+
+    // CLIENT-ONLY: All new signups are CLIENT role
+    const userRole = 'CLIENT';
 
     logger.info('Google One Tap credential verified', {
       email: payload.email,
@@ -142,10 +159,10 @@ router.post('/google/one-tap', async (req, res) => {
       const newUserResult = await query(`
         INSERT INTO users (
           email, name, first_name, last_name, profile_picture_url, username,
-          role, provider, provider_id, email_verified, is_active, user_status,
-          created_at, updated_at
+          role, provider, provider_id, email_verified, is_active,
+          created_at, updated_at, last_login_at
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW(), NOW())
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW(), NOW(), NOW())
         RETURNING *
       `, [
         payload.email,
@@ -158,36 +175,21 @@ router.post('/google/one-tap', async (req, res) => {
         'google',
         payload.sub,
         payload.email_verified || true,
-        true,
-        userRole === 'STYLIST' ? 'PENDING_ONBOARDING' : null
+        true
       ]);
 
       user = newUserResult.rows[0];
 
-      // Create role-specific profile
-      if (userRole === 'CLIENT') {
-        await query(`
-          INSERT INTO clients (user_id, total_bookings, average_rating, created_at, updated_at)
-          VALUES ($1, 0, 0.00, NOW(), NOW())
-        `, [user.id]);
-      } else if (userRole === 'STYLIST') {
-        await query(`
-          INSERT INTO stylists (
-            user_id, business_name, bio, specialties, experience_years,
-            location_address, location_city, location_state, created_at, updated_at
-          )
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())
-        `, [
-          user.id,
-          payload.name || 'My Business',
-          '',
-          [],
-          0,
-          'Address to be updated',
-          'City to be updated',
-          ''
-        ]);
-      }
+      // Create CLIENT profile (all Google One Tap signups are CLIENT only)
+      await query(`
+        INSERT INTO clients (user_id, total_bookings, average_rating, created_at, updated_at)
+        VALUES ($1, 0, 0.00, NOW(), NOW())
+      `, [user.id]);
+
+      logger.info('Client profile created for new Google One Tap user', {
+        userId: user.id,
+        email: user.email
+      });
     }
 
     // Track successful login
@@ -240,28 +242,49 @@ router.post('/google/one-tap', async (req, res) => {
   } catch (error) {
     logger.error('Google One Tap verification error', {
       error: error.message,
-      stack: error.stack
+      stack: error.stack,
+      code: error.code
     });
-    res.status(401).json({ error: 'Invalid credential' });
+
+    // Provide specific error messages based on error type
+    if (error.message && error.message.includes('Token used too late')) {
+      return res.status(401).json({
+        success: false,
+        error: 'Google credential expired. Please try signing in again.'
+      });
+    }
+
+    if (error.message && error.message.includes('Invalid token signature')) {
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid Google credential. Please try again.'
+      });
+    }
+
+    // Generic error for security
+    res.status(401).json({
+      success: false,
+      error: 'Authentication failed. Please try again.'
+    });
   }
 });
 
 /**
  * Initiate Google OAuth flow
- * GET /api/auth/google?role=client|stylist
+ * GET /api/auth/google
+ *
+ * CLIENT-ONLY SIGNUP: All new users are created as CLIENT role.
+ * Stylists must apply via /stylist-application after client onboarding.
  */
 router.get('/google', (req, res) => {
   try {
-    const role = req.query.role || 'client';
-
-    logger.info('Google OAuth initiated', {
-      role: role.toUpperCase(),
+    logger.info('Google OAuth initiated - CLIENT only', {
       ip: req.ip
     });
 
-    // Generate auth URL with state parameter containing role
+    // Generate auth URL with state parameter (CLIENT only)
     const state = Buffer.from(JSON.stringify({
-      role: role.toUpperCase() === 'STYLIST' ? 'STYLIST' : 'CLIENT',
+      role: 'CLIENT',
       timestamp: Date.now()
     })).toString('base64');
 
@@ -300,16 +323,8 @@ router.get('/google/callback', async (req, res) => {
       return res.redirect(`${process.env.FRONTEND_URL}/login?error=no_code`);
     }
 
-    // Decode state parameter to get role
-    let userRole = 'CLIENT';
-    if (state) {
-      try {
-        const stateData = JSON.parse(Buffer.from(state, 'base64').toString());
-        userRole = stateData.role || 'CLIENT';
-      } catch (e) {
-        logger.warn('Failed to decode state parameter', { error: e.message });
-      }
-    }
+    // CLIENT-ONLY: All new OAuth signups are CLIENT role (ignore state parameter)
+    const userRole = 'CLIENT';
 
     logger.info('Google OAuth callback received', {
       hasCode: !!code,
@@ -386,10 +401,10 @@ router.get('/google/callback', async (req, res) => {
       const newUserResult = await query(`
         INSERT INTO users (
           email, name, first_name, last_name, profile_picture_url, username,
-          role, provider, provider_id, email_verified, is_active, user_status,
-          created_at, updated_at
+          role, provider, provider_id, email_verified, is_active,
+          created_at, updated_at, last_login_at
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW(), NOW())
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW(), NOW(), NOW())
         RETURNING *
       `, [
         profile.email,
@@ -402,40 +417,18 @@ router.get('/google/callback', async (req, res) => {
         'google',
         profile.id,
         profile.verified_email || true,
-        true,
-        userRole === 'STYLIST' ? 'PENDING_ONBOARDING' : null
+        true
       ]);
 
       user = newUserResult.rows[0];
 
-      // Create role-specific profile
-      if (userRole === 'CLIENT') {
-        await query(`
-          INSERT INTO clients (user_id, total_bookings, average_rating, created_at, updated_at)
-          VALUES ($1, 0, 0.00, NOW(), NOW())
-        `, [user.id]);
+      // Create CLIENT profile (all OAuth signups are CLIENT only)
+      await query(`
+        INSERT INTO clients (user_id, total_bookings, average_rating, created_at, updated_at)
+        VALUES ($1, 0, 0.00, NOW(), NOW())
+      `, [user.id]);
 
-        logger.info('Client profile created', { userId: user.id });
-      } else if (userRole === 'STYLIST') {
-        await query(`
-          INSERT INTO stylists (
-            user_id, business_name, bio, specialties, experience_years,
-            location_address, location_city, location_state, created_at, updated_at
-          )
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())
-        `, [
-          user.id,
-          profile.name || 'My Business',
-          '',
-          [],
-          0,
-          'Address to be updated',
-          'City to be updated',
-          ''
-        ]);
-
-        logger.info('Stylist profile created', { userId: user.id });
-      }
+      logger.info('Client profile created for new OAuth user', { userId: user.id });
 
       logger.info('New Google user created', {
         userId: user.id,
@@ -503,11 +496,14 @@ router.get('/google/callback', async (req, res) => {
 /**
  * Mobile Google Sign-In - Verify ID token
  * POST /api/auth/google/mobile
- * Body: { idToken: string, role?: 'CLIENT' | 'STYLIST' }
+ * Body: { idToken: string }
+ *
+ * CLIENT-ONLY SIGNUP: All new users are created as CLIENT role.
+ * Stylists must apply via /stylist-application after client onboarding.
  */
 router.post('/google/mobile', async (req, res) => {
   try {
-    const { idToken, role } = req.body;
+    const { idToken } = req.body;
 
     if (!idToken) {
       return res.status(400).json({
@@ -516,16 +512,27 @@ router.post('/google/mobile', async (req, res) => {
       });
     }
 
-    logger.info('Mobile Google Sign-In initiated', { role });
+    logger.info('Mobile Google Sign-In initiated - CLIENT only');
 
-    // Verify the ID token
-    const ticket = await oauth2Client.verifyIdToken({
+    // Verify the ID token using google-auth-library (2025 best practice)
+    const { OAuth2Client } = require('google-auth-library');
+    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+    const ticket = await client.verifyIdToken({
       idToken: idToken,
       audience: process.env.GOOGLE_CLIENT_ID
     });
 
     const payload = ticket.getPayload();
-    const { email, email_verified, name, picture, sub: googleId } = payload;
+    const { email, email_verified, name, picture, sub: googleId, given_name, family_name } = payload;
+
+    // Validate required fields
+    if (!email || !googleId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid Google response - missing required fields'
+      });
+    }
 
     if (!email_verified) {
       return res.status(400).json({
@@ -536,86 +543,98 @@ router.post('/google/mobile', async (req, res) => {
 
     logger.info('Google ID token verified', { email });
 
-    // Check if user exists
+    // Check if user exists by provider_id first (more reliable)
     const existingUser = await query(
-      'SELECT * FROM users WHERE email = $1',
-      [email]
+      'SELECT * FROM users WHERE provider_id = $1 AND provider = $2',
+      [googleId, 'google']
     );
 
     let user;
     let isNewUser = false;
 
     if (existingUser.rows.length > 0) {
-      // Existing user - update Google ID if not set
+      // Existing user found
       user = existingUser.rows[0];
 
-      if (!user.google_id) {
-        await query(
-          'UPDATE users SET google_id = $1, google_picture = $2 WHERE id = $3',
-          [googleId, picture, user.id]
-        );
-      }
+      // Update last login
+      await query(
+        'UPDATE users SET last_login_at = NOW(), profile_picture_url = $1 WHERE id = $2',
+        [picture, user.id]
+      );
 
-      logger.info('Existing Google user logged in', { userId: user.id });
+      logger.info('Existing Google mobile user logged in', { userId: user.id });
     } else {
-      // New user - create account
+      // New user - create account (CLIENT only)
       isNewUser = true;
-      const userRole = (role && role.toUpperCase() === 'STYLIST') ? 'STYLIST' : 'CLIENT';
-
-      // Split name
-      const nameParts = (name || email.split('@')[0]).split(' ');
-      const firstName = nameParts[0] || 'User';
-      const lastName = nameParts.slice(1).join(' ') || '';
+      const userRole = 'CLIENT';
 
       // Generate username
       const username = await generateUsernameFromEmail(email);
 
       const result = await query(
-        `INSERT INTO users
-        (email, first_name, last_name, username, role, google_id, google_picture, email_verified, email_verified_at, is_active)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, true, NOW(), true)
+        `INSERT INTO users (
+          email, name, first_name, last_name, username, role,
+          provider, provider_id, profile_picture_url,
+          email_verified, is_active,
+          created_at, updated_at, last_login_at
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, true, true, NOW(), NOW(), NOW())
         RETURNING *`,
-        [email, firstName, lastName, username, userRole, googleId, picture]
+        [
+          email,
+          name || email.split('@')[0],
+          given_name || '',
+          family_name || '',
+          username,
+          userRole,
+          'google',
+          googleId,
+          picture
+        ]
       );
 
       user = result.rows[0];
-      logger.info('New Google user created', { userId: user.id, role: userRole });
+      logger.info('New Google mobile user created', { userId: user.id, role: userRole });
 
-      // Create stylist record if role is STYLIST
-      if (userRole === 'STYLIST') {
-        await query(
-          'INSERT INTO stylists (user_id) VALUES ($1)',
-          [user.id]
-        );
-        logger.info('Stylist record created', { userId: user.id });
-      } else {
-        // Create client record
-        await query(
-          'INSERT INTO clients (user_id) VALUES ($1)',
-          [user.id]
-        );
-        logger.info('Client record created', { userId: user.id });
-      }
+      // Create CLIENT profile
+      await query(
+        'INSERT INTO clients (user_id, total_bookings, average_rating, created_at, updated_at) VALUES ($1, 0, 0.00, NOW(), NOW())',
+        [user.id]
+      );
+      logger.info('Client record created for mobile user', { userId: user.id });
     }
+
+    // Track successful login
+    const ipAddress = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || req.connection.remoteAddress;
+    const userAgent = req.headers['user-agent'];
+    await query(`
+      INSERT INTO login_history (user_id, login_method, ip_address, user_agent, success, created_at)
+      VALUES ($1, $2, $3, $4, true, NOW())
+    `, [user.id, 'GOOGLE_MOBILE', ipAddress, userAgent]);
+
+    // Create session
+    await createSession(req, user);
 
     // Generate JWT token
     const token = jwt.sign(
       {
-        userId: user.id,
+        id: user.id,
         email: user.email,
-        role: user.role
+        role: user.role,
+        name: user.name
       },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || 'beautycita-secret',
       { expiresIn: '7d' }
     );
 
-    // Create session
-    await createSession(user.id, req);
-
     logger.info('JWT token generated for Google mobile user', {
       userId: user.id,
-      isNewUser
+      isNewUser,
+      sessionId: req.sessionID
     });
+
+    // Check if user has completed onboarding
+    const hasCompletedOnboarding = user.onboarding_completed || false;
 
     // Return success with token and user data
     res.json({
@@ -624,15 +643,14 @@ router.post('/google/mobile', async (req, res) => {
       user: {
         id: user.id,
         email: user.email,
+        name: user.name,
         role: user.role,
-        firstName: user.first_name,
-        lastName: user.last_name,
-        phone: user.phone,
         phoneVerified: user.phone_verified,
-        picture: user.google_picture
+        profilePicture: user.profile_picture_url,
+        onboardingCompleted: hasCompletedOnboarding
       },
       isNewUser,
-      requiresPhoneVerification: !user.phone_verified
+      requiresOnboarding: !hasCompletedOnboarding
     });
 
   } catch (error) {

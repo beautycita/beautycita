@@ -151,16 +151,16 @@ export default function PlatformPage() {
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <a
-                href="/register/client"
+                href="/register"
                 className="px-8 py-4 bg-white text-purple-600 font-semibold rounded-full hover:bg-gray-50 transition-all hover:scale-105 shadow-lg"
               >
                 {t('pages.platform.hero.cta1')}
               </a>
               <a
-                href="/register/stylist"
+                href="/stylist-application"
                 className="px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold rounded-full hover:shadow-xl transition-all hover:scale-105"
               >
-                {t('pages.platform.hero.cta2')}
+                Become a Stylist
               </a>
             </div>
           </motion.div>
@@ -315,7 +315,7 @@ export default function PlatformPage() {
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <a
-                href="/register/client"
+                href="/register"
                 className="px-8 py-4 bg-white text-purple-600 font-semibold rounded-full hover:bg-gray-50 transition-all hover:scale-105 shadow-lg"
               >
                 {t('pages.platform.cta.button1')}

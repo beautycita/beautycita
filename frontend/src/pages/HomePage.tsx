@@ -145,18 +145,34 @@ export default function HomePage() {
     return () => window.removeEventListener('storage', handleStorageChange)
   }, [])
 
-  // Show auth modal for new visitors after 3 seconds
+  // Show auth modal for new visitors after 3 seconds - ONLY after GDPR accepted
   useEffect(() => {
     if (!user) {
       const hasSeenAuthModal = sessionStorage.getItem('hasSeenAuthModal')
-      if (!hasSeenAuthModal) {
+
+      // Listen for GDPR acceptance
+      const handleGDPRAccepted = () => {
+        if (!hasSeenAuthModal) {
+          setTimeout(() => {
+            setShowAuthModal(true)
+            sessionStorage.setItem('hasSeenAuthModal', 'true')
+          }, 3000) // 3 seconds after GDPR accepted
+        }
+      }
+
+      // Check if already accepted on page load
+      const cookieConsent = localStorage.getItem('cookie-consent')
+      if (cookieConsent && !hasSeenAuthModal) {
         const timer = setTimeout(() => {
           setShowAuthModal(true)
           sessionStorage.setItem('hasSeenAuthModal', 'true')
-        }, 3000) // 3 seconds delay
-
+        }, 3000)
         return () => clearTimeout(timer)
       }
+
+      // Listen for new acceptance
+      window.addEventListener('cookie-consent-accepted', handleGDPRAccepted)
+      return () => window.removeEventListener('cookie-consent-accepted', handleGDPRAccepted)
     }
   }, [user])
 

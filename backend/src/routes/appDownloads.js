@@ -146,20 +146,21 @@ router.get('/page', validateJWT, requireRole(['ADMIN', 'SUPERADMIN']), (req, res
 
         <div class="file-info">
             <strong>Package:</strong> com.beautycita.app<br>
-            <strong>Version:</strong> 1.0.3 (Build 5)<br>
-            <strong>Release Date:</strong> October 16, 2025<br>
-            <strong>Size:</strong> ~570 MB<br>
+            <strong>Version:</strong> 2.5.1 (Build 7)<br>
+            <strong>Release Date:</strong> November 13, 2025<br>
+            <strong>Size:</strong> ~33 MB (APK)<br>
             <strong>Signed:</strong> Yes - Production Ready<br>
             <strong>Your Role:</strong> ${req.userRole}
         </div>
 
         <div class="info" style="background: #f0fdf4; border-left: 4px solid #10b981;">
-            <strong style="color: #10b981;">📋 What's New in v1.0.3:</strong><br>
-            • Fixed QR code generator - codes now scan properly<br>
-            • Updated Press page with real company data (Puerto Vallarta, 10K bookings, theme song)<br>
-            • Updated Careers page - removed unfilled positions, improved story<br>
-            • All pages reflect authentic BeautyCita data and growth trajectory<br>
-            • Maintained pink-purple gradient brand identity
+            <strong style="color: #10b981;">📋 What's New in v2.5.1:</strong><br>
+            • ✅ Removed confirm password field from registration (simplified signup)<br>
+            • 🔒 Consolidated all auth to modal-based system (consistent UX)<br>
+            • 🚫 Removed stylist registration routes (CLIENT-only signup enforced)<br>
+            • 🎯 All "Join as Stylist" links now point to /stylist-application<br>
+            • ⏱️ Fixed popup sequence - GDPR cookie consent shows first, then register modal<br>
+            • 📱 Updated frontend build with latest auth improvements
         </div>
 
         <div class="downloads">
@@ -273,21 +274,28 @@ router.get('/info', validateJWT, requireRole(['ADMIN', 'SUPERADMIN']), (req, res
     success: true,
     data: {
       package: 'com.beautycita.app',
-      version: '1.0.3',
-      versionCode: 5,
-      releaseDate: '2025-10-16',
+      version: '2.5.1',
+      versionCode: 7,
+      releaseDate: '2025-11-13',
       releaseNotes: {
-        version: '1.0.3',
-        date: 'October 16, 2025',
+        version: '2.5.1',
+        date: 'November 13, 2025',
         changes: [
-          '✅ Fixed QR code generator - QR codes now scan properly (reduced gradient opacity from 85% to 25%, removed edge fading)',
-          '📄 Updated Press page with real BeautyCita data (Puerto Vallarta origins, 10K bookings milestone, theme song, in-house artwork)',
-          '💼 Updated Careers page - removed unfilled positions, improved grassroots story',
-          '🌐 All frontend pages now reflect authentic company data and growth trajectory',
-          '🎨 Maintained BeautyCita brand identity with pink-purple gradient theme'
+          '✅ Removed confirm password field from registration (simplified signup)',
+          '🔒 Consolidated all auth to modal-based system (consistent UX across app)',
+          '🚫 Removed stylist registration routes (CLIENT-only signup enforced per business rules)',
+          '🎯 All "Join as Stylist" links now correctly point to /stylist-application',
+          '⏱️ Fixed popup sequence - GDPR cookie consent shows first, then register modal',
+          '📱 Updated frontend build with latest auth improvements'
         ]
       },
       previousVersions: [
+        {
+          version: '1.0.3',
+          versionCode: 5,
+          date: 'October 2025',
+          notes: 'Fixed QR code generator, updated Press & Careers pages with real data'
+        },
         {
           version: '1.0.2',
           versionCode: 4,
