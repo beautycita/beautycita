@@ -155,12 +155,15 @@ router.get('/page', validateJWT, requireRole(['ADMIN', 'SUPERADMIN']), (req, res
 
         <div class="info" style="background: #f0fdf4; border-left: 4px solid #10b981;">
             <strong style="color: #10b981;">📋 What's New in v2.5.1:</strong><br>
+            • 🔧 <strong>CRITICAL FIX:</strong> Email/password registration now works correctly<br>
+            • 🎟️ JWT token returned immediately for email-only registration<br>
+            • 📧 Phone verification optional - users can sign up with just email + password<br>
+            • 🔑 Fixed Google OAuth and Google One Tap authentication<br>
             • ✅ Removed confirm password field from registration (simplified signup)<br>
             • 🔒 Consolidated all auth to modal-based system (consistent UX)<br>
-            • 🚫 Removed stylist registration routes (CLIENT-only signup enforced)<br>
+            • 🚫 CLIENT-only signup enforced (no direct stylist registration)<br>
             • 🎯 All "Join as Stylist" links now point to /stylist-application<br>
-            • ⏱️ Fixed popup sequence - GDPR cookie consent shows first, then register modal<br>
-            • 📱 Updated frontend build with latest auth improvements
+            • ⏱️ Fixed popup sequence - GDPR cookie consent shows first, then register modal
         </div>
 
         <div class="downloads">
@@ -281,12 +284,15 @@ router.get('/info', validateJWT, requireRole(['ADMIN', 'SUPERADMIN']), (req, res
         version: '2.5.1',
         date: 'November 13, 2025',
         changes: [
+          '🔧 CRITICAL FIX: Email/password registration now works correctly',
+          '🎟️ JWT token returned immediately for email-only registration',
+          '📧 Phone verification optional - users can sign up with just email + password',
+          '🔑 Fixed Google OAuth and Google One Tap authentication',
           '✅ Removed confirm password field from registration (simplified signup)',
           '🔒 Consolidated all auth to modal-based system (consistent UX across app)',
-          '🚫 Removed stylist registration routes (CLIENT-only signup enforced per business rules)',
+          '🚫 CLIENT-only signup enforced (no direct stylist registration)',
           '🎯 All "Join as Stylist" links now correctly point to /stylist-application',
-          '⏱️ Fixed popup sequence - GDPR cookie consent shows first, then register modal',
-          '📱 Updated frontend build with latest auth improvements'
+          '⏱️ Fixed popup sequence - GDPR cookie consent shows first, then register modal'
         ]
       },
       previousVersions: [
