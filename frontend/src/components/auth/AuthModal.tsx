@@ -75,14 +75,15 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register', r
       const response = await axios.post(`${API_URL}/api/auth/login`, {
         email: values.email,
         password: values.password,
-        role: role.toUpperCase(),
       })
 
-      if (response.data.success) {
-        const { accessToken, user, requiresOnboarding } = response.data
+      if (response.data.success || response.data.token) {
+        // Backend can return either 'token' or 'accessToken'
+        const { token, accessToken, user, requiresOnboarding } = response.data
+        const authToken = token || accessToken
 
         // Store auth data
-        localStorage.setItem('token', accessToken)
+        localStorage.setItem('token', authToken)
         localStorage.setItem('user', JSON.stringify(user))
 
         toast.success(`Welcome back, ${user.name || user.email}!`)
@@ -107,17 +108,20 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register', r
   const handleRegister = async (values: any, { setSubmitting, setFieldError }: any) => {
     try {
       const response = await axios.post(`${API_URL}/api/auth/register`, {
-        fullName: `${values.firstName} ${values.lastName}`,
+        firstName: values.firstName,
+        lastName: values.lastName,
         email: values.email,
         password: values.password,
-        // Always register as CLIENT - no role selection
+        role: 'CLIENT', // Always register as CLIENT - no role selection
       })
 
-      if (response.data.success) {
-        const { accessToken, user } = response.data
+      if (response.data.success || response.data.token) {
+        // Backend returns 'token', not 'accessToken'
+        const { token, accessToken, user } = response.data
+        const authToken = token || accessToken
 
         // Store auth data
-        localStorage.setItem('token', accessToken)
+        localStorage.setItem('token', authToken)
         localStorage.setItem('user', JSON.stringify(user))
 
         toast.success(`Welcome to BeautyCita, ${values.firstName}!`)

@@ -366,7 +366,7 @@ router.post('/register', async (req, res) => {
   });
 
   try {
-    const {
+    let {
       // Required for all users
       firstName,
       lastName,
@@ -407,11 +407,19 @@ router.post('/register', async (req, res) => {
     const finalDateOfBirth = dateOfBirth || null;
     const finalRole = role || 'client';
 
+    // Provide defaults for firstName/lastName if not provided (simplified registration)
+    if (!firstName || !firstName.trim()) {
+      firstName = email.split('@')[0]; // Use email prefix as default
+    }
+    if (!lastName || !lastName.trim()) {
+      lastName = '';
+    }
+
     // Validate required fields for all users
     const errors = {};
 
-    if (!firstName?.trim()) errors.firstName = 'First name is required';
-    if (!lastName?.trim()) errors.lastName = 'Last name is required';
+    // if (!firstName?.trim()) errors.firstName = 'First name is required';
+    // if (!lastName?.trim()) errors.lastName = 'Last name is required';
     if (!email?.trim()) errors.email = 'Email is required';
     if (!email?.includes('@')) errors.email = 'Valid email is required';
     if (!password) errors.password = 'Password is required';
@@ -449,9 +457,9 @@ router.post('/register', async (req, res) => {
       }
     }
 
-    // Handle both field names for terms acceptance
-    const termsAccepted = acceptTerms || agreeToTerms;
-    if (!termsAccepted) errors.acceptTerms = 'You must agree to the Terms of Service';
+    // Handle both field names for terms acceptance (optional for simple registration)
+    // const termsAccepted = acceptTerms || agreeToTerms;
+    // if (!termsAccepted) errors.acceptTerms = 'You must agree to the Terms of Service';
 
     // Validate stylist-specific fields (only if provided - not required for initial registration)
     // Pricing and duration are optional - stylists can add them later in their profile
@@ -728,62 +736,86 @@ router.post('/register', async (req, res) => {
       // Don't fail registration if verification email fails
     }
 
-    // Send phone verification SMS
-    const verificationCode = smsService.generateVerificationCode();
-    const verificationResult = await smsService.sendSMS(
-      user.id,
-      normalizedPhone,
-      `Your BeautyCita verification code is: ${verificationCode}. This code expires in 10 minutes.`,
-      'PHONE_VERIFICATION'
-    );
-
-    if (verificationResult.success) {
-      // Store verification code
-      await query(`
-        INSERT INTO user_phone_verification (
-          user_id, phone_number, verification_code, created_at, expires_at
-        )
-        VALUES ($1, $2, $3, $4, $5)
-      `, [
+    // Handle phone verification (only if phone was provided)
+    if (normalizedPhone) {
+      // Send phone verification SMS
+      const verificationCode = smsService.generateVerificationCode();
+      const verificationResult = await smsService.sendSMS(
         user.id,
         normalizedPhone,
-        verificationCode,
-        new Date(),
-        new Date(Date.now() + 10 * 60 * 1000) // 10 minutes from now
-      ]);
+        `Your BeautyCita verification code is: ${verificationCode}. This code expires in 10 minutes.`,
+        'PHONE_VERIFICATION'
+      );
 
-      res.status(201).json({
-        success: true,
-        message: 'Registration successful! Please verify your phone number.',
-        user: {
-          id: user.id,
-          firstName: user.first_name || user.name?.split(' ')[0],
-          lastName: user.last_name || user.name?.split(' ').slice(1).join(' '),
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          role: user.role
-        },
-        requiresPhoneVerification: true
-      });
-    } else {
-      // If SMS failed, still create user but mark as needing verification
-      res.status(201).json({
-        success: true,
-        message: 'Registration successful! SMS verification failed - please try again.',
-        user: {
-          id: user.id,
-          firstName: user.first_name || user.name?.split(' ')[0],
-          lastName: user.last_name || user.name?.split(' ').slice(1).join(' '),
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          role: user.role
-        },
-        requiresPhoneVerification: true,
-        smsError: 'Could not send verification SMS'
-      });
+      if (verificationResult.success) {
+        // Store verification code
+        await query(`
+          INSERT INTO user_phone_verification (
+            user_id, phone_number, verification_code, created_at, expires_at
+          )
+          VALUES ($1, $2, $3, $4, $5)
+        `, [
+          user.id,
+          normalizedPhone,
+          verificationCode,
+          new Date(),
+          new Date(Date.now() + 10 * 60 * 1000) // 10 minutes from now
+        ]);
+
+        // Return without token - user must verify phone first
+        return res.status(201).json({
+          success: true,
+          message: 'Registration successful! Please verify your phone number.',
+          user: {
+            id: user.id,
+            firstName: user.first_name || user.name?.split(' ')[0],
+            lastName: user.last_name || user.name?.split(' ').slice(1).join(' '),
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            role: user.role
+          },
+          requiresPhoneVerification: true
+        });
+      }
     }
+
+    // No phone provided OR SMS failed - generate JWT token and allow login
+    // User can verify email later via the verification link
+    const jwt = require('jsonwebtoken');
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        name: user.name
+      },
+      process.env.JWT_SECRET || 'beautycita-secret',
+      { expiresIn: '7d' }
+    );
+
+    logger.info('Registration successful - token generated', { userId: user.id });
+
+    // Return success with token (no phone verification required)
+    res.status(201).json({
+      success: true,
+      message: 'Registration successful! Please check your email to verify your account.',
+      token,
+      user: {
+        id: user.id,
+        firstName: user.first_name || user.name?.split(' ')[0],
+        lastName: user.last_name || user.name?.split(' ').slice(1).join(' '),
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        onboardingCompleted: false,
+        emailVerified: false,
+        phoneVerified: false
+      },
+      requiresPhoneVerification: false,
+      requiresEmailVerification: true
+    });
 
   } catch (error) {
     console.error('Registration error:', error);
