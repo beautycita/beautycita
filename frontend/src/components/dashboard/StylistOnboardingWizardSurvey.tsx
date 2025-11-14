@@ -7,7 +7,7 @@ import { authService } from '../../services/authService'
 import SurveyComponent from '../survey/SurveyComponent'
 import { stylistOnboardingSurveyJson } from '../../config/stylistOnboardingSurvey'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 const STORAGE_KEY = 'beautycita-stylist-onboarding-survey-data'
 
 interface StylistOnboardingWizardSurveyProps {

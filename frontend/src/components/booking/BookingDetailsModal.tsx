@@ -5,7 +5,7 @@ import toast from 'react-hot-toast'
 import { XMarkIcon, ClockIcon, CurrencyDollarIcon, UserIcon, CalendarDaysIcon, CheckCircleIcon, PhoneIcon, EnvelopeIcon, DocumentTextIcon, MapPinIcon } from '@heroicons/react/24/outline'
 import { format } from 'date-fns'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 interface BookingDetailsModalProps {
   booking: any

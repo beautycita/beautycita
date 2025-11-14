@@ -11,7 +11,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { format, addDays, startOfWeek, isSameDay, isToday, isBefore, startOfDay } from 'date-fns'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 interface TimeSlot {
   time: string

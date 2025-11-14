@@ -19,7 +19,7 @@ import {
 import { useAuthStore } from '../../store/authStore'
 import LocationPicker from '../ui/LocationPicker'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 const STORAGE_KEY = 'beautycita-stylist-onboarding-progress'
 
 interface OnboardingData {

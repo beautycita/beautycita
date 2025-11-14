@@ -11,7 +11,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { useAuthStore } from '../../store/authStore'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 interface SystemHealth {
   postgres: { status: string; responseTime?: number }

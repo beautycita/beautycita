@@ -36,7 +36,7 @@ import BookingRequestsList from '../components/stylist/BookingRequestsList'
 import LateClientAlerts from '../components/stylist/LateClientAlerts'
 import OnboardingProgressBanner from '../components/onboarding/OnboardingProgressBanner'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 interface DashboardStats {
   users: number

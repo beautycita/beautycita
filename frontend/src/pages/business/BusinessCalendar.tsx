@@ -12,7 +12,7 @@ import {
 import BookingCalendar from '../../components/booking/BookingCalendar'
 import { useAuthStore } from '../../store/authStore'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 interface Appointment {
   id: number

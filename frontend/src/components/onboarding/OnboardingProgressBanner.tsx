@@ -4,7 +4,7 @@ import { CheckCircleIcon, SparklesIcon, XMarkIcon } from '@heroicons/react/24/ou
 import { motion, AnimatePresence } from 'framer-motion'
 import axios from 'axios'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 interface OnboardingStatus {
   clientOnboardingComplete: boolean

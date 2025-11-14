@@ -12,7 +12,7 @@ import {
 import { SparklesIcon } from '@heroicons/react/24/solid'
 import toast from 'react-hot-toast'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 interface BookingRequest {
   id: number

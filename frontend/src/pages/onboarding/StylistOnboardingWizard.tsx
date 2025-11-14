@@ -22,7 +22,7 @@ import {
 import LocationPicker from '../../components/ui/LocationPicker'
 import AphroditeAssistant from '../../components/ai/AphroditeAssistant'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 interface OnboardingData {
   // Step 1: Business Info

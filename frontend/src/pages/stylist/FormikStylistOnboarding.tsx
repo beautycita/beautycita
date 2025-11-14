@@ -20,7 +20,7 @@ import toast from 'react-hot-toast'
 import axios from 'axios'
 import LocationPicker from '../../components/ui/LocationPicker'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 // Validation schemas for each step
 const step1Schema = Yup.object({

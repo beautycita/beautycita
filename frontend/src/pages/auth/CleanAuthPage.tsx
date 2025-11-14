@@ -6,7 +6,7 @@ import toast from 'react-hot-toast'
 import { useAuthStore } from '../../store/authStore'
 import axios from 'axios'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 // Google One Tap types
 declare global {

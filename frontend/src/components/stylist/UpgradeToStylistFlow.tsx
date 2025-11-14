@@ -29,7 +29,7 @@ import LocationPicker from '../ui/LocationPicker'
 import UsernameSelector from '../profile/UsernameSelector'
 import ImportAssistant from './ImportAssistant'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 interface StylistProfileForm {
   // Step 1: Username & Contact

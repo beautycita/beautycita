@@ -10,7 +10,7 @@ import {
   PhoneIcon
 } from '@heroicons/react/24/outline'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 const GOOGLE_MAPS_API_KEY = 'AIzaSyCsy8MrU8leZ1HonRBL40s804jW91Xb5Nc'
 
 interface ClientJourneyProps {

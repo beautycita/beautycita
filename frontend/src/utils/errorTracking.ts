@@ -3,7 +3,7 @@
  * Sends all browser errors and console logs to backend for centralized monitoring
  */
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 interface LogEntry {
   level: 'log' | 'info' | 'warn' | 'error' | 'debug'

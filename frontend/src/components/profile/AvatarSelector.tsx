@@ -10,7 +10,7 @@ import axios from 'axios'
 import toast from 'react-hot-toast'
 import { getMediaUrl } from '@/config/media'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 // Default avatar options from local media
 const DEFAULT_AVATARS = [

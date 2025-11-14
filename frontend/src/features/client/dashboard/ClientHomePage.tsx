@@ -17,7 +17,7 @@ import {
 import { useAuthStore } from '../../../store/authStore'
 import { cardAppear, staggerChildren } from '../../../design/animations'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 interface UpcomingBooking {
   id: number

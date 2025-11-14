@@ -31,7 +31,7 @@ import { useAuthStore } from '../../store/authStore'
 import OnboardingProgressBanner from '../../components/dashboard/OnboardingProgressBanner'
 import StylistOnboardingWizard from '../../components/dashboard/StylistOnboardingWizard'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 interface DashboardStats {
   totalBookings?: number

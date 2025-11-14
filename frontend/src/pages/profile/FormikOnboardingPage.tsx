@@ -29,7 +29,7 @@ import axios from 'axios'
 import LocationPicker from '../../components/ui/LocationPicker'
 // Removed confetti import - was causing screen flashing
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyCsy8MrU8leZ1HonRBL40s804jW91Xb5Nc'
 
 const AVATARS = [
