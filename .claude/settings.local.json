@@ -26,7 +26,9 @@
       "Read(//etc/prometheus/**)",
       "Bash(tree:*)",
       "Bash(xargs:*)",
-      "WebFetch(domain:beautycita.com)"
+      "WebFetch(domain:beautycita.com)",
+      "Bash(ssh beautycita@74.208.218.18:*)",
+      "Bash(./gradlew assembleRelease:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,0 +1,44 @@
+=============================================================
+COPY AND PASTE THIS INTO PRODUCTION SERVER
+=============================================================
+
+SSH to server first:
+ssh www-data@beautycita.com
+
+Then run this one-liner:
+---------------------------------------------------------------
+cd /var/www/beautycita.com && \
+cp docker-compose.yml docker-compose.yml.backup && \
+cp monitoring/prometheus.yml monitoring/prometheus.yml.backup && \
+sed -i '/beautycita-network/a\    extra_hosts:\n      - "host.docker.internal:host-gateway"' docker-compose.yml && \
+sed -i 's/172\.17\.0\.1/host.docker.internal/g' monitoring/prometheus.yml && \
+echo "✅ Config updated" && \
+docker-compose --profile monitoring restart prometheus && \
+echo "⏳ Waiting 10 seconds..." && sleep 10 && \
+echo "✅ Deployment complete!" && \
+docker-compose ps prometheus && \
+echo "" && \
+echo "🔍 Verify metrics:" && \
+curl -s 'http://localhost:9090/api/v1/query?query=beautycita_http_requests_total' | grep -o '"result":\[.*\]' | head -c 100
+---------------------------------------------------------------
+
+Expected output:
+✅ Config updated
+✅ Deployment complete!
+beautycita-prometheus ... Up ... (status should show "Up")
+🔍 Verify metrics:
+"result":[{"metric":{...  (should show data, not empty [])
+
+=============================================================
+
+Verification URLs:
+- Targets: https://beautycita.com/prometheus/targets
+- Grafana: https://beautycita.com/grafana/
+
+If problems occur, rollback:
+cd /var/www/beautycita.com && \
+cp docker-compose.yml.backup docker-compose.yml && \
+cp monitoring/prometheus.yml.backup monitoring/prometheus.yml && \
+docker-compose --profile monitoring restart prometheus
+
+=============================================================

@@ -1,0 +1,104 @@
+================================================================================
+PROMETHEUS NETWORK FIX - COPY/PASTE DEPLOYMENT
+================================================================================
+
+STEP 1: SSH INTO SERVER
+------------------------
+Command:
+ssh beautycita@74.208.218.18
+
+Password when prompted:
+JUs3f2m3Fa
+
+================================================================================
+
+STEP 2: RUN THIS ENTIRE BLOCK (copy all lines below)
+------------------------
+cd /var/www/beautycita.com && \
+sudo -u www-data cp docker-compose.yml docker-compose.yml.backup.$(date +%Y%m%d_%H%M%S) && \
+sudo -u www-data cp monitoring/prometheus.yml monitoring/prometheus.yml.backup.$(date +%Y%m%d_%H%M%S) && \
+echo "✅ Backups created" && \
+sudo -u www-data sed -i '/beautycita-network$/a\    extra_hosts:\n      - "host.docker.internal:host-gateway"' docker-compose.yml && \
+echo "✅ Updated docker-compose.yml" && \
+sudo -u www-data sed -i 's/172\.17\.0\.1/host.docker.internal/g' monitoring/prometheus.yml && \
+echo "✅ Updated prometheus.yml" && \
+grep -A 1 "extra_hosts:" docker-compose.yml && \
+echo "" && \
+grep "host.docker.internal:4000" monitoring/prometheus.yml | head -3 && \
+echo "" && \
+echo "🔄 Restarting Prometheus..." && \
+sudo -u www-data docker-compose --profile monitoring restart prometheus && \
+echo "⏳ Waiting 10 seconds for startup..." && \
+sleep 10 && \
+sudo -u www-data docker-compose ps prometheus && \
+echo "" && \
+echo "🔍 Testing metrics..." && \
+curl -s 'http://localhost:9090/api/v1/query?query=beautycita_http_requests_total' | grep -o '"result":\[' && \
+echo "" && \
+echo "=================================================================================" && \
+echo "✅ DEPLOYMENT COMPLETE!" && \
+echo "=================================================================================" && \
+echo "" && \
+echo "Verify at: https://beautycita.com/prometheus/targets" && \
+echo "Look for: beautycita-backend status should be UP (green)" && \
+echo ""
+
+================================================================================
+
+EXPECTED OUTPUT:
+----------------
+✅ Backups created
+✅ Updated docker-compose.yml
+✅ Updated prometheus.yml
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+      - targets: ['host.docker.internal:4000']
+      - targets: ['host.docker.internal:4000']
+
+🔄 Restarting Prometheus...
+Restarting beautycita-prometheus ... done
+⏳ Waiting 10 seconds for startup...
+NAME                     COMMAND         STATUS    PORTS
+beautycita-prometheus   "/bin/prom..."   Up       0.0.0.0:9090->9090/tcp
+
+🔍 Testing metrics...
+"result":[
+
+=================================================================================
+✅ DEPLOYMENT COMPLETE!
+=================================================================================
+
+Verify at: https://beautycita.com/prometheus/targets
+Look for: beautycita-backend status should be UP (green)
+
+================================================================================
+
+IF YOU SEE ERRORS:
+------------------
+Rollback command (copy this):
+
+cd /var/www/beautycita.com && \
+sudo -u www-data cp docker-compose.yml.backup.* docker-compose.yml && \
+sudo -u www-data cp monitoring/prometheus.yml.backup.* monitoring/prometheus.yml && \
+sudo -u www-data docker-compose --profile monitoring restart prometheus
+
+================================================================================
+
+VERIFICATION URLS:
+------------------
+1. Prometheus Targets: https://beautycita.com/prometheus/targets
+   - beautycita-backend should be UP (green, no errors)
+
+2. Grafana: https://beautycita.com/grafana/
+   - Login: admin / admin123
+   - Dashboards should show data
+
+3. Metrics endpoint: https://beautycita.com/api/metrics
+   - Should return Prometheus-formatted metrics
+
+================================================================================
+
+THAT'S IT! The entire deployment is done with one command block.
+
+================================================================================

@@ -229,7 +229,13 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register', r
 
                       {/* Email/Password Button */}
                       <button
-                        onClick={() => setShowEmailForm(true)}
+                        onClick={() => {
+                          // Dismiss Google One Tap popup to prevent iframe interference
+                          if (window.google?.accounts?.id) {
+                            window.google.accounts.id.cancel()
+                          }
+                          setShowEmailForm(true)
+                        }}
                         className="w-full px-6 py-4 bg-gray-800 text-white font-semibold rounded-full hover:bg-gray-700 transition-all duration-200 border border-gray-700"
                       >
                         Continue with Email

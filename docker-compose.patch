@@ -1,0 +1,11 @@
+--- docker-compose.yml.original
++++ docker-compose.yml.updated
+@@ -23,6 +23,8 @@
+     ports:
+       - "9090:9090"
+     networks:
+       - beautycita-network
++    extra_hosts:
++      - "host.docker.internal:host-gateway"
+     profiles:
+       - monitoring

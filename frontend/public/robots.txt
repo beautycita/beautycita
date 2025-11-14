@@ -1,0 +1,60 @@
+# robots.txt for BeautyCita.com
+# Beauty services booking platform
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /panel/
+Disallow: /dashboard/
+Disallow: /settings/
+Disallow: /profile/edit
+Disallow: /messages/
+Disallow: /bookings/
+Disallow: /admin/
+
+# Sitemap location
+Sitemap: https://beautycita.com/sitemap.xml
+
+# Crawl delay (polite crawling)
+Crawl-delay: 1
+
+# Allow important pages
+Allow: /
+Allow: /stylists
+Allow: /services
+Allow: /about
+Allow: /help
+Allow: /contact
+Allow: /blog
+Allow: /careers
+Allow: /press
+Allow: /privacy
+Allow: /terms
+Allow: /cookies
+
+# Block search bots from sensitive areas
+User-agent: Googlebot
+Disallow: /api/
+Disallow: /panel/
+Disallow: /dashboard/
+Disallow: /settings/
+Disallow: /messages/
+Allow: /
+
+User-agent: Bingbot
+Disallow: /api/
+Disallow: /panel/
+Disallow: /dashboard/
+Disallow: /settings/
+Disallow: /messages/
+Allow: /
+
+# Block aggressive scrapers
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: DotBot
+Crawl-delay: 10
