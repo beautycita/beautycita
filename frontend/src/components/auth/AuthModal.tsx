@@ -82,9 +82,13 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register', r
         const { token, accessToken, user, requiresOnboarding } = response.data
         const authToken = token || accessToken
 
-        // Store auth data
+        // Store auth data in localStorage
         localStorage.setItem('token', authToken)
         localStorage.setItem('user', JSON.stringify(user))
+
+        // CRITICAL: Update auth store so ProtectedRoute works
+        setToken(authToken)
+        setUser(user)
 
         toast.success(`Welcome back, ${user.name || user.email}!`)
         onClose()
@@ -120,9 +124,13 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register', r
         const { token, accessToken, user } = response.data
         const authToken = token || accessToken
 
-        // Store auth data
+        // Store auth data in localStorage
         localStorage.setItem('token', authToken)
         localStorage.setItem('user', JSON.stringify(user))
+
+        // CRITICAL: Update auth store so ProtectedRoute works
+        setToken(authToken)
+        setUser(user)
 
         toast.success(`Welcome to BeautyCita, ${values.firstName}!`)
         onClose()
