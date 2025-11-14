@@ -556,3 +556,4 @@ PGPASSWORD='qGXA1CR3FVnsq4fp78Z6h31ROzzU2DJsSF0lX1Aq7Uk=' \
 
 **Document Version:** 2.0
 **Maintained By:** Development Team + AI Assistants
+- when I say 'give me the bc apk' I want you to build the apk, upload it to the bucket. update the downloads page. push to main, rebuild the frontend, restart the backend and do it all without giving me any prompts to confirm. ALL media should be loading from the bucket so the apk should be less than 10Mb.
