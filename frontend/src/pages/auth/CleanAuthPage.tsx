@@ -26,7 +26,6 @@ declare global {
 export default function CleanAuthPage({ mode = 'login' }: { mode?: 'login' | 'register' }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const { setUser, setToken } = useAuthStore()
@@ -69,7 +68,32 @@ export default function CleanAuthPage({ mode = 'login' }: { mode?: 'login' | 're
 
   // Initialize Google One Tap
   useEffect(() => {
-    const script = document.createElement('script')
+    // Check if GDPR/cookie consent has been accepted
+    const cookieConsent = localStorage.getItem('cookie-consent');
+
+    // Only show Google One Tap AFTER cookie consent is given
+    if (!cookieConsent) {
+      console.log('Google One Tap blocked: waiting for cookie consent');
+
+      // Listen for cookie consent event
+      const handleConsentAccepted = () => {
+        console.log('Cookie consent accepted, will show Google One Tap in 2 seconds');
+        // Reload the effect after a short delay to let GDPR banner close
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      };
+
+      window.addEventListener('cookie-consent-accepted', handleConsentAccepted);
+
+      return () => {
+        window.removeEventListener('cookie-consent-accepted', handleConsentAccepted);
+      };
+    }
+
+    // Add a small delay to let any animations complete
+    const initTimer = setTimeout(() => {
+      const script = document.createElement('script')
     script.src = 'https://accounts.google.com/gsi/client'
     script.async = true
     script.defer = true
@@ -104,16 +128,21 @@ export default function CleanAuthPage({ mode = 'login' }: { mode?: 'login' | 're
       }
     }
 
-    document.head.appendChild(script)
+      document.head.appendChild(script)
+
+      return () => {
+        if (window.google?.accounts?.id) {
+          window.google.accounts.id.cancel()
+        }
+        if (document.head.contains(script)) {
+          document.head.removeChild(script)
+        }
+      }
+    }, 1500); // 1.5 second delay to let GDPR banner close if user just accepted
 
     return () => {
-      if (window.google?.accounts?.id) {
-        window.google.accounts.id.cancel()
-      }
-      if (document.head.contains(script)) {
-        document.head.removeChild(script)
-      }
-    }
+      clearTimeout(initTimer);
+    };
   }, [handleGoogleOneTap, mode])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -121,11 +150,6 @@ export default function CleanAuthPage({ mode = 'login' }: { mode?: 'login' | 're
 
     if (!email || !password) {
       toast.error('Please fill in all fields')
-      return
-    }
-
-    if (mode === 'register' && password !== confirmPassword) {
-      toast.error('Passwords do not match')
       return
     }
 
@@ -140,14 +164,7 @@ export default function CleanAuthPage({ mode = 'login' }: { mode?: 'login' | 're
       const endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/register'
       const payload = mode === 'login'
         ? { email, password }
-        : {
-            email,
-            password,
-            role: 'CLIENT',
-            firstName: email.split('@')[0], // Use email prefix as default first name
-            lastName: '',
-            acceptTerms: true
-          }
+        : { email, password, role: 'CLIENT' }
 
       console.log(`Calling ${endpoint}...`)
       const response = await axios.post(`${API_URL}${endpoint}`, payload)
@@ -258,25 +275,6 @@ export default function CleanAuthPage({ mode = 'login' }: { mode?: 'login' | 're
                 />
               </div>
             </div>
-
-            {/* Confirm Password (Register only) */}
-            {mode === 'register' && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Confirm Password
-                </label>
-                <div className="relative">
-                  <LockClosedIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-3xl focus:ring-2 focus:ring-purple-500 focus:outline-none"
-                  />
-                </div>
-              </div>
-            )}
 
             {/* Submit Button */}
             <button

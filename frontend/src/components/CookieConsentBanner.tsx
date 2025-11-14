@@ -58,12 +58,20 @@ const CookieConsentBanner: React.FC = () => {
         // Save to localStorage
         localStorage.setItem('cookie-consent', JSON.stringify(finalPreferences));
         localStorage.setItem('cookie-consent-date', new Date().toISOString());
+
+        // Dispatch event to notify PopupManager
+        window.dispatchEvent(new CustomEvent('cookie-consent-accepted'));
+
         setShowBanner(false);
       }
     } catch (error) {
       console.error('Failed to save cookie consent:', error);
       // Save locally even if API fails
       localStorage.setItem('cookie-consent', JSON.stringify(finalPreferences));
+
+      // Dispatch event even if API fails
+      window.dispatchEvent(new CustomEvent('cookie-consent-accepted'));
+
       setShowBanner(false);
     }
   };

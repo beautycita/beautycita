@@ -8,7 +8,11 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
 }
 
-export default function InstallPrompt() {
+interface InstallPromptProps {
+  show?: boolean; // Controlled by PopupManager
+}
+
+export default function InstallPrompt({ show = true }: InstallPromptProps) {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [showPrompt, setShowPrompt] = useState(false)
   const [isIOS, setIsIOS] = useState(false)
@@ -61,25 +65,22 @@ export default function InstallPrompt() {
       console.log('📱 beforeinstallprompt event fired')
       setDeferredPrompt(e as BeforeInstallPromptEvent)
 
-      // Show prompt after user has been on site for 30 seconds
-      setTimeout(() => {
-        setShowPrompt(true)
-      }, 30000)
+      // Prompt is controlled by PopupManager - no timeout here
+      // (PopupManager shows this after 5 minutes)
     }
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
 
-    // For iOS, show after 30 seconds
-    if (isIOSDevice && !standalone) {
-      setTimeout(() => {
-        setShowPrompt(true)
-      }, 30000)
+    // Visibility controlled by PopupManager (shows after 5 minutes)
+    // Show the prompt when PopupManager allows it
+    if (show) {
+      setShowPrompt(true);
     }
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     }
-  }, [])
+  }, [show])
 
   const handleInstallClick = async () => {
     if (!deferredPrompt && !isIOS) {
@@ -184,13 +185,30 @@ export default function InstallPrompt() {
                 </ol>
               </div>
             ) : (
-              <button
-                onClick={handleInstallClick}
-                className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2"
-              >
-                <ArrowDownTrayIcon className="h-5 w-5" />
-                <span>Install App</span>
-              </button>
+              <div className="space-y-3">
+                {/* PWA Install Button */}
+                <button
+                  onClick={handleInstallClick}
+                  className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2"
+                >
+                  <ArrowDownTrayIcon className="h-5 w-5" />
+                  <span>Install PWA</span>
+                </button>
+
+                {/* Play Store Button (Android) */}
+                {platform === 'android' && (
+                  <a
+                    href="https://beautycita.com/downloads/beautycita.apk"
+                    download
+                    className="w-full bg-gray-800 dark:bg-gray-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2 border border-gray-700"
+                  >
+                    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" />
+                    </svg>
+                    <span>Download from Play Store</span>
+                  </a>
+                )}
+              </div>
             )}
 
             {/* Later button */}
