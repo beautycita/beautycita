@@ -7,8 +7,9 @@ import GoogleOneTap from './GoogleOneTap'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import axios from 'axios'
+import { useAuthStore } from '../../store/authStore'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 interface AuthModalProps {
   isOpen: boolean
@@ -41,6 +42,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'register', r
   const [showPassword, setShowPassword] = useState(false)
   const [showEmailForm, setShowEmailForm] = useState(false)
   const navigate = useNavigate()
+  const { setUser, setToken } = useAuthStore()
 
   // Reset state when modal opens
   useEffect(() => {
