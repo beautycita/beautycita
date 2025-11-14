@@ -29,6 +29,7 @@ import UnauthorizedPage from './pages/UnauthorizedPage'
 // Auth & Recovery pages
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'))
 const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'))
+const GoogleOnlyAuthPage = lazy(() => import('./pages/auth/GoogleOnlyAuthPage'))
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('./pages/auth/ResetPasswordPage'))
 const VerifyPhonePage = lazy(() => import('./pages/auth/VerifyPhonePage'))
@@ -145,6 +146,7 @@ const StylistLocationsManager = lazy(() => import('./pages/stylist/StylistLocati
 
 // Protected Route component
 import ProtectedRoute from './components/auth/ProtectedRoute'
+import DeviceBasedAuth from './components/auth/DeviceBasedAuth'
 
 // Panel Router Component - Routes to UnifiedPanel (single dashboard for all roles)
 function PanelRouter() {
@@ -176,17 +178,17 @@ function AppLayout() {
         <Suspense fallback={<BCLoading size="xl" fullScreen text={t('common.loading')} />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
-                  {/* Auth - Modal-based only (CLIENT ONLY SIGNUP - no stylist registration) */}
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route path="/register" element={<RegisterPage />} />
-                  <Route path="/auth" element={<LoginPage />} />
+                  {/* Auth - Device-based (Mobile: Google only, Desktop: Google + Email/Password) */}
+                  <Route path="/login" element={<DeviceBasedAuth mobileComponent={GoogleOnlyAuthPage} desktopComponent={LoginPage} />} />
+                  <Route path="/register" element={<DeviceBasedAuth mobileComponent={GoogleOnlyAuthPage} desktopComponent={RegisterPage} />} />
+                  <Route path="/auth" element={<DeviceBasedAuth mobileComponent={GoogleOnlyAuthPage} desktopComponent={LoginPage} />} />
 
                   {/* Legacy login redirects (all roles can login, but only CLIENT can register) */}
-                  <Route path="/client/login" element={<LoginPage />} />
-                  <Route path="/admin/login" element={<LoginPage />} />
-                  <Route path="/login/client" element={<LoginPage />} />
-                  <Route path="/login/stylist" element={<LoginPage />} />
-                  <Route path="/login/admin" element={<LoginPage />} />
+                  <Route path="/client/login" element={<DeviceBasedAuth mobileComponent={GoogleOnlyAuthPage} desktopComponent={LoginPage} />} />
+                  <Route path="/admin/login" element={<DeviceBasedAuth mobileComponent={GoogleOnlyAuthPage} desktopComponent={LoginPage} />} />
+                  <Route path="/login/client" element={<DeviceBasedAuth mobileComponent={GoogleOnlyAuthPage} desktopComponent={LoginPage} />} />
+                  <Route path="/login/stylist" element={<DeviceBasedAuth mobileComponent={GoogleOnlyAuthPage} desktopComponent={LoginPage} />} />
+                  <Route path="/login/admin" element={<DeviceBasedAuth mobileComponent={GoogleOnlyAuthPage} desktopComponent={LoginPage} />} />
 
                   {/* Password recovery and verification */}
                   <Route path="/forgot-password" element={<ForgotPasswordPage />} />
