@@ -6,6 +6,10 @@ import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import { useAuthStore } from '../store/authStore'
+import { loadStripe } from '@stripe/stripe-js'
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
 import {
   PhoneIcon,
   MapPinIcon,
@@ -15,6 +19,7 @@ import {
   ChevronRightIcon,
   ChevronLeftIcon,
   ArrowPathIcon,
+  CreditCardIcon,
 } from '@heroicons/react/24/outline'
 
 const API_URL = import.meta.env.VITE_API_URL || ''
@@ -55,6 +60,97 @@ const step4Schema = Yup.object({
   profilePicture: Yup.string().nullable(),
 })
 
+// Payment Method Form Component (wrapped with Stripe Elements)
+function PaymentMethodForm() {
+  const stripe = useStripe()
+  const elements = useElements()
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [cardComplete, setCardComplete] = useState(false)
+
+  const handleCardChange = (event: any) => {
+    setCardComplete(event.complete)
+  }
+
+  const handleAddCard = async () => {
+    if (!stripe || !elements) return
+
+    setIsProcessing(true)
+
+    try {
+      const token = localStorage.getItem('token')
+
+      // Create setup intent
+      const { data: setupData } = await axios.post(
+        `${API_URL}/api/payments/setup-intent`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+
+      const cardElement = elements.getElement(CardElement)
+      if (!cardElement) throw new Error('Card element not found')
+
+      // Confirm card setup
+      const { error, setupIntent } = await stripe.confirmCardSetup(
+        setupData.clientSecret,
+        {
+          payment_method: {
+            card: cardElement,
+          },
+        }
+      )
+
+      if (error) {
+        throw new Error(error.message)
+      }
+
+      if (setupIntent.status === 'succeeded') {
+        toast.success('Payment method added successfully!')
+        return true
+      }
+
+      return false
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to add payment method')
+      return false
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="p-4 bg-gray-900/50 rounded-xl border border-gray-600">
+        <CardElement
+          options={{
+            style: {
+              base: {
+                fontSize: '16px',
+                color: '#ffffff',
+                '::placeholder': {
+                  color: '#9ca3af',
+                },
+              },
+              invalid: {
+                color: '#ef4444',
+              },
+            },
+          }}
+          onChange={handleCardChange}
+        />
+      </div>
+
+      <button
+        type="button"
+        onClick={handleAddCard}
+        disabled={!cardComplete || isProcessing || !stripe}
+        className="w-full px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold rounded-xl hover:from-pink-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {isProcessing ? 'Adding Card...' : 'Add Payment Method'}
+      </button>
+    </div>
+  )
+}
+
 export default function FormikClientOnboarding() {
   const [currentStep, setCurrentStep] = useState(1)
   const [isDetectingLocation, setIsDetectingLocation] = useState(false)
@@ -65,7 +161,7 @@ export default function FormikClientOnboarding() {
   const navigate = useNavigate()
   const { user, setUser } = useAuthStore()
 
-  const totalSteps = 4
+  const totalSteps = 5
   const progress = (currentStep / totalSteps) * 100
 
   const steps = [
@@ -73,6 +169,7 @@ export default function FormikClientOnboarding() {
     { number: 2, title: 'Verify Phone', icon: SparklesIcon, color: 'from-purple-500 to-pink-500' },
     { number: 3, title: 'Your Location', icon: MapPinIcon, color: 'from-blue-500 to-cyan-500' },
     { number: 4, title: 'Profile Picture', icon: CameraIcon, color: 'from-green-500 to-teal-500' },
+    { number: 5, title: 'Payment Method', icon: CreditCardIcon, color: 'from-indigo-500 to-purple-500' },
   ]
 
   const initialValues: OnboardingValues = {
@@ -323,6 +420,9 @@ export default function FormikClientOnboarding() {
       } else {
         toast.error('Please fill in all location fields')
       }
+    } else if (currentStep === 4) {
+      // Profile picture is optional, always allow next
+      setCurrentStep(5)
     }
   }
 
@@ -645,6 +745,53 @@ export default function FormikClientOnboarding() {
                           </span>
                         </label>
                       </div>
+                    </motion.div>
+                  )}
+
+                  {/* Step 5: Payment Method */}
+                  {currentStep === 5 && (
+                    <motion.div
+                      key="step5"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="space-y-6"
+                    >
+                      <div className="text-center mb-8">
+                        <h2 className="text-3xl font-bold text-white mb-2">
+                          Add a payment method
+                        </h2>
+                        <p className="text-gray-400">
+                          Securely save your card for quick bookings
+                        </p>
+                      </div>
+
+                      <div className="bg-gray-800/50 p-6 rounded-2xl border border-gray-700">
+                        <Elements stripe={stripePromise}>
+                          <PaymentMethodForm />
+                        </Elements>
+                      </div>
+
+                      <div className="flex items-start gap-3 p-4 bg-blue-900/20 border border-blue-700/30 rounded-xl">
+                        <div className="text-blue-400 mt-0.5">
+                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm text-gray-300">
+                            <strong className="text-white">Your card is secure.</strong> We use Stripe for PCI-compliant payment processing. You won't be charged until you book a service.
+                          </p>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => setCurrentStep(6)}
+                        className="w-full text-center text-gray-400 hover:text-white text-sm py-2"
+                      >
+                        Skip for now (you can add this later)
+                      </button>
                     </motion.div>
                   )}
                 </AnimatePresence>
