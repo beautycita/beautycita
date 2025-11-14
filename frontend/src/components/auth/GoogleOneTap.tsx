@@ -36,8 +36,10 @@ export default function GoogleOneTap({
     try {
       console.log('Google One Tap credential received')
 
+      const API_URL = import.meta.env.VITE_API_URL || ''
+
       // Send credential to backend for verification
-      const res = await fetch('/api/auth/google/one-tap', {
+      const res = await fetch(`${API_URL}/api/auth/google/one-tap`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -105,9 +107,10 @@ export default function GoogleOneTap({
         window.google.accounts.id.initialize({
           client_id: clientId,
           callback: handleCredentialResponse,
-          auto_select: autoSelect,
-          cancel_on_tap_outside: false,
-          context: 'signin'
+          auto_select: false, // Don't auto-select - let user choose
+          cancel_on_tap_outside: false, // Keep visible even if user clicks outside
+          context: 'signin',
+          itp_support: true // Intelligent Tracking Prevention support
         })
 
         // Display the One Tap prompt
