@@ -46,7 +46,7 @@ export default function GoogleOnlyAuthPage() {
           client_id: clientId,
           callback: handleCredentialResponse,
           auto_select: false,
-          cancel_on_tap_outside: false,
+          cancel_on_tap_outside: true, // Allow dismissal by clicking outside
           context: 'signin',
           itp_support: true,
         })
@@ -97,6 +97,11 @@ export default function GoogleOnlyAuthPage() {
 
       if (data.success && data.token) {
         console.log('Authentication successful')
+
+        // Dismiss Google One Tap popup immediately
+        if (window.google?.accounts?.id) {
+          window.google.accounts.id.cancel()
+        }
 
         // Store in localStorage
         localStorage.setItem('token', data.token)

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -33,7 +33,7 @@ interface OnboardingValues {
 // Step validation schemas
 const step1Schema = Yup.object({
   phone: Yup.string()
-    .matches(/^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/, 'Invalid phone number')
+    .matches(/^\d{10}$/, 'Phone number must be exactly 10 digits')
     .required('Phone number is required'),
 })
 
@@ -60,6 +60,8 @@ export default function FormikClientOnboarding() {
   const [isDetectingLocation, setIsDetectingLocation] = useState(false)
   const [verificationSent, setVerificationSent] = useState(false)
   const [isVerifying, setIsVerifying] = useState(false)
+  const [countryCode, setCountryCode] = useState('+1') // Default to US
+  const [isDetectingCountry, setIsDetectingCountry] = useState(false)
   const navigate = useNavigate()
   const { user, setUser } = useAuthStore()
 
@@ -80,18 +82,72 @@ export default function FormikClientOnboarding() {
     profilePicture: user?.profilePicture || null,
   }
 
+  // Detect country code from geolocation on mount
+  useEffect(() => {
+    detectCountryCode()
+  }, [])
+
+  const detectCountryCode = async () => {
+    setIsDetectingCountry(true)
+    try {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+            )
+
+            if (response.ok) {
+              const locationData = await response.json()
+              const countryCode = locationData.address?.country_code?.toUpperCase()
+
+              // Map country codes to phone country codes
+              const phoneCountryCodes: { [key: string]: string } = {
+                'US': '+1',
+                'CA': '+1',
+                'MX': '+52',
+                'GB': '+44',
+                'DE': '+49',
+                'FR': '+33',
+                'ES': '+34',
+                'IT': '+39',
+                // Add more as needed
+              }
+
+              setCountryCode(phoneCountryCodes[countryCode] || '+1')
+            }
+            setIsDetectingCountry(false)
+          },
+          () => {
+            // Default to US if geolocation fails
+            setCountryCode('+1')
+            setIsDetectingCountry(false)
+          }
+        )
+      } else {
+        setCountryCode('+1')
+        setIsDetectingCountry(false)
+      }
+    } catch (error) {
+      setCountryCode('+1')
+      setIsDetectingCountry(false)
+    }
+  }
+
   const sendVerificationCode = async (phone: string) => {
     try {
-      const token = localStorage.getItem('token')
-      await axios.post(
-        `${API_URL}/api/auth/send-verification`,
-        { phone },
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
+      // Convert 10-digit phone to E.164 format (country code + number)
+      const e164Phone = `${countryCode}${phone}`
+
+      // Send SMS via Twilio Verify (expects E.164 format)
+      await axios.post(`${API_URL}/api/verify/send-code`, {
+        phoneNumber: e164Phone
+      })
       setVerificationSent(true)
       toast.success('Verification code sent!')
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to send verification code')
+      toast.error(error.response?.data?.error || error.response?.data?.message || 'Failed to send verification code')
       throw error
     }
   }
@@ -99,20 +155,33 @@ export default function FormikClientOnboarding() {
   const verifyCode = async (phone: string, code: string) => {
     setIsVerifying(true)
     try {
-      const token = localStorage.getItem('token')
-      const response = await axios.post(
-        `${API_URL}/api/auth/verify-phone`,
-        { phone, code },
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
+      // Convert 10-digit phone to E.164 format
+      const e164Phone = `${countryCode}${phone}`
 
-      if (response.data.success) {
+      // Check code via Twilio Verify
+      const response = await axios.post(`${API_URL}/api/verify/check-code`, {
+        phoneNumber: e164Phone,
+        code
+      })
+
+      if (response.data.success && response.data.verified) {
+        // Update user's phone in database (store E.164 format)
+        const token = localStorage.getItem('token')
+        await axios.patch(
+          `${API_URL}/api/user/profile`,
+          {
+            phone: e164Phone,
+            phone_verified: true
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        )
+
         toast.success('Phone verified!')
         return true
       }
       return false
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Invalid verification code')
+      toast.error(error.response?.data?.error || error.response?.data?.message || 'Invalid verification code')
       return false
     } finally {
       setIsVerifying(false)
@@ -351,12 +420,21 @@ export default function FormikClientOnboarding() {
                         <label className="block text-sm font-medium text-gray-300 mb-2">
                           Phone Number
                         </label>
-                        <Field
-                          name="phone"
-                          type="tel"
-                          placeholder="+1 (555) 123-4567"
-                          className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-pink-500"
-                        />
+                        <div className="flex gap-2">
+                          <div className="bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white flex items-center min-w-[80px]">
+                            {isDetectingCountry ? '...' : countryCode}
+                          </div>
+                          <Field
+                            name="phone"
+                            type="tel"
+                            placeholder="5551234567"
+                            maxLength={10}
+                            className="flex-1 px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-pink-500"
+                          />
+                        </div>
+                        <p className="mt-1 text-xs text-gray-400">
+                          Enter your 10-digit phone number
+                        </p>
                         <ErrorMessage
                           name="phone"
                           component="p"
