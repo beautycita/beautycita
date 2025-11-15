@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../store/authStore'
-import AuthModal from '../components/auth/AuthModal'
 import {
   ArrowRightIcon,
   ShieldCheckIcon,
@@ -117,7 +116,6 @@ export default function HomePage() {
   const { t } = useTranslation()
   const { user } = useAuthStore()
   const [isDarkMode, setIsDarkMode] = useState(false)
-  const [showAuthModal, setShowAuthModal] = useState(false)
 
   // Load dark mode preference and listen for changes
   useEffect(() => {
@@ -144,37 +142,6 @@ export default function HomePage() {
     window.addEventListener('storage', handleStorageChange)
     return () => window.removeEventListener('storage', handleStorageChange)
   }, [])
-
-  // Show auth modal for new visitors after 3 seconds - ONLY after GDPR accepted
-  useEffect(() => {
-    if (!user) {
-      const hasSeenAuthModal = sessionStorage.getItem('hasSeenAuthModal')
-
-      // Listen for GDPR acceptance
-      const handleGDPRAccepted = () => {
-        if (!hasSeenAuthModal) {
-          setTimeout(() => {
-            setShowAuthModal(true)
-            sessionStorage.setItem('hasSeenAuthModal', 'true')
-          }, 3000) // 3 seconds after GDPR accepted
-        }
-      }
-
-      // Check if already accepted on page load
-      const cookieConsent = localStorage.getItem('cookie-consent')
-      if (cookieConsent && !hasSeenAuthModal) {
-        const timer = setTimeout(() => {
-          setShowAuthModal(true)
-          sessionStorage.setItem('hasSeenAuthModal', 'true')
-        }, 3000)
-        return () => clearTimeout(timer)
-      }
-
-      // Listen for new acceptance
-      window.addEventListener('cookie-consent-accepted', handleGDPRAccepted)
-      return () => window.removeEventListener('cookie-consent-accepted', handleGDPRAccepted)
-    }
-  }, [user])
 
   // Data
   const avatars = Array.from({ length: 13 }, (_, i) => `/media/img/avatar/A${i}.png`)
@@ -546,13 +513,7 @@ export default function HomePage() {
         </div>
       </VideoSection>
 
-      {/* Auth Modal for New Visitors - ALWAYS CLIENT ONLY */}
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        initialMode="register"
-        role="client"
-      />
+      {/* Google One Tap is handled by Navbar - no popup modal on homepage */}
     </div>
   )
 }
